@@ -1,7 +1,7 @@
 import { useTheme } from "@shopify/restyle";
 import * as React from "react";
-import { FC, useState } from "react";
-import { Alert, ImageBackground, Pressable, SafeAreaView } from "react-native";
+import { useState } from "react";
+import { Alert, ImageBackground, Pressable } from "react-native";
 import { registration } from "../../firebase/firebase";
 import { Theme } from "../../theme/theme";
 import Box from "../Common/Box";
@@ -9,7 +9,7 @@ import Button from "../Common/Button";
 import Input from "../Common/Input";
 import Text from "../Common/Text";
 
-const SignUp: FC = ({ navigation }) => {
+const SignUp = ({ navigation }) => {
   // set theme
   const theme = useTheme<Theme>();
   // set bgimage
@@ -21,13 +21,14 @@ const SignUp: FC = ({ navigation }) => {
   const [passwordReapeat, setPasswordReapeat] = useState("");
 
   const emptyState = () => {
+    setEmail("");
     setPassword("");
     setPasswordReapeat("");
   };
 
   const handlePress = () => {
     if (!email) {
-      Alert.alert("Email field is required.");
+      Alert.alert("E-Mail field is required.");
     } else if (!password) {
       Alert.alert("Password field is required.");
     } else if (!passwordReapeat) {
@@ -37,9 +38,9 @@ const SignUp: FC = ({ navigation }) => {
       Alert.alert("Password does not match!");
     } else if (password.length < 6) {
       emptyState();
+      Alert.alert("Password too Short!");
     } else {
       registration(email, password, nickname);
-      navigation.navigate("login");
       emptyState();
     }
   };
@@ -101,5 +102,4 @@ const SignUp: FC = ({ navigation }) => {
     </ImageBackground>
   );
 };
-
 export default SignUp;

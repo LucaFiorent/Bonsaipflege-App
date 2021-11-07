@@ -8,7 +8,6 @@ import { SimpleLineIcons } from "@expo/vector-icons";
 import { useTheme } from "@shopify/restyle";
 import { Theme } from "../theme/theme";
 import HomeScreen from "../screens/HomeScreen";
-import ProfileInfos from "../components/Home/Profile/ProfileInfos";
 
 type MainStackParams = {
   HomeScreen: undefined;

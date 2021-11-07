@@ -1,6 +1,6 @@
 import { useTheme } from "@shopify/restyle";
 import * as React from "react";
-import { FC, useState } from "react";
+import { useState } from "react";
 import { ImageBackground, Pressable } from "react-native";
 import { login } from "../../firebase/firebase";
 import { Theme } from "../../theme/theme";
@@ -10,7 +10,7 @@ import Button from "../Common/Button";
 import Input from "../Common/Input";
 import Text from "../Common/Text";
 
-const LoginScreen: FC = ({ navigation }) => {
+const LoginScreen = ({ navigation }) => {
   // set theme
   const theme = useTheme<Theme>();
   // set bgimage
@@ -37,8 +37,6 @@ const LoginScreen: FC = ({ navigation }) => {
         .catch(() => {
           console.log("the insert data is wrong");
         });
-      console.log("logged in");
-
       emptyState();
       setMessage("");
     }

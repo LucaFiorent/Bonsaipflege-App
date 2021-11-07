@@ -26,11 +26,14 @@ const theme = createTheme({
     greyBackground: palette.greyLight,
 
     primarySalmonColor: palette.salmonPrimary,
+    primaryLightSalmonColor: palette.salmonLight,
     primaryBGColor: palette.greenLight,
     primaryGreenColor: palette.greenPrimary,
 
     iconColor: palette.black,
-    iconInactive: palette.greyLight,
+
+    iconInactive: palette.grey,
+    iconInactiveBackground: palette.greyLight,
 
     headline: palette.black,
     text: palette.black,
@@ -97,6 +100,10 @@ const theme = createTheme({
       fontSize: 22,
       textTransform: "uppercase",
     },
+    buttonWithIcon: {
+      fontFamily: "OpenSans-Regular",
+      fontSize: 12,
+    },
     description: {
       fontFamily: "Bebas-Neue",
       fontSize: 24,
@@ -121,6 +128,11 @@ const theme = createTheme({
       fontFamily: "Ubuntu-Regular",
       fontSize: 16,
       color: "primarySalmonColor",
+    },
+    title: {
+      fontSize: 18,
+      textTransform: "capitalize",
+      fontWeight: "bold",
     },
   },
 });

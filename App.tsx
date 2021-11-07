@@ -8,7 +8,7 @@ import { ThemeProvider } from "@shopify/restyle";
 import theme from "./theme/theme";
 //components
 import CommunityScreen from "./screens/CommunityScreen";
-import MySectionScreen from "./screens/MySectionScreen";
+//import MySectionScreen from "./screens/MySectionScreen";
 //react navigation
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
@@ -25,7 +25,9 @@ import LoginScreen from "./components/Auth/LoginScreen";
 import SignUp from "./components/Auth/SignUp";
 //types
 // stores
-import { authStore, userStore } from "./dataStores/userManagmentStore";
+import { authStore } from "./dataStores/userManagmentStore";
+import { userStore } from "./dataStores/accountStore";
+
 import HomeSection from "./sections/HomeSection";
 import MySection from "./sections/MySection";
 
@@ -44,7 +46,7 @@ export default function App() {
   });
 
   useEffect(() => {
-    //if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    // if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         authStore.setState({ user: user });
@@ -52,7 +54,7 @@ export default function App() {
     });
   }, []);
 
-  const getUserData = (user: any) => {
+  const getUserData = () => {
     if (user) {
       const data = db.collection("userData").doc(user.uid);
       data.get().then((doc: any) => {
@@ -62,7 +64,7 @@ export default function App() {
   };
 
   useEffect(() => {
-    getUserData(user);
+    getUserData();
   }, [user]);
 
   if (!fontsLoaded) {

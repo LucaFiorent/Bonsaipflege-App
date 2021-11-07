@@ -15,13 +15,11 @@ import Box from "../../Common/Box";
 import Text from "../../Common/Text";
 
 //stores
-import { userStore } from "../../../dataStores/userManagmentStore";
+import { userStore } from "../../../dataStores/accountStore";
 import { SimpleLineIcons } from "@expo/vector-icons";
 
 import "react-native-gesture-handler";
 import { FC, useState } from "react";
-
-import { EmojiHappy } from "iconsax-react-native";
 
 const ProfileInfos: FC = () => {
   const theme = useTheme<Theme>();
@@ -43,7 +41,7 @@ const ProfileInfos: FC = () => {
                 <SimpleLineIcons name={"logout"} size={24} />
               </Box>
             </Pressable>
-            <EmojiHappy color="#eee" variant="Bulk" size={54} />
+
             <Pressable onPress={() => setLightOn(!lightOn)}>
               <Box
                 borderColor={!lightOn ? "greyBackground" : "error"}

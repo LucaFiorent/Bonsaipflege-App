@@ -7,12 +7,17 @@ import { RouteProp } from "@react-navigation/native";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { useTheme } from "@shopify/restyle";
 import { Theme } from "../theme/theme";
-import { userData, userStore } from "../dataStores/userManagmentStore";
+import { userData } from "../dataStores/accountStore";
 import MyScreen from "../screens/MyScreen";
+import AddBonsai from "../components/MyScreen/AddBonsai/AddBonsai";
+import AddBonsaiStep2 from "../components/MyScreen/AddBonsai/AddBonsaiStep2";
 
 type MainStackParams = {
   MyScreen: { userData: userData };
+  AddBonsai: undefined;
+  AddBonsaiStep2: undefined;
 };
+
 type RootStackParams = {
   ProfileStack: undefined;
 };
@@ -20,9 +25,30 @@ type RootStackParams = {
 // navigation and route props type
 type MyScreenRouteProp = RouteProp<RootStackParams, "ProfileStack">;
 type MyScreenNavigationProp = StackNavigationProp<MainStackParams, "MyScreen">;
+
 export type MyScreenProps = {
   route: MyScreenRouteProp;
   navigation: MyScreenNavigationProp;
+};
+
+type AddBonsaiRouteProp = RouteProp<MainStackParams, "AddBonsai">;
+type AddBonsaiNavigationProp = StackNavigationProp<
+  MainStackParams,
+  "AddBonsai"
+>;
+export type AddBonsaiProps = {
+  route: AddBonsaiRouteProp;
+  navigation: AddBonsaiNavigationProp;
+};
+
+type AddBonsaiStep2RouteProp = RouteProp<MainStackParams, "AddBonsai">;
+type AddBonsaiStep2NavigationProp = StackNavigationProp<
+  MainStackParams,
+  "AddBonsaiStep2"
+>;
+export type AddBonsaiStep2Props = {
+  route: AddBonsaiStep2RouteProp;
+  navigation: AddBonsaiStep2NavigationProp;
 };
 
 const ProfileStack: FC = () => {
@@ -45,6 +71,24 @@ const ProfileStack: FC = () => {
         name="MyScreen"
         component={MyScreen}
         options={{ headerBackTitleVisible: false, headerShown: false }}
+      />
+      <MainStack.Screen
+        name="AddBonsai"
+        component={AddBonsai}
+        options={{
+          headerBackTitleVisible: false,
+          headerShown: true,
+          headerTitle: "Add new Bonsai",
+        }}
+      />
+      <MainStack.Screen
+        name="AddBonsaiStep2"
+        component={AddBonsaiStep2}
+        options={{
+          headerBackTitleVisible: false,
+          headerShown: true,
+          headerTitle: "Add new Bonsai",
+        }}
       />
     </MainStack.Navigator>
   );

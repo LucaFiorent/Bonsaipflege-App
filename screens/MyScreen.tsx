@@ -1,23 +1,33 @@
-import { backgroundColor } from "@shopify/restyle";
 import * as React from "react";
-import { FC } from "react";
-import { SafeAreaView, Image, ScrollView } from "react-native";
+import { SafeAreaView, ScrollView, Pressable } from "react-native";
 import Box from "../components/Common/Box";
-import Text from "../components/Common/Text";
-import Search from "../components/Common/Search";
-import { userStore } from "../dataStores/userManagmentStore";
 import theme from "../theme/theme";
-import ProfileInfos from "../components/Home/Profile/ProfileInfos";
+import ProfileInfos from "../components/MyScreen/Profile/ProfileInfos";
+import { SimpleLineIcons } from "@expo/vector-icons";
+import NextStepButton from "../components/Common/NextStepButton";
+import { MyScreenProps } from "../sections/MySection";
+import { FC } from "react";
 
-const MyScreen: FC = () => {
-  const userData = userStore();
+const MyScreen: FC<MyScreenProps> = ({ navigation }) => {
+  // const userData = userStore();
 
   return (
-    <SafeAreaView style={{ backgroundColor: theme.colors.mainBackground }}>
-      <ScrollView contentContainerStyle={{ paddingBottom: 64 }}>
-        <ProfileInfos />
-      </ScrollView>
-    </SafeAreaView>
+    <>
+      <NextStepButton
+        onPress={() => {
+          navigation.navigate("AddBonsai");
+        }}
+        primary={theme.colors.primarySalmonColor}
+        title=""
+        icon="plus"
+      />
+      <SafeAreaView style={{ backgroundColor: theme.colors.mainBackground }}>
+        <ScrollView contentContainerStyle={{ paddingBottom: 64 }}>
+          <ProfileInfos />
+        </ScrollView>
+      </SafeAreaView>
+    </>
   );
 };
+
 export default MyScreen;
