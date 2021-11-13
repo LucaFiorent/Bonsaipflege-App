@@ -26,7 +26,7 @@ import SignUp from "./components/Auth/SignUp";
 //types
 // stores
 import { authStore } from "./dataStores/userManagmentStore";
-import { userStore } from "./dataStores/accountStore";
+import { userBonsaisStore, userStore } from "./dataStores/accountStore";
 
 import HomeSection from "./sections/HomeSection";
 import MySection from "./sections/MySection";
@@ -37,6 +37,7 @@ export default function App() {
   const Tab = createBottomTabNavigator();
 
   const { user } = authStore();
+  const userData = userStore();
 
   let [fontsLoaded] = useFonts({
     "HinaMincho-Regular": require("./assets/fonts/HinaMincho-Regular.ttf"),

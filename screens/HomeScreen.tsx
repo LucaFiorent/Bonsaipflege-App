@@ -1,22 +1,30 @@
 import * as React from "react";
+import db, { firebaseConfig } from "../firebase/firebaseConfig";
+import firebase from "firebase";
 import { FC, useEffect, useState } from "react";
-import { SafeAreaView, Image, ScrollView } from "react-native";
+import { SafeAreaView, Image, ScrollView, Pressable } from "react-native";
 import Box from "../components/Common/Box";
 import Text from "../components/Common/Text";
 import Search from "../components/Common/Search";
-import { userStore } from "../dataStores/accountStore";
+import { userBonsaisStore, userStore } from "../dataStores/accountStore";
 import theme from "../theme/theme";
 import Feed from "../components/Home/Community/Feed";
-import db from "../firebase/firebaseConfig";
 import { communityData } from "../dataStores/CommunityStore";
+import { FlatList } from "react-native-gesture-handler";
+import create from "zustand";
+import { SimpleLineIcons } from "@expo/vector-icons";
+
+import { filterData } from "../data/bonsaiFilter";
+import FilterCards from "../components/Home/Community/FilterCards";
 
 const HomeScreen: FC = () => {
   const userData = userStore();
   const [communityProfiles, setAllCommunityProfiles] = useState<
     communityData[]
   >([]);
-  const [allBonsais, setAllBonsais] = useState([]);
-  const [myBonsais, getMyBonsais] = useState([]);
+
+  const { myBonsais } = userBonsaisStore();
+  const [selectedFilter, setFilterData] = useState("");
 
   useEffect(() => {
     const entityRef = db
@@ -31,14 +39,17 @@ const HomeScreen: FC = () => {
           entity.id = doc.id;
           newEntities.push(entity);
         });
-        getMyBonsais(newEntities);
+        userBonsaisStore.setState((state) => ({
+          myBonsais: newEntities,
+        }));
       },
       (error: any) => {
         console.log(error, "no Bonsais found");
       }
     );
-  }, []);
-  console.log("my Bonsais: ", myBonsais);
+  }, [userData]);
+
+  // userBonsais.forEach((item) => console.log(item)  )
   // communityProfiles.forEach((element) => {
   //   console.log(element.bonsais);
   //   element.bonsais.forEach((bonsai) => {
@@ -65,57 +76,110 @@ const HomeScreen: FC = () => {
     );
   }, []);
 
+  console.log("sel ", selectedFilter);
+
+  const filterResults: any = selectedFilter
+    ? myBonsais.filter(
+        (bonsai) =>
+          bonsai.form.toLowerCase().includes(selectedFilter.toLowerCase()) ||
+          bonsai.size.toLowerCase().includes(selectedFilter.toLowerCase()) ||
+          bonsai.type.toLowerCase().includes(selectedFilter.toLowerCase())
+      )
+    : null;
+
+  console.log(filterResults);
+
   return (
-    <SafeAreaView style={{ backgroundColor: theme.colors.mainBackground }}>
-      <ScrollView contentContainerStyle={{ paddingBottom: 64 }}>
-        <Box
-          flex={1}
-          flexDirection="row"
-          alignItems="center"
-          marginVertical="l"
-          marginHorizontal="m"
-        >
-          <Box alignItems="center">
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: theme.colors.mainBackground,
+        marginBottom: 95,
+      }}
+    >
+      <Box paddingHorizontal="m" backgroundColor="mainBackground">
+        <Box marginVertical="m">
+          <Search searchValue="" searchTrick={() => null} placeholder="lol" />
+        </Box>
+        <ScrollView>
+          <Box
+            flex={1}
+            flexDirection="row"
+            alignItems="center"
+            marginVertical="l"
+          >
             <Box alignItems="center">
-              <Image
-                source={
-                  userData.avatar === ""
-                    ? require("../assets/images/programmer.png")
-                    : { uri: userData.avatar }
-                }
-                style={{
-                  width: 80,
-                  height: 80,
-                  borderRadius: theme.borderRadii.xxl,
-                }}
-              />
+              <Box alignItems="center">
+                <Image
+                  source={
+                    userData.avatar === ""
+                      ? require("../assets/images/programmer.png")
+                      : { uri: userData.avatar }
+                  }
+                  style={{
+                    width: 80,
+                    height: 80,
+                    borderRadius: theme.borderRadii.xxl,
+                  }}
+                />
+              </Box>
+            </Box>
+            <Box marginLeft="xl">
+              <Text fontSize={18} marginVertical="xs" textTransform="uppercase">
+                {userData.nickname}
+              </Text>
             </Box>
           </Box>
-          <Box marginLeft="xl">
-            <Text fontSize={18} marginVertical="xs" textTransform="uppercase">
-              {userData.nickname}
+
+          <Box>
+            <Text marginBottom="l" variant="h1">
+              Deine Bonsais
             </Text>
+            {myBonsais.map((item) => {
+              return <Feed bonsai={item} />;
+            })}
           </Box>
-        </Box>
-        <Search searchValue="" searchTrick={() => null} placeholder="lol" />
-        <Box marginHorizontal="m">
-          <Text marginBottom="l" variant="h1">
-            Feed
-          </Text>
-          {/* <FlatList
-            contentContainerStyle={{
-              paddingTop: theme.spacing.m,
-              paddingBottom: theme.spacing.xxl,
-            }}
-            data={communityProfiles.bonsais}
-            renderItem={({ item }) => (
-              <Feed item={item} navigation={navigation} />
-            )}
-            keyExtractor={(item) => item.name}
-          /> */}
-          <Feed />
-        </Box>
-      </ScrollView>
+          <Box marginBottom="xl">
+            <Box flexDirection="row" alignItems="center" marginBottom="l">
+              <SimpleLineIcons
+                name="equalizer"
+                size={24}
+                color={theme.colors.headline}
+              />
+              <Text marginLeft="m" variant="h1">
+                Filter
+              </Text>
+            </Box>
+            <Box
+              flexDirection="row"
+              flexWrap="wrap"
+              justifyContent="space-between"
+            >
+              {filterData.map((item) => {
+                return (
+                  <FilterCards
+                    selectedFilter={selectedFilter}
+                    filterItem={item}
+                    filterOnPress={setFilterData}
+                  />
+                );
+              })}
+            </Box>
+          </Box>
+          <Box>
+            <Text marginBottom="l" variant="h1">
+              Feed
+            </Text>
+            {!filterResults
+              ? myBonsais.map((item) => {
+                  return <Feed bonsai={item} />;
+                })
+              : filterResults.map((item) => {
+                  return <Feed bonsai={item} />;
+                })}
+          </Box>
+        </ScrollView>
+      </Box>
     </SafeAreaView>
   );
 };

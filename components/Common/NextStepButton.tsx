@@ -14,7 +14,7 @@ interface ButtonProps {
 
 const NextStepButton: FC<ButtonProps> = ({ onPress, primary, title, icon }) => {
   return (
-    <Box position="absolute" right={15} bottom={20}>
+    <Box position="absolute" right={15} bottom={20} zIndex={1}>
       <Pressable onPress={onPress}>
         <Box flexDirection="row" alignItems="center">
           <Text marginRight="m" color="text">

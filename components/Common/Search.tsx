@@ -23,7 +23,7 @@ const Search: FC<SearchProps> = ({
     <Box
       borderRadius="xxl"
       borderColor="borderColor"
-      backgroundColor={primaryBg ? "mainBackground" : "greyBackground"}
+      backgroundColor={primaryBg ? "mainBackground" : "mainBackground"}
       borderWidth={1}
       paddingVertical="s"
       paddingHorizontal="m"
@@ -39,16 +39,16 @@ const Search: FC<SearchProps> = ({
             name="magnifier"
             size={19}
             style={{
-              color: theme.colors.iconColor,
+              color: theme.colors.borderColor,
             }}
           />
           <TextInput
             // TODO: continue
             onChangeText={(search) => searchTrick(search)}
-            selectionColor={theme.colors.greyBackground}
+            selectionColor={theme.colors.borderColor}
             showSoftInputOnFocus={true}
             placeholder={placeholder}
-            placeholderTextColor={theme.colors.text}
+            placeholderTextColor={theme.colors.borderColor}
             style={{
               fontFamily: theme.textVariants.inputTitle.fontFamily,
               fontSize: theme.textVariants.inputTitle.fontSize,

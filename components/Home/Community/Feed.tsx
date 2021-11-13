@@ -9,20 +9,23 @@ import Text from "../../Common/Text";
 
 //stores
 import { userStore } from "../../../dataStores/accountStore";
-import { SimpleLineIcons } from "@expo/vector-icons";
 
 import "react-native-gesture-handler";
-import { FC, useEffect, useState } from "react";
-import db from "../../../firebase/firebaseConfig";
+import { FC } from "react";
 
-const Feed: FC = (profile, navigation) => {
+export type FeedProps = {
+  bonsai: any;
+};
+
+const Feed: FC<FeedProps> = ({ bonsai }) => {
   const theme = useTheme<Theme>();
   const userData = userStore();
-  const [allBonsais, setAllBonsais] = useState();
+  const bonsaiDTasksFertilize = null;
+  const bonsaiDTasksWatering = null;
 
   return (
-    <SafeAreaView>
-      <Box marginBottom="xl">
+    <Box marginBottom="xl" key={bonsai.id}>
+      {bonsai.userId !== userData.id ? (
         <Box flex={1} flexDirection="row" marginBottom="xs">
           <Box>
             <Box>
@@ -46,51 +49,75 @@ const Feed: FC = (profile, navigation) => {
             </Text>
           </Box>
         </Box>
-        <Box flex={1} flexDirection="row" alignItems="center">
-          <Box alignItems="center">
-            <Image
-              source={
-                userData.avatar === ""
-                  ? require("../../../assets/images/bonsai.jpg")
-                  : { uri: userData.avatar }
-              }
-              style={{
-                width: 100,
-                height: 100,
-                borderRadius: theme.borderRadii.xxl,
-              }}
-            />
-          </Box>
-          <Box
-            flex={1}
-            flexDirection="row"
-            marginHorizontal="l"
-            justifyContent="space-between"
-          >
-            <Box>
-              <Box marginVertical="xs">
-                <Text fontSize={14}>Typ:</Text>
-                <Text fontSize={16}>Schwarzkiefer</Text>
-              </Box>
-              <Box marginVertical="xs">
-                <Text fontSize={14}>Größe:</Text>
-                <Text fontSize={16}>CHUMONO</Text>
-              </Box>
+      ) : null}
+
+      <Box flex={1} flexDirection="row" alignItems="center">
+        <Box alignItems="center">
+          <Image
+            source={
+              bonsai.image === ""
+                ? require("../../../assets/images/bonsai.jpg")
+                : { uri: bonsai.image }
+            }
+            style={{
+              width: 100,
+              height: 100,
+              borderRadius: theme.borderRadii.xxl,
+            }}
+          />
+        </Box>
+        <Box
+          flex={1}
+          flexDirection="row"
+          marginHorizontal="l"
+          justifyContent="space-between"
+        >
+          <Box>
+            <Box marginVertical="xs">
+              <Text fontSize={14}>Typ:</Text>
+              <Text fontSize={16}>{bonsai.type}</Text>
             </Box>
-            <Box>
-              <Box marginVertical="xs">
-                <Text fontSize={14}>Form:</Text>
-                <Text fontSize={16}>SOKAN</Text>
-              </Box>
-              <Box marginVertical="xs">
-                <Text fontSize={14}>Alter:</Text>
-                <Text fontSize={16}>15 j</Text>
-              </Box>
+            <Box marginVertical="xs">
+              <Text fontSize={14}>Form:</Text>
+              <Text fontSize={16}>{bonsai.form}</Text>
+            </Box>
+          </Box>
+          <Box>
+            <Box
+              marginVertical="xs"
+              flexDirection="row"
+              alignItems="center"
+              justifyContent="flex-end"
+            >
+              <Text fontSize={12}>Alter: </Text>
+              <Text fontSize={16}> {bonsai.acquisitionDate}</Text>
+            </Box>
+            <Box
+              marginVertical="xs"
+              flexDirection="row"
+              alignItems="center"
+              justifyContent="flex-end"
+            >
+              <Text fontSize={12}>Bewässerung: </Text>
+              <Text fontSize={16}>
+                {bonsaiDTasksWatering ? bonsaiDTasksWatering : "~"}
+              </Text>
+            </Box>
+            <Box
+              marginVertical="xs"
+              flexDirection="row"
+              alignItems="center"
+              justifyContent="flex-end"
+            >
+              <Text fontSize={12}>Düngung: </Text>
+              <Text fontSize={16}>
+                {bonsaiDTasksFertilize ? bonsaiDTasksFertilize : "~"}
+              </Text>
             </Box>
           </Box>
         </Box>
       </Box>
-    </SafeAreaView>
+    </Box>
   );
 };
 export default Feed;
