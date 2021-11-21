@@ -53,8 +53,11 @@ const theme = createTheme({
     error: palette.orangeWarning,
   },
   spacing: {
+    null: 0,
+    xxs: 3,
     xs: 4,
     s: 8,
+    ms: 12,
     m: 16,
     l: 24,
     xl: 40,

@@ -10,11 +10,18 @@ interface ButtonProps {
   primary?: string;
   title?: string;
   icon?: any;
+  index?: number;
 }
 
-const NextStepButton: FC<ButtonProps> = ({ onPress, primary, title, icon }) => {
+const NextStepButton: FC<ButtonProps> = ({
+  onPress,
+  primary,
+  title,
+  icon,
+  index,
+}) => {
   return (
-    <Box position="absolute" right={15} bottom={20} zIndex={1}>
+    <Box position="absolute" right={15} bottom={20} zIndex={index}>
       <Pressable onPress={onPress}>
         <Box flexDirection="row" alignItems="center">
           <Text marginRight="m" color="text">

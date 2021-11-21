@@ -15,6 +15,7 @@ import MyBonsais from "../components/Home/Community/MyBonsais";
 
 const MyScreen: FC<MyScreenProps> = ({ navigation }) => {
   const userData = userStore();
+  console.log();
 
   const { myBonsais } = userBonsaisStore();
 
@@ -27,6 +28,7 @@ const MyScreen: FC<MyScreenProps> = ({ navigation }) => {
         primary={theme.colors.primarySalmonColor}
         title=""
         icon="plus"
+        index={1}
       />
       <Box paddingHorizontal="m" backgroundColor={"mainBackground"}>
         <SafeAreaView>
@@ -40,7 +42,13 @@ const MyScreen: FC<MyScreenProps> = ({ navigation }) => {
             paddingBottom: theme.spacing.l,
           }}
           data={myBonsais}
-          renderItem={({ item }) => <MyBonsais bonsai={item} />}
+          renderItem={({ item }) => (
+            <MyBonsais
+              bonsaiData={item}
+              navigation={navigation}
+              user={userData}
+            />
+          )}
           keyExtractor={(item) => item.id}
         />
       </Box>

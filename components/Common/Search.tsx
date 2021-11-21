@@ -21,6 +21,7 @@ const Search: FC<SearchProps> = ({
   const theme = useTheme<Theme>();
   return (
     <Box
+      flex={1}
       borderRadius="xxl"
       borderColor="borderColor"
       backgroundColor={primaryBg ? "mainBackground" : "mainBackground"}
@@ -30,7 +31,6 @@ const Search: FC<SearchProps> = ({
       flexDirection="row"
       justifyContent="space-between"
       marginTop="s"
-      marginHorizontal="m"
       marginBottom="s"
     >
       <Box flexDirection="row" flex={1} justifyContent="space-between">

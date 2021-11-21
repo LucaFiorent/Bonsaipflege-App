@@ -11,16 +11,25 @@ interface InputP {
   placeholder: string;
   value: string;
   onChange: Dispatch<SetStateAction<string>>;
+  color?: string;
+  inputMessage?: string;
 }
 
-const Input: FC<InputP> = ({ label, placeholder, value, onChange }) => {
+const Input: FC<InputP> = ({
+  label,
+  placeholder,
+  value,
+  onChange,
+  color,
+  inputMessage,
+}) => {
   const theme = useTheme<Theme>();
   return (
     <Box marginBottom="l">
       <Text
         variant="inputTitle"
         marginBottom="xs"
-        style={{ color: theme.colors.headline }}
+        style={{ color: color ? color : theme.colors.headline }}
       >
         {label}
       </Text>
@@ -38,6 +47,11 @@ const Input: FC<InputP> = ({ label, placeholder, value, onChange }) => {
           borderBottomWidth: 1,
         }}
       />
+      <Box>
+        <Text variant="inputTitle" style={color ? { color: color } : null}>
+          {inputMessage}
+        </Text>
+      </Box>
     </Box>
   );
 };

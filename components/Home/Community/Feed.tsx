@@ -13,6 +13,8 @@ import { userStore } from "../../../dataStores/accountStore";
 import "react-native-gesture-handler";
 import { FC } from "react";
 
+import moment from "moment";
+
 export type FeedProps = {
   bonsai: any;
 };
@@ -24,7 +26,7 @@ const Feed: FC<FeedProps> = ({ bonsai }) => {
   const bonsaiDTasksWatering = null;
 
   return (
-    <Box marginBottom="xl" key={bonsai.id}>
+    <Box marginBottom="xl">
       {bonsai.userId !== userData.id ? (
         <Box flex={1} flexDirection="row" marginBottom="xs">
           <Box>
@@ -90,7 +92,9 @@ const Feed: FC<FeedProps> = ({ bonsai }) => {
               justifyContent="flex-end"
             >
               <Text fontSize={12}>Alter: </Text>
-              <Text fontSize={16}> {bonsai.acquisitionDate}</Text>
+              <Text fontSize={16}>
+                {moment(bonsai.acquisitionDate).format("D MMM. YY")}
+              </Text>
             </Box>
             <Box
               marginVertical="xs"

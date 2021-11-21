@@ -8,50 +8,59 @@ import theme from "../../../theme/theme";
 import { filterData } from "../../../data/bonsaiFilter";
 
 import { SimpleLineIcons } from "@expo/vector-icons";
+import { State } from "react-native-gesture-handler";
 
 type FilterCardsProps = {
-  selectedFilter: string;
+  selectedFilters: string;
   filterItem: string;
-  filterOnPress: (filterItem: string) => string;
+  filterOnPress: (filterItem: string) => string[];
 };
 
 //   onPress={() => filterOnPress(filterItem)}
 //   key={filterData.indexOf(filterItem)}
 
 const FilterCards: FC<FilterCardsProps> = ({
-  selectedFilter,
+  selectedFilters,
   filterItem,
   filterOnPress,
 }) => {
   return (
     <Pressable onPress={() => filterOnPress(filterItem)}>
       <Box
-        marginVertical="xs"
-        key={filterData.indexOf(filterItem)}
+        alignSelf="stretch"
+        justifyContent="center"
+        flexDirection="row"
         backgroundColor={
-          selectedFilter === filterItem
+          selectedFilters.includes(filterItem)
             ? "primaryGreenColor"
             : "primarySalmonColor"
         }
-        borderRadius="s"
-        paddingHorizontal="l"
+        minWidth="23%"
+        marginVertical="xs"
         paddingVertical="s"
-        alignSelf="stretch"
-        minWidth="49%"
-        flexDirection="row"
-        alignItems="center"
-        // justifyContent="center"
+        paddingHorizontal="s"
+        borderRadius="l"
       >
-        {selectedFilter === filterItem && (
-          <Box position="absolute" right={15}>
+        {selectedFilters.includes(filterItem) && (
+          <Box
+            position="absolute"
+            right={0.1}
+            top={-6}
+            backgroundColor="primaryGreenColor"
+            paddingHorizontal="xs"
+            paddingTop="xs"
+            paddingBottom="s"
+            borderTopEndRadius="l"
+            borderTopLeftRadius="l"
+          >
             <SimpleLineIcons
               name="check"
-              size={20}
+              size={12}
               color={theme.colors.textOnDark}
             />
           </Box>
         )}
-        <Text variant="h1" color="textOnDark">
+        <Text variant="button" fontSize={12} color="textOnDark">
           {filterItem}
         </Text>
       </Box>

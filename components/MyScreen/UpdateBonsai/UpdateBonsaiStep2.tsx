@@ -1,14 +1,6 @@
 //react
 import * as React from "react";
-import {
-  FC,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Alert, Image, Platform, Pressable, ScrollView } from "react-native";
 //expo
@@ -34,7 +26,7 @@ import { FormsData, SizesData } from "../../../types/firebaseTypes";
 import db from "../../../firebase/firebaseConfig";
 import Input from "../../Common/Input";
 import ToggleSwitchButton from "../../Common/ToggleSwitchButton";
-import { AddBonsaiStep2Props } from "../../../types/bottomSheetTypes";
+import { UpdateBonsaiStep2Props } from "../../../types/bottomSheetTypes";
 import { userStore } from "../../../dataStores/accountStore";
 
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -44,7 +36,15 @@ import firebase from "firebase";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 
-const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
+const AddBonsaiStep2: FC<UpdateBonsaiStep2Props> = ({ route, navigation }) => {
+  const updateBonsai = route.params.bonsai;
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: 'Update "' + updateBonsai.name + '"',
+    });
+  }, [navigation]);
+
   const theme = useTheme<Theme>();
   const userData = userStore();
 
@@ -56,39 +56,6 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
   //previus values
   const image = route.params.image;
   const bonsaiName = route.params.bonsaiName;
-
-  //set forms and sizes gotten from Database
-  const [formsFirestore, setFormsFirestore] = useState<FormsData[]>([]);
-  const [sizesFirestore, setSizesFirestore] = useState<SizesData[]>([]);
-  //set other values
-  const [treeType, setTreeType] = useState("");
-  const [publicBonsai, setPublic] = useState(false);
-
-  //map only forms and sizes in Japain
-  const formJP = formsFirestore.map((item) => item.formJP);
-  const sizeJP = sizesFirestore.map((item) => item.sizeJP);
-
-  const [acquisitionDate, setAcquisitionDate] = useState(new Date());
-  const [mode, setMode] = useState("date");
-  const [show, setShow] = useState(false);
-  const [date, setDate] = useState(false);
-
-  const onChange = (event: any, selectedDate: any) => {
-    const currentDate = selectedDate || acquisitionDate;
-    setShow(Platform.OS === "ios");
-    setAcquisitionDate(currentDate);
-    setDate(true);
-  };
-
-  const showMode = (currentMode: any) => {
-    setShow(true);
-    setMode(currentMode);
-  };
-
-  const showDatepicker = () => {
-    showMode("date");
-  };
-
   //get all Forms from Firestore Database
   useEffect(() => {
     const entityRefForms = db.collection("forms");
@@ -123,13 +90,46 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
       }
     );
   }, []);
+  //set forms and sizes gotten from Database
+  const [formsFirestore, setFormsFirestore] = useState<FormsData[]>([]);
+  const [sizesFirestore, setSizesFirestore] = useState<SizesData[]>([]);
 
-  //modal logic
+  //set other values
+  const [treeType, setTreeType] = useState(updateBonsai.type);
+  const [publicBonsai, setPublic] = useState(updateBonsai.publicBonsai);
+
+  //map only forms and sizes in Japain
+  const formJP = formsFirestore.map((item) => item.formJP);
+  const sizeJP = sizesFirestore.map((item) => item.sizeJP);
+
+  //set values for calendar
+  const [acquisitionDate, setAcquisitionDate] = useState(
+    updateBonsai.acquisitionDate
+  );
+  const [mode, setMode] = useState("date");
+  const [show, setShow] = useState(false);
+  const [date, setDate] = useState(false);
+
+  // Logic for calendar
+  const onChange = (event: any, selectedDate: any) => {
+    const currentDate = selectedDate || acquisitionDate;
+    setShow(Platform.OS === "ios");
+    setAcquisitionDate(currentDate);
+    setDate(true);
+  };
+  const showMode = (currentMode: any) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+  const showDatepicker = () => {
+    showMode("date");
+  };
+
+  //set bottom sheet modal values
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-
   const snapPoints = useMemo(() => ["30%", "50%"], []);
   const statusBarHeight = Constants.statusBarHeight;
-
+  //bottom sheet modal logic
   const handlePresentModalPress = (values: string[], editingInput: string) => {
     setModalOptions(values);
     setCurrentlyEditing(editingInput);
@@ -140,9 +140,9 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
   }, []);
 
   //set selected forms or sizes
-  const [selectedForm, setForm] = useState("");
-  const [selectedSize, setSize] = useState("");
-
+  const [selectedForm, setForm] = useState(updateBonsai.form);
+  const [selectedSize, setSize] = useState(updateBonsai.size);
+  // set form or size logic
   const setOption = (selectedOption: string) => {
     if (currentlyEditing === "Formen") {
       setForm(selectedOption);
@@ -152,10 +152,10 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
     }
     bottomSheetModalRef.current?.dismiss();
   };
-
   const selectedValue =
     currentlyEditing === "Größen" ? selectedSize : selectedForm;
 
+  // bundle bonsai data
   const bonsai = {
     image: "",
     name: bonsaiName,
@@ -166,13 +166,12 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
     publicBonsai: publicBonsai,
     userId: userData.id,
   };
-
   // OnPress Event that aktivate the function that send the Data and redirect
   const addNewBonsai = async () => {
     let imageResult = await image;
 
     if (imageResult) {
-      addPicture(image, bonsai.name)
+      addPicture(image, bonsai.name, updateBonsai.image)
         .then(() => {
           Alert.alert("Success");
           navigation.navigate("MyScreen");
@@ -184,7 +183,16 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
   };
 
   // function that send the Bonsai Data to the Firebase database
-  const addPicture = async (imagePath: any, imageName: any) => {
+  const addPicture = async (
+    imagePath: string,
+    imageName: string,
+    oldImage: string
+  ) => {
+    var fileRef = firebase.storage().refFromURL(oldImage);
+
+    var delPic = fileRef.delete();
+    console.log(delPic);
+
     const response = await fetch(imagePath);
     const blob = await response.blob();
     var ref = firebase
@@ -193,8 +201,9 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
       .child("bonsaiImages/" + imageName + "-" + uuidv4());
     const snapshot = await ref.put(blob);
     const imageUrl = await snapshot.ref.getDownloadURL();
+
     db.collection("bonsais")
-      .doc()
+      .doc(updateBonsai.id)
       .set({ ...bonsai, image: imageUrl });
   };
 
@@ -318,17 +327,13 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
                     <Text
                       style={{
                         fontSize: 16,
-                        color: !date
-                          ? theme.colors.placeholderColor
-                          : theme.colors.text,
+                        color: theme.colors.text,
                         paddingHorizontal: theme.spacing.xs,
                         paddingBottom: theme.spacing.xs,
                         paddingTop: theme.spacing.xs,
                       }}
                     >
-                      {date
-                        ? moment(acquisitionDate).format("D MMMM YYYY")
-                        : "Datum Auswählen..."}
+                      {moment(acquisitionDate).format("D MMMM YYYY")}
                     </Text>
                   </Box>
                 </Box>

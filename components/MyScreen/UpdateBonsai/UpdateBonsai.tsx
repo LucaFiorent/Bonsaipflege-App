@@ -3,7 +3,7 @@ import { useTheme } from "@shopify/restyle";
 import { Theme } from "../../../theme/theme";
 //react
 import * as React from "react";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { Image, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 //common components
@@ -14,17 +14,23 @@ import NextStepButton from "../../Common/NextStepButton";
 //expo
 import * as ImagePicker from "expo-image-picker";
 //stores
-import { AddBonsaiProps } from "../../../types/bottomSheetTypes";
+import { UpdateBonsaiProps } from "../../../types/bottomSheetTypes";
 import ErrorMessage from "../../Common/ErrorMessage";
 
-const AddBonsai: FC<AddBonsaiProps> = ({ navigation }) => {
+const UpdateBonsai: FC<UpdateBonsaiProps> = ({ navigation, route }) => {
+  const updateBonsai = route.params.bonsai;
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: 'Update "' + updateBonsai.name + '"',
+    });
+  }, [navigation]);
+
   const theme = useTheme<Theme>();
   const [errMss, setErrMss] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [image, setImage] = useState<string>(
-    "https://firebasestorage.googleapis.com/v0/b/bonsaipflege-app.appspot.com/o/bonsai-pic.jpg?alt=media&token=a04f373c-7501-4d78-ad0c-159597daa4e3"
-  );
-  const [bonsaiName, setbonsaiName] = useState("");
+  const [image, setImage] = useState<string>(updateBonsai.image);
+  const [bonsaiName, setbonsaiName] = useState(updateBonsai.name);
 
   const openImagePicker = async (type: any) => {
     const { status } =
@@ -57,7 +63,8 @@ const AddBonsai: FC<AddBonsaiProps> = ({ navigation }) => {
   const NavigateToNextPage = () => {
     if (bonsaiName) {
       setErrMss(null);
-      navigation.navigate("AddBonsaiStep2", {
+      navigation.navigate("UpdateBonsaiStep2", {
+        bonsai: updateBonsai,
         image: image,
         bonsaiName: bonsaiName,
       });
@@ -121,4 +128,4 @@ const AddBonsai: FC<AddBonsaiProps> = ({ navigation }) => {
     </>
   );
 };
-export default AddBonsai;
+export default UpdateBonsai;

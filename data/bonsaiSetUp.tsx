@@ -51,3 +51,40 @@ export const sizes = [
   "SHITO",
   "KETSCHITSUBO",
 ];
+{
+  acquisitionDate;
+  ("24/09/1995");
+  followers;
+  0;
+  ("hTbdNRq6yYhc4z9khHzXQ9Sq9VJ2");
+  form;
+  ("TACHI-GI");
+  image;
+  ("");
+  name;
+  ("mein Bonsai");
+  notes;
+  0;
+  ("");
+  size;
+  ("OMONO BONSAI");
+  tasks;
+  fertilizing;
+  ("");
+  leafCut;
+  ("");
+  pruning;
+  ("");
+  repotting;
+  ("");
+  watering;
+  ("");
+  wiring;
+  ("");
+  woodWork;
+  ("");
+  type;
+  ("Ahorn");
+  userId;
+  ("8bHsf94hzGMsDTZFG5K4CuKwWhQ2");
+}

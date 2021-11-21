@@ -13,6 +13,39 @@ export type AddBonsaiProps = {
   navigation: any;
 };
 
+export type UpdateBonsaiStep2Props = {
+  route: {
+    params: {
+      bonsai: {
+        acquisitionDate: Date;
+        form: string;
+        id: string;
+        image: string;
+        name: string;
+        publicBonsai: boolean;
+        size: string;
+        type: string;
+        userId: string;
+      };
+      user: {
+        avatar: string;
+        bonsais: [];
+        id: string;
+        nickname: string;
+        subscribed: [];
+        subscribers: [];
+      };
+      image: string;
+      bonsaiName: string;
+    };
+  };
+  navigation: any;
+};
+export type UpdateBonsaiProps = {
+  navigation: any;
+  route: any;
+};
+
 export type BottomSheetModalContainerProps = {
   values: string[];
   onPress: (item: string) => void;
@@ -20,7 +53,6 @@ export type BottomSheetModalContainerProps = {
   currentlyEditing: string | undefined;
   data: FormsData[] | SizesData[];
 };
-
 export type BottomSheetButtonProps = {
   title: string;
   onPress: (item: string) => void;
@@ -28,7 +60,6 @@ export type BottomSheetButtonProps = {
   currentlyEditing: string | undefined;
   data: FormsData[] | SizesData[];
 };
-
 export type ToggleSwitchButtonProps = {
   publicBonsai: boolean;
   setPublic: (value: boolean) => void;

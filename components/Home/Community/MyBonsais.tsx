@@ -1,6 +1,6 @@
 import { useTheme } from "@shopify/restyle";
 import * as React from "react";
-import { Image, Pressable, SafeAreaView, ScrollView } from "react-native";
+import { Image, Pressable } from "react-native";
 import { Theme } from "../../../theme/theme";
 
 //components
@@ -8,67 +8,76 @@ import Box from "../../Common/Box";
 import Text from "../../Common/Text";
 
 //stores
-import { userBonsaisStore, userStore } from "../../../dataStores/accountStore";
-import { SimpleLineIcons } from "@expo/vector-icons";
 
 import "react-native-gesture-handler";
-import { FC, useEffect, useState } from "react";
-import db from "../../../firebase/firebaseConfig";
+import { FC } from "react";
+import moment from "moment";
 
 export type MyBonsaisProps = {
-  bonsai: any;
+  bonsaiData: any;
+  navigation: any;
+  user: any;
 };
 
-const MyBonsais: FC<MyBonsaisProps> = ({ bonsai }) => {
+const MyBonsais: FC<MyBonsaisProps> = ({ bonsaiData, navigation, user }) => {
   const theme = useTheme<Theme>();
-  const userData = userStore();
 
   return (
-    <Box marginBottom="xl">
-      <Box flex={1} flexDirection="row" alignItems="center">
-        <Box alignItems="center">
-          <Image
-            source={
-              bonsai.image === ""
-                ? require("../../../assets/images/bonsai.jpg")
-                : { uri: bonsai.image }
-            }
-            style={{
-              width: 100,
-              height: 100,
-              borderRadius: theme.borderRadii.xxl,
-            }}
-          />
-        </Box>
-        <Box
-          flex={1}
-          flexDirection="row"
-          marginHorizontal="l"
-          justifyContent="space-between"
-        >
-          <Box>
-            <Box marginVertical="xs">
-              <Text fontSize={14}>Typ:</Text>
-              <Text fontSize={16}>{bonsai.type}</Text>
-            </Box>
-            <Box marginVertical="xs">
-              <Text fontSize={14}>Größe:</Text>
-              <Text fontSize={16}>{bonsai.size}</Text>
-            </Box>
+    <Pressable
+      onPress={() =>
+        navigation.navigate("BonsaiViewStack", {
+          screen: "BonsaiView",
+          params: {
+            bonsai: bonsaiData,
+            user: user,
+          },
+        })
+      }
+    >
+      <Box marginBottom="xl">
+        <Box flex={1} flexDirection="row" alignItems="center">
+          <Box alignItems="center">
+            <Image
+              source={{ uri: bonsaiData.image }}
+              style={{
+                width: 100,
+                height: 100,
+                borderRadius: theme.borderRadii.xxl,
+              }}
+            />
           </Box>
-          <Box>
-            <Box marginVertical="xs">
-              <Text fontSize={14}>Form:</Text>
-              <Text fontSize={16}>{bonsai.form}</Text>
+          <Box
+            flex={1}
+            flexDirection="row"
+            marginHorizontal="l"
+            justifyContent="space-between"
+          >
+            <Box>
+              <Box marginVertical="xs">
+                <Text fontSize={14}>Typ:</Text>
+                <Text fontSize={16}>{bonsaiData.type}</Text>
+              </Box>
+              <Box marginVertical="xs">
+                <Text fontSize={14}>Größe:</Text>
+                <Text fontSize={16}>{bonsaiData.size}</Text>
+              </Box>
             </Box>
-            <Box marginVertical="xs">
-              <Text fontSize={14}>Alter:</Text>
-              <Text fontSize={16}> {bonsai.acquisitionDate}</Text>
+            <Box>
+              <Box marginVertical="xs">
+                <Text fontSize={14}>Form:</Text>
+                <Text fontSize={16}>{bonsaiData.form}</Text>
+              </Box>
+              <Box marginVertical="xs">
+                <Text fontSize={14}>Alter:</Text>
+                <Text fontSize={16}>
+                  {moment(bonsaiData.acquisitionDate).format("D MMM. YY")}
+                </Text>
+              </Box>
             </Box>
           </Box>
         </Box>
       </Box>
-    </Box>
+    </Pressable>
   );
 };
 export default MyBonsais;

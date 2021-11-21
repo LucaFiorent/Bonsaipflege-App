@@ -6,7 +6,7 @@ import Animated, {
 } from "react-native-reanimated";
 import React, { useMemo } from "react";
 import { useTheme } from "@shopify/restyle";
-import { Theme } from "../../theme/theme";
+import { Theme } from "../../../theme/theme";
 
 const Backdrop = ({ animatedIndex, style }: BottomSheetBackdropProps) => {
   const theme = useTheme<Theme>();

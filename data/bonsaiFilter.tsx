@@ -5,4 +5,6 @@ export const filterData = [
   "Imperial",
   "Shonin",
   "Mame",
+  "Liguster",
+  "Benjamin",
 ];
