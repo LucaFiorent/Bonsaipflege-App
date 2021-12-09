@@ -5,6 +5,7 @@ import { TextInput } from "react-native";
 import { useTheme } from "@shopify/restyle";
 import { Theme } from "../../theme/theme";
 import Box from "./Box";
+import { SimpleLineIcons } from "@expo/vector-icons";
 
 interface InputP {
   label: string;
@@ -13,6 +14,7 @@ interface InputP {
   onChange: Dispatch<SetStateAction<string>>;
   color?: string;
   inputMessage?: string;
+  type?: string;
 }
 
 const Input: FC<InputP> = ({
@@ -22,6 +24,7 @@ const Input: FC<InputP> = ({
   onChange,
   color,
   inputMessage,
+  type,
 }) => {
   const theme = useTheme<Theme>();
   return (
@@ -47,11 +50,18 @@ const Input: FC<InputP> = ({
           borderBottomWidth: 1,
         }}
       />
-      <Box>
-        <Text variant="inputTitle" style={color ? { color: color } : null}>
-          {inputMessage}
-        </Text>
-      </Box>
+      {inputMessage ? (
+        <Box marginTop="xs" flexDirection="row">
+          <SimpleLineIcons name="exclamation" size={18} color={color} />
+          <Text
+            variant="inputTitle"
+            style={color ? { color: color } : null}
+            marginLeft="s"
+          >
+            {inputMessage}
+          </Text>
+        </Box>
+      ) : null}
     </Box>
   );
 };

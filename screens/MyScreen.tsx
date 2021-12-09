@@ -1,57 +1,66 @@
 import * as React from "react";
-import { SafeAreaView, ScrollView, Pressable, FlatList } from "react-native";
-import Box from "../components/Common/Box";
+import { FlatList, SafeAreaView } from "react-native";
 import theme from "../theme/theme";
 import ProfileInfos from "../components/MyScreen/Profile/ProfileInfos";
-import { SimpleLineIcons } from "@expo/vector-icons";
 import NextStepButton from "../components/Common/NextStepButton";
 import { MyScreenProps } from "../sections/MySection";
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import { userBonsaisStore, userStore } from "../dataStores/accountStore";
-import Feed from "../components/Home/Community/Feed";
-import useStore from "zustand";
-import db from "../firebase/firebaseConfig";
 import MyBonsais from "../components/Home/Community/MyBonsais";
 
 const MyScreen: FC<MyScreenProps> = ({ navigation }) => {
   const userData = userStore();
-  console.log();
 
   const { myBonsais } = userBonsaisStore();
 
   return (
     <>
+      {}
       <NextStepButton
         onPress={() => {
           navigation.navigate("AddBonsai");
         }}
         primary={theme.colors.primarySalmonColor}
-        title=""
+        title="Neuer Bonsai"
         icon="plus"
         index={1}
       />
-      <Box paddingHorizontal="m" backgroundColor={"mainBackground"}>
-        <SafeAreaView>
-          <ScrollView>
-            <ProfileInfos bonsais={myBonsais.length} />
-          </ScrollView>
-        </SafeAreaView>
-        <FlatList
-          contentContainerStyle={{
-            paddingTop: theme.spacing.m,
-            paddingBottom: theme.spacing.l,
-          }}
-          data={myBonsais}
-          renderItem={({ item }) => (
-            <MyBonsais
-              bonsaiData={item}
-              navigation={navigation}
-              user={userData}
-            />
-          )}
-          keyExtractor={(item) => item.id}
+      <SafeAreaView
+        style={{
+          flex: 1,
+          marginHorizontal: theme.spacing.m,
+        }}
+      >
+        <ProfileInfos
+          navigation={navigation}
+          user={userData}
+          bonsais={myBonsais.length}
         />
-      </Box>
+        {myBonsais && (
+          <FlatList
+            contentContainerStyle={{
+              paddingTop: theme.spacing.m,
+              paddingBottom: theme.spacing.xxl,
+            }}
+            // removeClippedSubviews={true}
+            // initialNumToRender={5}
+            // maxToRenderPerBatch={5}
+            // updateCellsBatchingPeriod={100}
+            // windowSize={20}
+            data={myBonsais}
+            renderItem={(bonsai) => {
+              return (
+                <MyBonsais
+                  bonsaiData={bonsai.item}
+                  navigation={navigation}
+                  user={userData}
+                />
+              );
+            }}
+            keyExtractor={(item) => item.id}
+          />
+        )}
+      </SafeAreaView>
     </>
   );
 };

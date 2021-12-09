@@ -39,21 +39,21 @@ const UpdateBonsai: FC<UpdateBonsaiProps> = ({ navigation, route }) => {
         : await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (status !== "granted") {
-      alert(
-        "Sorry, we need " + (type === "camera")
-          ? "camera"
-          : "Media Library" + " roll permissions to make this work!"
-      );
+      if (type === "camera") alert("Sorry, we need camera");
+      if (type === "library")
+        alert("Media Library roll permissions to make this work!");
     }
 
     let pickerResult =
       type === "camera"
         ? await ImagePicker.launchCameraAsync({
             allowsEditing: true,
-            aspect: [16, 9],
-            quality: 1,
+            quality: 0.5,
           })
-        : await ImagePicker.launchImageLibraryAsync();
+        : await ImagePicker.launchImageLibraryAsync({
+            allowsEditing: true,
+            quality: 0.5,
+          });
 
     if (!pickerResult.cancelled) {
       setImage(pickerResult.uri);

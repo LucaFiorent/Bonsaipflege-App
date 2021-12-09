@@ -1,14 +1,6 @@
 //react
 import * as React from "react";
-import {
-  FC,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Alert, Image, Platform, Pressable, ScrollView } from "react-native";
 //expo
@@ -49,7 +41,6 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
   const userData = userStore();
 
   // const formData = forms;
-
   const [modalOptions, setModalOptions] = useState<string[]>([]);
   const [currentlyEditing, setCurrentlyEditing] = useState<string>();
 
@@ -165,17 +156,17 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
     acquisitionDate: acquisitionDate,
     publicBonsai: publicBonsai,
     userId: userData.id,
+    tasks: [],
   };
 
   // OnPress Event that aktivate the function that send the Data and redirect
-  const addNewBonsai = async () => {
-    let imageResult = await image;
-
+  const addNewBonsai = () => {
+    let imageResult = image;
     if (imageResult) {
       addPicture(image, bonsai.name)
         .then(() => {
-          Alert.alert("Success");
           navigation.navigate("MyScreen");
+          Alert.alert("Sie haben ein Bonsai erfolgreich hinzugefügt.");
         })
         .catch((err) => {
           Alert.alert(err);

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import db, { firebaseConfig } from "./firebase/firebaseConfig";
+import React, { useEffect } from "react";
+import db from "./firebase/firebaseConfig";
 import firebase from "firebase";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
@@ -14,22 +14,25 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 //expo
-import { SimpleLineIcons } from "@expo/vector-icons";
 import Box from "./components/Common/Box";
 import Text from "./components/Common/Text";
 import { useFonts } from "expo-font";
 import AppLoading from "expo-app-loading";
-import { Button, Image, StatusBar } from "react-native";
+import { Image, StatusBar } from "react-native";
 //components
 import LoginScreen from "./components/Auth/LoginScreen";
 import SignUp from "./components/Auth/SignUp";
 //types
 // stores
 import { authStore } from "./dataStores/userManagmentStore";
-import { userBonsaisStore, userStore } from "./dataStores/accountStore";
+import { userStore } from "./dataStores/accountStore";
 
 import HomeSection from "./sections/HomeSection";
 import MySection from "./sections/MySection";
+import { Home2, Profile2User } from "iconsax-react-native";
+
+import { useNavigationContainerRef } from "@react-navigation/native";
+import CommunitySection from "./sections/CommunitySection";
 
 export default function App() {
   const appTheme = theme;
@@ -77,39 +80,42 @@ export default function App() {
           animated={true}
           backgroundColor={theme.colors.primaryGreenColor}
         />
-
-        <Box alignItems="center" backgroundColor="primaryGreenColor">
-          <Text
-            marginVertical="m"
-            fontSize={20}
-            fontFamily="HinaMincho-Regular"
-          >
-            BONSAI
-          </Text>
-        </Box>
         <BottomSheetModalProvider>
           <NavigationContainer>
             {user ? (
               <Tab.Navigator
                 initialRouteName="Home"
                 screenOptions={({ route }) => ({
-                  tabBarIcon: ({ color, size }) => {
-                    let iconName;
-
+                  tabBarShowIcon: true,
+                  tabBarIcon: ({ color }) => {
                     if (route.name === "Home") {
-                      iconName = "home";
+                      return <Home2 size={24} color={color} variant="Broken" />;
                     } else if (route.name === "Community") {
-                      iconName = "people";
+                      return (
+                        <Profile2User
+                          size={24}
+                          color={color}
+                          variant="Outline"
+                        />
+                      );
                     } else if (route.name === "Me") {
-                      iconName = "user";
+                      return (
+                        <Box flex={1}>
+                          <Image
+                            source={
+                              userData.avatar
+                                ? { uri: userData.avatar }
+                                : require("./assets/images/programmer.png")
+                            }
+                            style={{
+                              width: 26,
+                              height: 26,
+                              borderRadius: theme.borderRadii.xxl,
+                            }}
+                          />
+                        </Box>
+                      );
                     }
-                    return (
-                      <SimpleLineIcons
-                        name={iconName}
-                        size={22}
-                        color={color}
-                      />
-                    );
                   },
                   tabBarActiveTintColor: theme.colors.text,
                   tabBarInactiveTintColor: theme.palette.greenDark,
@@ -128,7 +134,7 @@ export default function App() {
                 />
                 <Tab.Screen
                   name="Community"
-                  component={CommunityScreen}
+                  component={CommunitySection}
                   options={{ headerShown: false }}
                 />
                 <Tab.Screen

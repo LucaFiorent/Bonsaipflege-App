@@ -2,8 +2,6 @@ import React, { FC } from "react";
 import Box from "./Box";
 import Text from "./Text";
 import { Pressable } from "react-native";
-import { SimpleLineIcons } from "@expo/vector-icons";
-import theme from "../../theme/theme";
 
 interface ButtonProps {
   onPress: () => void;
@@ -13,7 +11,7 @@ interface ButtonProps {
   index?: number;
 }
 
-const NextStepButton: FC<ButtonProps> = ({
+const NextStepButton2: FC<ButtonProps> = ({
   onPress,
   primary,
   title,
@@ -23,13 +21,8 @@ const NextStepButton: FC<ButtonProps> = ({
   return (
     <Box position="absolute" right={15} bottom={20} zIndex={index}>
       <Pressable onPress={onPress}>
-        <Box
-          flexDirection="row"
-          alignItems="center"
-          backgroundColor="mainBackground"
-          borderRadius="xl"
-        >
-          <Text marginLeft="m" marginRight="m" color="text">
+        <Box flexDirection="row" alignItems="center">
+          <Text marginRight="m" color="text">
             {title}
           </Text>
           <Box
@@ -42,11 +35,7 @@ const NextStepButton: FC<ButtonProps> = ({
             width={54}
             height={54}
           >
-            <SimpleLineIcons
-              size={24}
-              name={icon}
-              color={theme.colors.textOnDark}
-            />
+            {icon}
           </Box>
         </Box>
       </Pressable>
@@ -54,4 +43,4 @@ const NextStepButton: FC<ButtonProps> = ({
   );
 };
 
-export default NextStepButton;
+export default NextStepButton2;

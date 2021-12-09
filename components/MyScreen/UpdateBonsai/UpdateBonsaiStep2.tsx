@@ -56,6 +56,7 @@ const AddBonsaiStep2: FC<UpdateBonsaiStep2Props> = ({ route, navigation }) => {
   //previus values
   const image = route.params.image;
   const bonsaiName = route.params.bonsaiName;
+
   //get all Forms from Firestore Database
   useEffect(() => {
     const entityRefForms = db.collection("forms");
@@ -129,6 +130,7 @@ const AddBonsaiStep2: FC<UpdateBonsaiStep2Props> = ({ route, navigation }) => {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => ["30%", "50%"], []);
   const statusBarHeight = Constants.statusBarHeight;
+
   //bottom sheet modal logic
   const handlePresentModalPress = (values: string[], editingInput: string) => {
     setModalOptions(values);
@@ -142,6 +144,7 @@ const AddBonsaiStep2: FC<UpdateBonsaiStep2Props> = ({ route, navigation }) => {
   //set selected forms or sizes
   const [selectedForm, setForm] = useState(updateBonsai.form);
   const [selectedSize, setSize] = useState(updateBonsai.size);
+
   // set form or size logic
   const setOption = (selectedOption: string) => {
     if (currentlyEditing === "Formen") {
@@ -152,6 +155,7 @@ const AddBonsaiStep2: FC<UpdateBonsaiStep2Props> = ({ route, navigation }) => {
     }
     bottomSheetModalRef.current?.dismiss();
   };
+
   const selectedValue =
     currentlyEditing === "Größen" ? selectedSize : selectedForm;
 
@@ -165,6 +169,7 @@ const AddBonsaiStep2: FC<UpdateBonsaiStep2Props> = ({ route, navigation }) => {
     acquisitionDate: acquisitionDate,
     publicBonsai: publicBonsai,
     userId: userData.id,
+    tasks: updateBonsai.tasks,
   };
   // OnPress Event that aktivate the function that send the Data and redirect
   const addNewBonsai = async () => {
@@ -189,9 +194,7 @@ const AddBonsaiStep2: FC<UpdateBonsaiStep2Props> = ({ route, navigation }) => {
     oldImage: string
   ) => {
     var fileRef = firebase.storage().refFromURL(oldImage);
-
     var delPic = fileRef.delete();
-    console.log(delPic);
 
     const response = await fetch(imagePath);
     const blob = await response.blob();
@@ -199,6 +202,7 @@ const AddBonsaiStep2: FC<UpdateBonsaiStep2Props> = ({ route, navigation }) => {
       .storage()
       .ref()
       .child("bonsaiImages/" + imageName + "-" + uuidv4());
+
     const snapshot = await ref.put(blob);
     const imageUrl = await snapshot.ref.getDownloadURL();
 

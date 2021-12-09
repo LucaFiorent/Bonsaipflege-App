@@ -9,6 +9,7 @@ export type AddBonsaiStep2Props = {
   };
   navigation: any;
 };
+
 export type AddBonsaiProps = {
   navigation: any;
 };
@@ -26,6 +27,7 @@ export type UpdateBonsaiStep2Props = {
         size: string;
         type: string;
         userId: string;
+        tasks: Tasks[];
       };
       user: {
         avatar: string;
@@ -41,6 +43,43 @@ export type UpdateBonsaiStep2Props = {
   };
   navigation: any;
 };
+
+type Tasks = {
+  doneTask: string[];
+  taskDate: Date;
+  taskImage: string;
+  taskNote: string;
+};
+
+export type BonsaiViewParams = {
+  route: {
+    params: {
+      bonsai: {
+        acquisitionDate: Date;
+        form: string;
+        id: string;
+        image: string;
+        name: string;
+        publicBonsai: boolean;
+        size: string;
+        type: string;
+        userId: string;
+        task: Tasks[];
+      };
+      user: {
+        avatar: string;
+        bonsais: [];
+        id: string;
+        nickname: string;
+        subscribed: [];
+        subscribers: [];
+      };
+      pagePath?: string;
+    };
+  };
+  navigation: any;
+};
+
 export type UpdateBonsaiProps = {
   navigation: any;
   route: any;

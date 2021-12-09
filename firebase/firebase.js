@@ -16,7 +16,6 @@ export async function registration(email, password, nickname) {
       id: currentUser.uid,
       nickname: nickname,
       avatar: "",
-      bonsais: [],
       subscribed: [],
       subscribers: [],
     });

@@ -15,6 +15,8 @@ export const palette = {
   grey: "#9C9C9C",
   black: "#505059",
   white: "#fff",
+  braun: "#8D7D74",
+  blue: "#6DABED",
 };
 
 const theme = createTheme({
@@ -51,6 +53,9 @@ const theme = createTheme({
     success: palette.greenPrimary,
 
     error: palette.orangeWarning,
+
+    watering: palette.blue,
+    fertilizer: palette.braun,
   },
   spacing: {
     null: 0,
@@ -62,6 +67,7 @@ const theme = createTheme({
     l: 24,
     xl: 40,
     xxl: 54,
+    x3l: 80,
   },
   borderRadii: {
     xs: 4,
@@ -108,7 +114,7 @@ const theme = createTheme({
       fontSize: 12,
     },
     description: {
-      fontFamily: "Bebas-Neue",
+      fontFamily: "OpenSans-Regular",
       fontSize: 24,
     },
     placeholder: {
@@ -134,8 +140,8 @@ const theme = createTheme({
     },
     title: {
       fontSize: 18,
-      textTransform: "capitalize",
-      fontWeight: "bold",
+      fontFamily: "OpenSans-Bold",
+      textTransform: "uppercase",
     },
   },
 });

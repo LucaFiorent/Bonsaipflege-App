@@ -7,16 +7,17 @@ interface ButtonProps {
   onPress: () => void;
   title: string;
   primary?: string;
+  color?: string;
 }
 
-const Button: FC<ButtonProps> = ({ onPress, title, primary }) => {
+const Button: FC<ButtonProps> = ({ onPress, title, primary, color }) => {
   return (
     <Pressable onPress={onPress}>
       <Box
         alignItems="center"
         paddingVertical="s"
         paddingHorizontal="xl"
-        backgroundColor={primary ? "primarySalmonColor" : "primaryGreenColor"}
+        backgroundColor={primary ? "primarySalmonColor" : `${color}`}
         borderRadius="xl"
       >
         <Text variant="button" style={{ color: primary ? "#fff" : "#385168" }}>

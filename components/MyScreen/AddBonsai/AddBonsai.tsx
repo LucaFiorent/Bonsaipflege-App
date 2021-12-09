@@ -16,6 +16,7 @@ import * as ImagePicker from "expo-image-picker";
 //stores
 import { AddBonsaiProps } from "../../../types/bottomSheetTypes";
 import ErrorMessage from "../../Common/ErrorMessage";
+import Modal from "../../Common/Modal";
 
 const AddBonsai: FC<AddBonsaiProps> = ({ navigation }) => {
   const theme = useTheme<Theme>();
@@ -33,21 +34,21 @@ const AddBonsai: FC<AddBonsaiProps> = ({ navigation }) => {
         : await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (status !== "granted") {
-      alert(
-        "Sorry, we need " + (type === "camera")
-          ? "camera"
-          : "Media Library" + " roll permissions to make this work!"
-      );
+      if (type === "camera") alert("Sorry, we need camera");
+      if (type === "library")
+        alert("Media Library roll permissions to make this work!");
     }
 
     let pickerResult =
       type === "camera"
         ? await ImagePicker.launchCameraAsync({
             allowsEditing: true,
-            aspect: [16, 9],
-            quality: 1,
+            quality: 0.5,
           })
-        : await ImagePicker.launchImageLibraryAsync();
+        : await ImagePicker.launchImageLibraryAsync({
+            allowsEditing: true,
+            quality: 0.5,
+          });
 
     if (!pickerResult.cancelled) {
       setImage(pickerResult.uri);
@@ -76,10 +77,11 @@ const AddBonsai: FC<AddBonsaiProps> = ({ navigation }) => {
         icon="arrow-right-circle"
       />
       {errMss && (
-        <ErrorMessage
-          visible={modalVisible}
+        <Modal
           setModalVisible={setModalVisible}
-          title={"Etwas ist Schiefgelaufen!"}
+          visible={modalVisible}
+          title="Etwas ist Schiefgelaufen!"
+          type="error"
           message={errMss}
           primary={theme.colors.error}
         />
@@ -112,7 +114,8 @@ const AddBonsai: FC<AddBonsaiProps> = ({ navigation }) => {
               placeholder="Füge ein Spitznamen für dein Bonsai hinzu"
               value={bonsaiName}
               onChange={(bonsaiName) => setbonsaiName(bonsaiName)}
-              color={errMss ? theme.colors.error : null}
+              color={errMss ? theme.colors.error : ""}
+              type={errMss ? "error" : "success"}
               inputMessage={errMss ? "Spitzname hinzufügen" : ""}
             />
           </Box>

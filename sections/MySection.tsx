@@ -11,9 +11,12 @@ import { userData } from "../dataStores/accountStore";
 import MyScreen from "../screens/MyScreen";
 import AddBonsai from "../components/MyScreen/AddBonsai/AddBonsai";
 import AddBonsaiStep2 from "../components/MyScreen/AddBonsai/AddBonsaiStep2";
-import BonsaiView from "../components/Home/Community/BonsaiView";
+import BonsaiView from "../components/BonsaiView/BonsaiView";
 import UpdateBonsai from "../components/MyScreen/UpdateBonsai/UpdateBonsai";
 import UpdateBonsaiStep2 from "../components/MyScreen/UpdateBonsai/UpdateBonsaiStep2";
+import WorkItemView from "../components/BonsaiView/Arbeiten/AddWorks/xxxWorkItemView";
+import { ProfileCircle } from "iconsax-react-native";
+import EditProfilePage from "../components/MyScreen/EditProfile/EditProfilePage";
 
 type RootStackParams = {
   ProfileStack: undefined;
@@ -23,6 +26,7 @@ type RootStackParams = {
 // navigation and route props type of ProfileStack
 type MainStackProfileParams = {
   MyScreen: { userData: userData };
+  EditProfile: { userData: userData };
   AddBonsai: undefined;
   AddBonsaiStep2: undefined;
 };
@@ -36,6 +40,16 @@ type MyScreenNavigationProp = StackNavigationProp<
 export type MyScreenProps = {
   route: MyScreenRouteProp;
   navigation: MyScreenNavigationProp;
+};
+type EditProfileRouteProp = RouteProp<RootStackParams, "ProfileStack">;
+type EditProfileNavigationProp = StackNavigationProp<
+  MainStackProfileParams,
+  "EditProfile"
+>;
+
+export type EditProfileProps = {
+  route: EditProfileRouteProp;
+  navigation: EditProfileNavigationProp;
 };
 
 type AddBonsaiRouteProp = RouteProp<MainStackProfileParams, "AddBonsai">;
@@ -124,12 +138,21 @@ const ProfileStack: FC = () => {
         options={{ headerBackTitleVisible: false, headerShown: false }}
       />
       <MainStack.Screen
+        name="EditProfile"
+        component={EditProfilePage}
+        options={{
+          headerBackTitleVisible: false,
+          headerShown: true,
+          headerTitle: "Profil Bearbeiten",
+        }}
+      />
+      <MainStack.Screen
         name="AddBonsai"
         component={AddBonsai}
         options={{
           headerBackTitleVisible: false,
           headerShown: true,
-          headerTitle: "Add new Bonsai",
+          headerTitle: "Bonsai hinzufügen",
         }}
       />
       <MainStack.Screen
@@ -138,7 +161,7 @@ const ProfileStack: FC = () => {
         options={{
           headerBackTitleVisible: false,
           headerShown: true,
-          headerTitle: "Add new Bonsai",
+          headerTitle: "Bonsai hinzufügen",
         }}
       />
     </MainStack.Navigator>
@@ -164,7 +187,7 @@ const BonsaiViewStack: FC = () => {
       <MainStack.Screen
         name="BonsaiView"
         component={BonsaiView}
-        options={{ headerBackTitleVisible: false, headerShown: false }}
+        options={{ headerBackTitleVisible: false, headerShown: true }}
       />
       <MainStack.Screen
         name="UpdateBonsai"
