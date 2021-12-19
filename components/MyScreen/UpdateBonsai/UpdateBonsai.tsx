@@ -15,7 +15,12 @@ import NextStepButton from "../../Common/NextStepButton";
 import * as ImagePicker from "expo-image-picker";
 //stores
 import { UpdateBonsaiProps } from "../../../types/bottomSheetTypes";
-import ErrorMessage from "../../Common/ErrorMessage";
+import ModalMessage from "../../Common/ModalMessage";
+import { ArrowCircleRight, Camera, Folder2 } from "iconsax-react-native";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 const UpdateBonsai: FC<UpdateBonsaiProps> = ({ navigation, route }) => {
   const updateBonsai = route.params.bonsai;
@@ -80,13 +85,20 @@ const UpdateBonsai: FC<UpdateBonsaiProps> = ({ navigation, route }) => {
         onPress={NavigateToNextPage}
         primary={theme.colors.primarySalmonColor}
         title="nächster Schritt"
-        icon="arrow-right-circle"
+        icon={
+          <ArrowCircleRight
+            size={wp(6.5)}
+            color={theme.colors.textOnDark}
+            variant="Broken"
+          />
+        }
       />
       {errMss && (
-        <ErrorMessage
+        <ModalMessage
           visible={modalVisible}
           setModalVisible={setModalVisible}
           title={"Etwas ist Schiefgelaufen!"}
+          type="error"
           message={errMss}
           primary={theme.colors.error}
         />
@@ -94,10 +106,10 @@ const UpdateBonsai: FC<UpdateBonsaiProps> = ({ navigation, route }) => {
       <SafeAreaView>
         <ScrollView>
           <Box marginHorizontal="m">
-            <Box marginHorizontal="xxl" marginTop="xl">
+            <Box marginTop="xl">
               <Image
                 source={{ uri: image }}
-                style={{ width: "100%", height: 250, borderRadius: 20 }}
+                style={{ width: "100%", height: hp(26), borderRadius: 20 }}
               />
             </Box>
             <Box flexDirection="row" justifyContent="center">
@@ -105,13 +117,25 @@ const UpdateBonsai: FC<UpdateBonsaiProps> = ({ navigation, route }) => {
                 onPress={() => openImagePicker("camera")}
                 title="Kamera"
                 primary={theme.colors.primarySalmonColor}
-                icon="camera"
+                icon={
+                  <Camera
+                    size={wp(5.5)}
+                    color={theme.colors.textOnDark}
+                    variant="Broken"
+                  />
+                }
               />
               <ButtonWithIcon
                 onPress={() => openImagePicker("library")}
                 title="Durchsuchen"
                 primary={theme.colors.primarySalmonColor}
-                icon="folder-alt"
+                icon={
+                  <Folder2
+                    size={wp(5.5)}
+                    color={theme.colors.textOnDark}
+                    variant="Broken"
+                  />
+                }
               />
             </Box>
             <Input

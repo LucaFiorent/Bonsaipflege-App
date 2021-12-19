@@ -2,7 +2,6 @@
 import React, { FC, useState } from "react";
 import { Pressable } from "react-native";
 //expo
-import { SimpleLineIcons } from "@expo/vector-icons";
 //restyle/shopyfi theme
 import theme from "../../../theme/theme";
 //types
@@ -10,6 +9,8 @@ import { BottomSheetButtonProps } from "../../../types/bottomSheetTypes";
 //common components
 import Box from "../../Common/Box";
 import Text from "../../Common/Text";
+import { InfoCircle, TickCircle } from "iconsax-react-native";
+import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 const BottomSheetButton: FC<BottomSheetButtonProps> = ({
   title,
@@ -36,14 +37,17 @@ const BottomSheetButton: FC<BottomSheetButtonProps> = ({
         <Box flex={0}>
           <Pressable onPress={() => setInfoBox(!infoBox)}>
             <Box paddingLeft="l" paddingRight="m" paddingVertical="m">
-              <SimpleLineIcons
-                name="info"
-                size={20}
+              <InfoCircle
+                style={{
+                  transform: [{ rotateX: "180deg" }],
+                }}
+                size={wp(5.3)}
                 color={
                   selectedValue === title
                     ? theme.colors.textOnDark
                     : theme.colors.descriptionText
                 }
+                variant="Broken"
               />
             </Box>
           </Pressable>
@@ -71,10 +75,10 @@ const BottomSheetButton: FC<BottomSheetButtonProps> = ({
               </Box>
               {selectedValue === title ? (
                 <Box>
-                  <SimpleLineIcons
-                    name="check"
-                    size={20}
+                  <TickCircle
+                    size={wp(5.3)}
                     color={theme.colors.textOnDark}
+                    variant="Broken"
                   />
                 </Box>
               ) : null}

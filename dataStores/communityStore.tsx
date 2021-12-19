@@ -19,6 +19,8 @@ type communityBonsais = {
   publicBonsai: boolean;
   userId: string;
   tasks: Task[];
+  createdOn: Date;
+  updatedOn?: Date;
 };
 
 type Task = {

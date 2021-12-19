@@ -41,6 +41,7 @@ export type WorkItemProps = {
     taskNote: string;
   };
   bonsai: any;
+  user?: any;
 };
 
 export type WorksViewProps = {

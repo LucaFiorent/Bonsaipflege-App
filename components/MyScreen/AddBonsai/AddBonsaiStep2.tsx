@@ -30,11 +30,12 @@ import { AddBonsaiStep2Props } from "../../../types/bottomSheetTypes";
 import { userStore } from "../../../dataStores/accountStore";
 
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { SimpleLineIcons } from "@expo/vector-icons";
 import moment from "moment";
 import firebase from "firebase";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
+import { CalendarAdd, CalendarTick, ClipboardTick } from "iconsax-react-native";
+import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
   const theme = useTheme<Theme>();
@@ -157,6 +158,8 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
     publicBonsai: publicBonsai,
     userId: userData.id,
     tasks: [],
+    createdOn: "",
+    updatedOn: "",
   };
 
   // OnPress Event that aktivate the function that send the Data and redirect
@@ -186,7 +189,12 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
     const imageUrl = await snapshot.ref.getDownloadURL();
     db.collection("bonsais")
       .doc()
-      .set({ ...bonsai, image: imageUrl });
+      .set({
+        ...bonsai,
+        image: imageUrl,
+        createdOn: firebase.firestore.FieldValue.serverTimestamp(),
+        updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
+      });
   };
 
   moment.locale("de");
@@ -198,7 +206,13 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
         onPress={addNewBonsai}
         primary={theme.colors.primarySalmonColor}
         title="Bonsai Speichern"
-        icon="arrow-right-circle"
+        icon={
+          <ClipboardTick
+            size={wp(6.5)}
+            color={theme.colors.textOnDark}
+            variant="Broken"
+          />
+        }
         index={0}
       />
       <Box marginHorizontal="m" zIndex={-1}>
@@ -216,7 +230,7 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
                     ? { uri: image }
                     : require("../../../assets/images/bonsai.jpg")
                 }
-                style={{ width: 100, height: 100, borderRadius: 50 }}
+                style={{ width: wp(22), height: wp(22), borderRadius: 50 }}
               />
               <Text marginLeft="m" variant="title" color="headline">
                 {bonsaiName}
@@ -308,7 +322,7 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
                   <Box flex={1} borderBottomWidth={1} borderColor="borderInput">
                     <Text
                       style={{
-                        fontSize: 16,
+                        fontSize: wp(3.5),
                         color: !date
                           ? theme.colors.placeholderColor
                           : theme.colors.text,
@@ -324,7 +338,10 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
                   </Box>
                 </Box>
                 <Box
-                  padding="m"
+                  width={wp(12)}
+                  height={wp(12)}
+                  alignItems="center"
+                  justifyContent="center"
                   backgroundColor={
                     date ? "primaryGreenColor" : "primarySalmonColor"
                   }
@@ -332,32 +349,19 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
                   position="absolute"
                   right={0}
                 >
-                  {date && (
-                    <Box
-                      position="absolute"
-                      flex={1}
-                      alignItems="center"
-                      justifyContent="center"
-                      right={11}
-                      bottom={11}
-                      backgroundColor="textOnDark"
-                      borderRadius="xl"
-                      zIndex={1}
-                      style={{ padding: 2 }}
-                    >
-                      <SimpleLineIcons
-                        size={11}
-                        name="check"
-                        color={theme.colors.primaryGreenColor}
-                      />
-                    </Box>
+                  {date ? (
+                    <CalendarTick
+                      size={wp(6.5)}
+                      color={theme.colors.textOnDark}
+                      variant="Broken"
+                    />
+                  ) : (
+                    <CalendarAdd
+                      size={wp(6.5)}
+                      color={theme.colors.textOnDark}
+                      variant="Broken"
+                    />
                   )}
-
-                  <SimpleLineIcons
-                    size={24}
-                    name="calendar"
-                    color={theme.colors.textOnDark}
-                  />
                 </Box>
               </Box>
             </Pressable>
@@ -384,7 +388,7 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
           handleComponent={() => (
             <Box alignItems="center" padding="s">
               <Box
-                width={42}
+                width={wp(14)}
                 height={4}
                 backgroundColor="primarySalmonColor"
                 borderRadius="m"

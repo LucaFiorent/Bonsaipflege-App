@@ -10,10 +10,9 @@ import Text from "../../Common/Text";
 
 //stores
 import { userStore } from "../../../dataStores/accountStore";
-import { SimpleLineIcons } from "@expo/vector-icons";
 
 import "react-native-gesture-handler";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import {
   Flash,
   FlashSlash,
@@ -23,7 +22,7 @@ import {
 } from "iconsax-react-native";
 import db from "../../../firebase/firebaseConfig";
 import { communityDataStore } from "../../../dataStores/communityStore";
-import { NavigationContainer } from "@react-navigation/native";
+import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 export type ProfileInfosProps = {
   navigation?: any;
@@ -94,56 +93,60 @@ const ProfileInfos: FC<ProfileInfosProps> = ({ navigation, user, bonsais }) => {
   const selUser = user.id === userData.id ? user : selCommunityUser;
 
   return (
-    <Box marginBottom="l">
+    <Box marginTop="m" marginBottom="ms">
       {user.id === userData.id ? (
-        <Box bottom={-40} flexDirection="row" justifyContent="space-between">
+        <Box
+          style={{ marginBottom: wp(-9.5) }}
+          flexDirection="row"
+          justifyContent="space-between"
+        >
           <Pressable onPress={() => loggingOut()}>
-            <Box justifyContent="center" alignItems="center" width={60}>
-              <Logout size={34} color={theme.colors.iconInactive} />
-              <Text fontSize={10} color="iconInactive">
+            <Box justifyContent="center" alignItems="center" width={wp(12)}>
+              <Logout size={wp(7)} color={theme.colors.iconInactive} />
+              <Text fontSize={wp(2)} color="iconInactive">
                 Logout
               </Text>
             </Box>
           </Pressable>
           <Pressable onPress={() => setLightOn(!lightOn)}>
-            <Box alignItems="center" width={60}>
-              <Box
-                borderColor={!lightOn ? "greyBackground" : "primarySalmonColor"}
-                borderWidth={2}
-                borderRadius="xl"
-              >
+            <Box alignItems="center" width={wp(12)}>
+              <Box>
                 {lightOn ? (
-                  <Flash size={30} color={theme.colors.primarySalmonColor} />
+                  <Flash size={wp(7)} color={theme.colors.primarySalmonColor} />
                 ) : (
-                  <FlashSlash size={30} color={theme.colors.iconInactive} />
+                  <FlashSlash size={wp(7)} color={theme.colors.iconInactive} />
                 )}
               </Box>
-              <Text fontSize={10} color="iconInactive">
+              <Text fontSize={wp(2)} color="iconInactive">
                 {!lightOn ? "Dark Mode" : "Light Mode"}
               </Text>
             </Box>
           </Pressable>
         </Box>
       ) : (
-        <Box alignSelf="flex-end" bottom={-40} width={60}>
+        <Box
+          alignSelf="flex-end"
+          style={{ marginBottom: wp(-9.5) }}
+          width={wp(14)}
+        >
           <Pressable onPress={() => followUserHandler(user)}>
             {!selCommunityUser.subscribers.includes(userData.id) ? (
               <Box alignItems="center">
                 <ProfileAdd
-                  size={34}
+                  size={wp(7)}
                   color={theme.colors.primarySalmonColor}
                   variant="Broken"
                 />
-                <Text fontSize={10}>Folgen</Text>
+                <Text fontSize={wp(2)}>Folgen</Text>
               </Box>
             ) : (
               <Box alignItems="center">
                 <UserTick
-                  size={34}
+                  size={wp(7)}
                   color={theme.colors.primarySalmonColor}
                   variant="Broken"
                 />
-                <Text fontSize={10}>Nicht Folgen</Text>
+                <Text fontSize={wp(2)}>Nicht Folgen</Text>
               </Box>
             )}
           </Pressable>
@@ -160,8 +163,8 @@ const ProfileInfos: FC<ProfileInfosProps> = ({ navigation, user, bonsais }) => {
                   : { uri: selUser.avatar }
               }
               style={{
-                width: 100,
-                height: 100,
+                width: wp(22),
+                height: wp(22),
                 borderRadius: theme.borderRadii.xxl,
               }}
             />
@@ -173,7 +176,7 @@ const ProfileInfos: FC<ProfileInfosProps> = ({ navigation, user, bonsais }) => {
           </Box>
         </Pressable>
       </Box>
-      <Box flexDirection="row" justifyContent="space-around" marginVertical="m">
+      <Box flexDirection="row" justifyContent="space-around" marginBottom="m">
         <Box alignItems="center">
           <Text color="primaryGreenColor">Bäume</Text>
           <Text color="primaryGreenColor">{bonsais}</Text>

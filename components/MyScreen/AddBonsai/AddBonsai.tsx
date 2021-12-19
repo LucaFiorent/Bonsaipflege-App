@@ -3,7 +3,7 @@ import { useTheme } from "@shopify/restyle";
 import { Theme } from "../../../theme/theme";
 //react
 import * as React from "react";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { Image, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 //common components
@@ -15,8 +15,12 @@ import NextStepButton from "../../Common/NextStepButton";
 import * as ImagePicker from "expo-image-picker";
 //stores
 import { AddBonsaiProps } from "../../../types/bottomSheetTypes";
-import ErrorMessage from "../../Common/ErrorMessage";
-import Modal from "../../Common/Modal";
+import ModalMessage from "../../Common/ModalMessage";
+import { ArrowCircleRight, Camera, Folder2 } from "iconsax-react-native";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 const AddBonsai: FC<AddBonsaiProps> = ({ navigation }) => {
   const theme = useTheme<Theme>();
@@ -74,10 +78,17 @@ const AddBonsai: FC<AddBonsaiProps> = ({ navigation }) => {
         onPress={NavigateToNextPage}
         primary={theme.colors.primarySalmonColor}
         title="nächster Schritt"
-        icon="arrow-right-circle"
+        index={1}
+        icon={
+          <ArrowCircleRight
+            size={wp(6.5)}
+            color={theme.colors.textOnDark}
+            variant="Broken"
+          />
+        }
       />
       {errMss && (
-        <Modal
+        <ModalMessage
           setModalVisible={setModalVisible}
           visible={modalVisible}
           title="Etwas ist Schiefgelaufen!"
@@ -89,10 +100,10 @@ const AddBonsai: FC<AddBonsaiProps> = ({ navigation }) => {
       <SafeAreaView>
         <ScrollView>
           <Box marginHorizontal="m">
-            <Box marginHorizontal="xxl" marginTop="xl">
+            <Box marginTop="xl">
               <Image
                 source={{ uri: image }}
-                style={{ width: "100%", height: 250, borderRadius: 20 }}
+                style={{ width: "100%", height: hp(26), borderRadius: 20 }}
               />
             </Box>
             <Box flexDirection="row" justifyContent="center">
@@ -100,13 +111,25 @@ const AddBonsai: FC<AddBonsaiProps> = ({ navigation }) => {
                 onPress={() => openImagePicker("camera")}
                 title="Kamera"
                 primary={theme.colors.primarySalmonColor}
-                icon="camera"
+                icon={
+                  <Camera
+                    size={wp(5.5)}
+                    color={theme.colors.textOnDark}
+                    variant="Broken"
+                  />
+                }
               />
               <ButtonWithIcon
                 onPress={() => openImagePicker("library")}
                 title="Durchsuchen"
                 primary={theme.colors.primarySalmonColor}
-                icon="folder-alt"
+                icon={
+                  <Folder2
+                    size={wp(5.5)}
+                    color={theme.colors.textOnDark}
+                    variant="Broken"
+                  />
+                }
               />
             </Box>
             <Input

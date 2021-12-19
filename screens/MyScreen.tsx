@@ -6,7 +6,8 @@ import NextStepButton from "../components/Common/NextStepButton";
 import { MyScreenProps } from "../sections/MySection";
 import { FC } from "react";
 import { userBonsaisStore, userStore } from "../dataStores/accountStore";
-import MyBonsais from "../components/Home/Community/MyBonsais";
+import MyBonsais from "../components/Common/MyBonsais";
+import { AddCircle } from "iconsax-react-native";
 
 const MyScreen: FC<MyScreenProps> = ({ navigation }) => {
   const userData = userStore();
@@ -15,14 +16,19 @@ const MyScreen: FC<MyScreenProps> = ({ navigation }) => {
 
   return (
     <>
-      {}
       <NextStepButton
         onPress={() => {
           navigation.navigate("AddBonsai");
         }}
         primary={theme.colors.primarySalmonColor}
         title="Neuer Bonsai"
-        icon="plus"
+        icon={
+          <AddCircle
+            size={26}
+            color={theme.colors.textOnDark}
+            variant="Broken"
+          />
+        }
         index={1}
       />
       <SafeAreaView

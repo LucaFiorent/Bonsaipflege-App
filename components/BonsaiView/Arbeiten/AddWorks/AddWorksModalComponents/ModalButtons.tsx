@@ -27,7 +27,7 @@ const ModalButtons: FC<ModalButtonsProps> = ({
             backgroundColor="primarySalmonColor"
             borderRadius="xl"
           >
-            <Text variant="button" fontSize={16} color="textOnDark">
+            <Text variant="button" color="textOnDark">
               Hinzufügen
             </Text>
           </Box>
@@ -41,7 +41,7 @@ const ModalButtons: FC<ModalButtonsProps> = ({
             backgroundColor="greyBackground"
             borderRadius="xl"
           >
-            <Text variant="button" fontSize={16} color="textHighContrast">
+            <Text variant="button" color="textHighContrast">
               Abbrechen
             </Text>
           </Box>

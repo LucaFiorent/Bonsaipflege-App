@@ -3,6 +3,10 @@ import Box from "../../../../Common/Box";
 import Text from "../../../../Common/Text";
 import { Pressable } from "react-native";
 import { WorkElementProps } from "../../../../../types/WorkViewTypes";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 const WorkElement: FC<WorkElementProps> = ({
   item,
@@ -13,18 +17,18 @@ const WorkElement: FC<WorkElementProps> = ({
     <>
       <Pressable onPress={() => setSelectedWorks(item)}>
         <Box
-          minWidth="30%"
+          minWidth={wp(25)}
           flexDirection="row"
           alignItems="center"
           marginBottom="ms"
         >
           <Box
-            height={20}
-            width={20}
+            height={wp(5)}
+            width={wp(5)}
             borderWidth={2}
             borderRadius="xxl"
             marginRight="s"
-            style={{ padding: 2, borderColor: "#ddd" }}
+            style={{ padding: wp(0.56), borderColor: "#ddd" }}
           >
             <Box
               alignSelf="center"
@@ -33,12 +37,12 @@ const WorkElement: FC<WorkElementProps> = ({
                   ? "primaryGreenColor"
                   : "greyBackground"
               }
-              width={12}
-              height={12}
+              width={wp(3)}
+              height={wp(3)}
               borderRadius="xxl"
             />
           </Box>
-          <Text variant="body" fontSize={13}>
+          <Text variant="body" fontSize={wp(3)}>
             {item}
           </Text>
         </Box>

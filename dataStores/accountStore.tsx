@@ -19,6 +19,8 @@ type Bonsai = {
   publicBonsai: boolean;
   userId: string;
   tasks: Task[];
+  createdOn: Date;
+  updatedOn?: Date;
 };
 
 export interface userBonsais {

@@ -1,13 +1,14 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import Box from "./Box";
 import Text from "./Text";
-import { Alert, Pressable } from "react-native";
-import { SimpleLineIcons } from "@expo/vector-icons";
+import { Pressable } from "react-native";
 import theme from "../../theme/theme";
 import Modal from "react-native-modal";
-import BonsaiView from "../BonsaiView/BonsaiView";
-import Button from "./Button";
 import { Camera, CloseCircle, Folder2 } from "iconsax-react-native";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 interface ButtonProps {
   onPressHandler: (prop: string) => void;
@@ -29,12 +30,12 @@ const ImagePickerModal: FC<ButtonProps> = ({
             justifyContent="center"
             alignItems="center"
             borderRadius="xxl"
-            width={54}
-            height={54}
+            width={wp(11)}
+            height={wp(11)}
             marginTop="m"
           >
             <CloseCircle
-              size={26}
+              size={wp(6.5)}
               variant="Broken"
               color={theme.colors.textOnDark}
             />
@@ -58,19 +59,19 @@ const ImagePickerModal: FC<ButtonProps> = ({
               <Box
                 backgroundColor="primarySalmonColor"
                 borderRadius="m"
-                width={80}
-                height={80}
+                width={wp(18)}
+                height={wp(18)}
                 alignItems="center"
                 justifyContent="center"
               >
                 <Camera
-                  size={40}
+                  size={wp(8)}
                   color={theme.colors.textOnDark}
                   variant="Broken"
                 />
               </Box>
               <Box marginTop="xs">
-                <Text fontSize={10}>Kamera</Text>
+                <Text fontSize={wp(2.4)}>Kamera</Text>
               </Box>
             </Box>
           </Pressable>
@@ -90,19 +91,19 @@ const ImagePickerModal: FC<ButtonProps> = ({
               <Box
                 backgroundColor="primarySalmonColor"
                 borderRadius="m"
-                width={80}
-                height={80}
+                width={wp(18)}
+                height={wp(18)}
                 alignItems="center"
                 justifyContent="center"
               >
                 <Folder2
-                  size={40}
+                  size={wp(8)}
                   color={theme.colors.textOnDark}
                   variant="Broken"
                 />
               </Box>
               <Box marginTop="xs">
-                <Text fontSize={10}>Durchsuchen</Text>
+                <Text fontSize={wp(2.4)}>Durchsuchen</Text>
               </Box>
             </Box>
           </Pressable>

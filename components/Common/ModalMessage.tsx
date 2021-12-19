@@ -1,13 +1,17 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import Box from "./Box";
 import Text from "./Text";
 import { Pressable } from "react-native";
-import { SimpleLineIcons } from "@expo/vector-icons";
 import theme from "../../theme/theme";
 import Modal from "react-native-modal";
+import { Danger } from "iconsax-react-native";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 interface ButtonProps {
-  onPressHandler: () => void;
+  onPressHandler?: () => void;
   setModalVisible: (props: boolean) => void;
   visible: boolean;
   data?: any;
@@ -18,7 +22,7 @@ interface ButtonProps {
   category?: string;
 }
 
-const ErrorMessage: FC<ButtonProps> = ({
+const ModalMessage: FC<ButtonProps> = ({
   onPressHandler,
   setModalVisible,
   visible,
@@ -34,7 +38,7 @@ const ErrorMessage: FC<ButtonProps> = ({
       <Box
         backgroundColor="mainBackground"
         borderColor="error"
-        borderTopWidth={15}
+        borderTopWidth={wp(3.5)}
         borderRadius="m"
         justifyContent="center"
         alignItems="center"
@@ -44,24 +48,27 @@ const ErrorMessage: FC<ButtonProps> = ({
         <Box>
           <Box alignItems="center">
             <Box
+              width={wp(22)}
+              height={wp(22)}
+              alignItems="center"
+              justifyContent="center"
               backgroundColor="error"
-              padding="l"
               borderRadius="xl"
-              position="absolute"
               marginBottom="l"
-              top={-90}
+              style={{ marginTop: wp(-20) }}
             >
-              <SimpleLineIcons
-                name="exclamation"
-                size={50}
+              <Danger
+                size={wp(13)}
                 color={theme.colors.textOnDark}
+                variant="Broken"
               />
             </Box>
             <Box marginTop="xl">
               <Text
                 variant="h1"
-                fontSize={23}
+                textTransform="uppercase"
                 fontWeight="bold"
+                textAlign="center"
                 style={{ color: theme.colors.text }}
               >
                 {title}
@@ -78,11 +85,7 @@ const ErrorMessage: FC<ButtonProps> = ({
               alignItems="center"
               justifyContent="center"
             >
-              <Text
-                variant="body"
-                fontSize={19}
-                style={{ color: theme.colors.text }}
-              >
+              <Text variant="body" style={{ color: theme.colors.text }}>
                 Möchten Sie wirklich
                 {category === "bonsai"
                   ? " den Bonsai"
@@ -90,14 +93,10 @@ const ErrorMessage: FC<ButtonProps> = ({
                   ? " die arbeit vom"
                   : null}
               </Text>
-              <Text variant="title" fontSize={19} style={{ color: primary }}>
+              <Text variant="title" style={{ color: primary }}>
                 {` "` + data + `" `}
               </Text>
-              <Text
-                variant="body"
-                fontSize={19}
-                style={{ color: theme.colors.text }}
-              >
+              <Text variant="body" style={{ color: theme.colors.text }}>
                 Löschen?
               </Text>
             </Box>
@@ -112,7 +111,6 @@ const ErrorMessage: FC<ButtonProps> = ({
             >
               <Text
                 variant="body"
-                fontSize={20}
                 textAlign="center"
                 style={{ color: theme.colors.text }}
               >
@@ -132,7 +130,7 @@ const ErrorMessage: FC<ButtonProps> = ({
                 borderRadius="xl"
                 marginRight="l"
               >
-                <Text variant="button" fontSize={16} color="textHighContrast">
+                <Text variant="button" color="textHighContrast">
                   Löschen
                 </Text>
               </Box>
@@ -147,7 +145,7 @@ const ErrorMessage: FC<ButtonProps> = ({
                 backgroundColor="error"
                 borderRadius="xl"
               >
-                <Text variant="button" fontSize={16} color="textOnDark">
+                <Text variant="button" color="textOnDark">
                   Abbrechen
                 </Text>
               </Box>
@@ -159,7 +157,7 @@ const ErrorMessage: FC<ButtonProps> = ({
                 backgroundColor="error"
                 borderRadius="xl"
               >
-                <Text variant="button" fontSize={16} color="textOnDark">
+                <Text variant="button" color="textOnDark">
                   Schließen
                 </Text>
               </Box>
@@ -171,4 +169,4 @@ const ErrorMessage: FC<ButtonProps> = ({
   );
 };
 
-export default ErrorMessage;
+export default ModalMessage;

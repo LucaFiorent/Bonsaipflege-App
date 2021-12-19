@@ -20,6 +20,10 @@ import firebase from "firebase";
 import { v4 as uuidv4 } from "uuid";
 import { userBonsaisStore } from "../../../../dataStores/accountStore";
 import { AddWorksModalProps } from "../../../../types/WorkViewTypes";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 const AddWorksModal: FC<AddWorksModalProps> = ({
   setModalVisible,
@@ -158,7 +162,10 @@ const AddWorksModal: FC<AddWorksModalProps> = ({
       if (task) {
         db.collection("bonsais")
           .doc(data.id)
-          .set({ ...formatElement });
+          .set({
+            ...formatElement,
+            updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
+          });
       }
     }
   };
@@ -168,7 +175,7 @@ const AddWorksModal: FC<AddWorksModalProps> = ({
       <Box
         backgroundColor="mainBackground"
         borderColor="primarySalmonColor"
-        borderTopWidth={15}
+        borderTopWidth={wp(3.5)}
         borderRadius="m"
         paddingHorizontal="l"
       >
@@ -180,15 +187,18 @@ const AddWorksModal: FC<AddWorksModalProps> = ({
         >
           <Box alignItems="center">
             <Box
+              alignItems="center"
+              justifyContent="center"
               backgroundColor="primarySalmonColor"
-              padding="l"
+              width={wp(21)}
+              height={wp(21)}
               borderRadius="xl"
               position="absolute"
               marginBottom="l"
-              top={-90}
+              top={hp(-10)}
             >
               <Additem
-                size={50}
+                size={wp(10)}
                 color={theme.colors.textOnDark}
                 variant="Broken"
               />
@@ -196,7 +206,6 @@ const AddWorksModal: FC<AddWorksModalProps> = ({
             <Box marginTop="l">
               <Text
                 variant="h1"
-                fontSize={23}
                 fontWeight="bold"
                 style={{ color: theme.colors.text }}
               >

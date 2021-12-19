@@ -1,17 +1,22 @@
 import { useTheme } from "@shopify/restyle";
 import * as React from "react";
 import { Image, Pressable } from "react-native";
-import { Theme } from "../../../theme/theme";
+import { Theme } from "../../theme/theme";
 
 //components
-import Box from "../../Common/Box";
-import Text from "../../Common/Text";
+import Box from "./Box";
+import Text from "./Text";
 
 //stores
 import "react-native-gesture-handler";
 import { FC } from "react";
 import moment from "moment";
-import { userStore } from "../../../dataStores/accountStore";
+import { userStore } from "../../dataStores/accountStore";
+
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 export type MyBonsaisProps = {
   bonsaiData: any;
@@ -47,14 +52,22 @@ const MyBonsais: FC<MyBonsaisProps> = ({ bonsaiData, navigation, user }) => {
             })
       }
     >
-      <Box marginBottom="xl">
+      <Box
+        marginBottom="xl"
+        backgroundColor="mainBackground"
+        borderTopEndRadius="m"
+        borderBottomEndRadius="m"
+        borderTopStartRadius="xxl"
+        borderBottomStartRadius="xxl"
+        padding="xs"
+      >
         <Box flexDirection="row" alignItems="center">
           <Box alignItems="center">
             <Image
               source={{ uri: bonsaiData.image }}
               style={{
-                width: 100,
-                height: 100,
+                width: wp(25),
+                height: wp(25),
                 borderRadius: theme.borderRadii.xxl,
               }}
             />
@@ -63,6 +76,7 @@ const MyBonsais: FC<MyBonsaisProps> = ({ bonsaiData, navigation, user }) => {
           <Box flex={1}>
             {user.id === userData.id && bonsaiData.publicBonsai && (
               <Box
+                backgroundColor="mainBackground"
                 alignSelf="flex-end"
                 flexDirection="row"
                 alignItems="center"
@@ -72,9 +86,10 @@ const MyBonsais: FC<MyBonsaisProps> = ({ bonsaiData, navigation, user }) => {
                 borderColor="greyBackground"
                 paddingRight="xs"
                 paddingLeft="s"
+                style={{ marginTop: wp(-3.2) }}
               >
                 <Box marginRight="s">
-                  <Text fontSize={12}>öffentlich</Text>
+                  <Text fontSize={wp(2.3)}>öffentlich</Text>
                 </Box>
                 <Box
                   alignItems="center"
@@ -84,8 +99,8 @@ const MyBonsais: FC<MyBonsaisProps> = ({ bonsaiData, navigation, user }) => {
                   borderColor="primarySalmonColor"
                 >
                   <Box
-                    width={10}
-                    height={10}
+                    width={wp(2)}
+                    height={wp(2)}
                     backgroundColor="primaryGreenColor"
                     borderRadius="xxl"
                     borderWidth={1}
@@ -100,48 +115,49 @@ const MyBonsais: FC<MyBonsaisProps> = ({ bonsaiData, navigation, user }) => {
               flexDirection="row"
               marginLeft="l"
               justifyContent="space-between"
+              alignItems="center"
             >
               <Box>
-                <Box marginVertical="xs">
-                  <Text fontSize={14}>Typ:</Text>
-                  <Text fontSize={16}>{bonsaiData.type}</Text>
+                <Box marginBottom="s">
+                  <Text fontSize={wp(3.2)}>Typ:</Text>
+                  <Text fontSize={wp(3.4)}>{bonsaiData.type}</Text>
                 </Box>
-                <Box marginVertical="xs">
-                  <Text fontSize={14}>Form:</Text>
-                  <Text fontSize={16}>{bonsaiData.form}</Text>
+                <Box marginBottom="s">
+                  <Text fontSize={wp(3.2)}>Form:</Text>
+                  <Text fontSize={wp(3.4)}>{bonsaiData.form}</Text>
                 </Box>
               </Box>
               <Box>
                 <Box
-                  marginVertical="xs"
+                  marginBottom="s"
                   flexDirection="row"
                   alignItems="center"
                   justifyContent="flex-end"
                 >
-                  <Text fontSize={12}>Alter: </Text>
-                  <Text fontSize={16}>
+                  <Text fontSize={wp(3)}>Alter: </Text>
+                  <Text fontSize={wp(3.5)}>
                     {moment(bonsaiData.acquisitionDate).format("D MMM. YY")}
                   </Text>
                 </Box>
                 <Box
-                  marginVertical="xs"
+                  marginBottom="s"
                   flexDirection="row"
                   alignItems="center"
                   justifyContent="flex-end"
                 >
-                  <Text fontSize={12}>Bewässerung: </Text>
-                  <Text fontSize={16}>
+                  <Text fontSize={wp(3)}>Bewässerung: </Text>
+                  <Text fontSize={wp(3.4)}>
                     {bonsaiDTasksWatering ? bonsaiDTasksWatering : "~"}
                   </Text>
                 </Box>
                 <Box
-                  marginVertical="xs"
+                  marginBottom="s"
                   flexDirection="row"
                   alignItems="center"
                   justifyContent="flex-end"
                 >
-                  <Text fontSize={12}>Düngung: </Text>
-                  <Text fontSize={16}>
+                  <Text fontSize={wp(3)}>Düngung: </Text>
+                  <Text fontSize={wp(3.4)}>
                     {bonsaiDTasksFertilize ? bonsaiDTasksFertilize : "~"}
                   </Text>
                 </Box>

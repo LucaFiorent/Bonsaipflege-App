@@ -4,7 +4,7 @@ import Box from "../../components/Common/Box";
 import theme from "../../theme/theme";
 import ProfileInfos from "../../components/MyScreen/Profile/ProfileInfos";
 import { FC } from "react";
-import MyBonsais from "../../components/Home/Community/MyBonsais";
+import MyBonsais from "../../components/Common/MyBonsais";
 import { CommunityUserProfileViewProps } from "../../sections/CommunitySection";
 import { communityBonsaisStore } from "../../dataStores/communityStore";
 

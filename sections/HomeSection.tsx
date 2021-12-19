@@ -8,6 +8,7 @@ import { SimpleLineIcons } from "@expo/vector-icons";
 import { useTheme } from "@shopify/restyle";
 import { Theme } from "../theme/theme";
 import HomeScreen from "../screens/HomeScreen";
+import { ArrowCircleLeft2 } from "iconsax-react-native";
 
 type MainStackParams = {
   HomeScreen: undefined;
@@ -45,10 +46,10 @@ const HomeStack: FC = () => {
           paddingRight: 16,
         },
         headerBackImage: () => (
-          <SimpleLineIcons
-            name="arrow-left-circle"
-            size={24}
+          <ArrowCircleLeft2
+            size={30}
             color={theme.colors.primaryGreenColor}
+            variant="Broken"
           />
         ),
       }}

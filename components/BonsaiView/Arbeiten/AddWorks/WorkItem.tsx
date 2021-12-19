@@ -6,12 +6,18 @@ import { Image, Pressable } from "react-native";
 import moment from "moment";
 import { WorkItemProps } from "../../../../types/WorkViewTypes";
 import { Bubble, Drop, Scissor, Trash } from "iconsax-react-native";
-import Modal from "../../../Common/Modal";
+import ModalMessage from "../../../Common/ModalMessage";
 import firebase from "firebase";
 import db from "../../../../firebase/firebaseConfig";
+import { userStore } from "../../../../dataStores/accountStore";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
-const WorkItem: FC<WorkItemProps> = ({ task, bonsai }) => {
+const WorkItem: FC<WorkItemProps> = ({ task, bonsai, user }) => {
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const userData = userStore();
 
   moment.locale("de");
 
@@ -29,7 +35,11 @@ const WorkItem: FC<WorkItemProps> = ({ task, bonsai }) => {
 
     db.collection("bonsais")
       .doc(bonsai.id)
-      .set({ ...bonsai, tasks: selTask });
+      .set({
+        ...bonsai,
+        tasks: selTask,
+        updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
+      });
     setDeleteModalVisible(!deleteModalVisible);
   };
 
@@ -47,44 +57,48 @@ const WorkItem: FC<WorkItemProps> = ({ task, bonsai }) => {
         <Box flexDirection="row">
           <Box
             flex={0}
-            width={80}
-            height={80}
-            backgroundColor="primaryLightSalmonColor"
+            width={wp(17)}
+            height={wp(17)}
+            backgroundColor={
+              task.taskImage !== ""
+                ? "primaryLightSalmonColor"
+                : task.doneTask.includes("Bewässerung")
+                ? "watering"
+                : task.doneTask.includes("Beschneidung")
+                ? "primaryBGColor"
+                : task.doneTask.includes("Dünger")
+                ? "fertilizer"
+                : "greyBackground"
+            }
             borderRadius="m"
             alignItems="center"
             justifyContent="center"
-
-            // style={
-            //   task.taskImage === ""
-            //     ? { backgroundColor: theme.colors.primaryLightSalmonColor }
-            //     : null
-            // }
           >
             {task.taskImage !== "" ? (
               <Image
                 source={{ uri: task.taskImage }}
                 style={{
-                  width: 80,
-                  height: 80,
+                  width: wp(17),
+                  height: wp(17),
                   borderRadius: theme.borderRadii.m,
                 }}
               />
             ) : task.doneTask.includes("Bewässerung") ? (
               <Drop
-                size={44}
+                size={wp(8)}
                 variant="Broken"
                 color={theme.colors.textOnDark}
               />
             ) : task.doneTask.includes("Beschneidung") ? (
               <Scissor
-                size={44}
+                size={wp(8)}
                 variant="Outline"
                 color={theme.colors.textOnDark}
               />
             ) : (
               task.doneTask.includes("Dünger") && (
                 <Bubble
-                  size={44}
+                  size={wp(8)}
                   variant="Broken"
                   color={theme.colors.textOnDark}
                 />
@@ -108,30 +122,30 @@ const WorkItem: FC<WorkItemProps> = ({ task, bonsai }) => {
               </Box>
             </Box>
           )}
-
-          <Box
-            flexDirection="row"
-            justifyContent="flex-end"
-            position="absolute"
-            right={-12}
-            top={-22}
-          >
-            <Pressable
-              onPress={() => setDeleteModalVisible(!deleteModalVisible)}
+          {user.id === userData.id && (
+            <Box
+              flexDirection="row"
+              justifyContent="flex-end"
+              position="absolute"
+              right={wp(-3.4)}
+              top={wp(-6)}
             >
-              <Box
-                marginRight="xs"
-                backgroundColor="mainBackground"
-                padding="s"
-                borderTopRightRadius="xl"
-                borderTopLeftRadius="xl"
+              <Pressable
+                onPress={() => setDeleteModalVisible(!deleteModalVisible)}
               >
-                <Trash size={26} color={theme.colors.error} />
-              </Box>
-            </Pressable>
-          </Box>
+                <Box
+                  marginRight="xs"
+                  backgroundColor="mainBackground"
+                  padding="s"
+                  borderTopRightRadius="xl"
+                  borderTopLeftRadius="xl"
+                >
+                  <Trash size={wp(6.5)} color={theme.colors.error} />
+                </Box>
+              </Pressable>
+            </Box>
+          )}
         </Box>
-
         <Box marginTop="ms" flexDirection="row" justifyContent="space-between">
           <Box flex={1} flexDirection="row" flexWrap="wrap">
             {task.doneTask.map((item) => (
@@ -147,7 +161,7 @@ const WorkItem: FC<WorkItemProps> = ({ task, bonsai }) => {
                 <Text
                   variant="inputTitle"
                   color="textHighContrast"
-                  fontSize={12}
+                  fontSize={wp(2.8)}
                 >
                   {item}
                 </Text>
@@ -157,19 +171,19 @@ const WorkItem: FC<WorkItemProps> = ({ task, bonsai }) => {
 
           <Box flex={0} alignItems="flex-end" justifyContent="flex-end">
             <Box marginRight="xs">
-              <Text variant="body" fontSize={11}>
+              <Text variant="body" fontSize={wp(2.3)}>
                 Dürchgeführt:
               </Text>
             </Box>
             <Box marginRight="xs">
-              <Text fontSize={13}>
+              <Text fontSize={wp(3)}>
                 {moment(task.taskDate).format("D MMM YYYY")}
               </Text>
             </Box>
           </Box>
         </Box>
       </Box>
-      <Modal
+      <ModalMessage
         onPressHandler={deleteTaskHandler}
         setModalVisible={setDeleteModalVisible}
         visible={deleteModalVisible}

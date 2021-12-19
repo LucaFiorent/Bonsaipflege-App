@@ -4,24 +4,34 @@ import { FC, useEffect, useState } from "react";
 import { SafeAreaView, Image, ScrollView, Pressable } from "react-native";
 import Box from "../components/Common/Box";
 import Text from "../components/Common/Text";
-import Search from "../components/Common/Search";
 import { userBonsaisStore, userStore } from "../dataStores/accountStore";
 import theme from "../theme/theme";
-import Feed from "../components/Home/Community/Feed";
-import { SimpleLineIcons } from "@expo/vector-icons";
+import Feed from "../components/Common/Feed";
 
 import { filterData } from "../data/bonsaiData";
-import FilterCards from "../components/Home/Community/FilterCards";
+import {
+  communityBonsaisStore,
+  communityDataStore,
+} from "../dataStores/communityStore";
+import { Like, SearchNormal1 } from "iconsax-react-native";
+import moment from "moment";
+import NewAktivities from "../components/Home/NewAktivities/NewAktivities";
+import SearchAndFilterBar from "../components/Home/SearchAndFilterBar/SearchAndFilterBar";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 const HomeScreen: FC = () => {
   const userData = userStore();
+  const { myBonsais } = userBonsaisStore();
+  const { communityBonsais } = communityBonsaisStore();
+  const { communityProfiles } = communityDataStore();
 
   const [searchBarState, setSearchBarState] = useState(false);
   const [filterOpen, openFilter] = useState(false);
 
-  const { myBonsais } = userBonsaisStore();
-
-  const [selectedFilters, setselectedFilters] = useState([]);
+  const [selectedFilters, setselectedFilters] = useState<string[]>([]);
 
   const allFilter = filterData.filter(
     (item) => !selectedFilters.includes(item)
@@ -29,7 +39,7 @@ const HomeScreen: FC = () => {
 
   const [searchValue, setSearchValue] = useState("");
 
-  const setSelectedFilterLogic = (newFilter) => {
+  const setSelectedFilterLogic = (newFilter: string) => {
     if (!selectedFilters.includes(newFilter)) {
       setselectedFilters([...selectedFilters, newFilter]);
     }
@@ -43,6 +53,56 @@ const HomeScreen: FC = () => {
   useEffect(() => {
     const entityRef = db
       .collection("bonsais")
+      .where("publicBonsai", "==", true);
+    entityRef.onSnapshot(
+      (querySnapshot: any) => {
+        const newEntities: any = [];
+        querySnapshot.forEach((doc: any) => {
+          const entity = doc.data();
+          entity.id = doc.id;
+          entity.acquisitionDate = entity.acquisitionDate.toDate();
+          entity.createdOn = entity.createdOn.toDate();
+          entity.updatedOn = entity.updatedOn && entity.updatedOn.toDate();
+          entity.tasks &&
+            (entity.tasks = entity.tasks.map((task: any) => ({
+              ...task,
+              taskDate: task.taskDate.toDate(),
+            })));
+          newEntities.push(entity);
+        });
+
+        communityBonsaisStore.setState((state) => ({
+          communityBonsais: newEntities,
+        }));
+      },
+      (error: any) => {
+        console.log(error, "no Communitty Bonsais found");
+      }
+    );
+
+    const communityUserData = db.collection("userData");
+
+    communityUserData.onSnapshot(
+      (querySnapshot: any) => {
+        const newCommunityEntities: any = [];
+        querySnapshot.forEach((doc: any) => {
+          const entity = doc.data();
+
+          newCommunityEntities.push(entity);
+        });
+        communityDataStore.setState((state) => ({
+          communityProfiles: newCommunityEntities,
+        }));
+      },
+      (error: any) => {
+        console.log(error, "no Community Data found");
+      }
+    );
+  }, []);
+
+  useEffect(() => {
+    const entityRef = db
+      .collection("bonsais")
       .where("userId", "==", userData.id);
 
     entityRef.onSnapshot(
@@ -52,6 +112,8 @@ const HomeScreen: FC = () => {
           const entity = doc.data();
           entity.id = doc.id;
           entity.acquisitionDate = entity.acquisitionDate.toDate();
+          entity.createdOn = entity.createdOn.toDate();
+          entity.updatedOn = entity.updatedOn && entity.updatedOn.toDate();
           entity.tasks &&
             (entity.tasks = entity.tasks.map((task: any) => ({
               ...task,
@@ -69,19 +131,17 @@ const HomeScreen: FC = () => {
     );
   }, [userData]);
 
-  let filterResults = myBonsais;
-  //console.log(myBonsais);
-
+  let filterResults = communityBonsais;
   if (searchValue) {
-    filterResults = myBonsais.filter(
+    filterResults = communityBonsais.filter(
       (bonsai) =>
         bonsai.form.toLowerCase().includes(searchValue.toLowerCase()) ||
         bonsai.size.toLowerCase().includes(searchValue.toLowerCase()) ||
         bonsai.type.toLowerCase().includes(searchValue.toLowerCase())
     );
     if (selectedFilters.length > 0) {
-      selectedFilters.map((selectedFilter) => {
-        filterResults = myBonsais.filter(
+      selectedFilters.map((selectedFilter: string) => {
+        filterResults = communityBonsais.filter(
           (bonsai) =>
             bonsai.form.toLowerCase().includes(selectedFilter.toLowerCase()) ||
             bonsai.size.toLowerCase().includes(selectedFilter.toLowerCase()) ||
@@ -90,7 +150,7 @@ const HomeScreen: FC = () => {
       });
     }
   } else if (selectedFilters.length > 0) {
-    selectedFilters.map((selectedFilter) => {
+    selectedFilters.map((selectedFilter: string) => {
       filterResults = myBonsais.filter(
         (bonsai) =>
           bonsai.form.toLowerCase().includes(selectedFilter.toLowerCase()) ||
@@ -100,10 +160,22 @@ const HomeScreen: FC = () => {
     });
   }
 
+  let today = new Date();
+  const newAktivities = communityBonsais.filter(
+    (bonsai) =>
+      moment(bonsai.updatedOn).format("D MMM. YY") ===
+      moment(today).format("D MMM. YY")
+  );
+
   return (
     <>
       <Box alignItems="center" backgroundColor="primaryGreenColor">
-        <Text marginVertical="m" fontSize={20} fontFamily="HinaMincho-Regular">
+        <Text
+          variant="logo"
+          marginVertical="m"
+          // fontSize={wp(6)}
+          // fontFamily="HinaMincho-Regular"
+        >
           BONSAI
         </Text>
       </Box>
@@ -130,15 +202,15 @@ const HomeScreen: FC = () => {
                       : { uri: userData.avatar }
                   }
                   style={{
-                    width: 50,
-                    height: 50,
+                    width: wp(14),
+                    height: wp(14),
                     borderRadius: theme.borderRadii.xxl,
                   }}
                 />
               </Box>
               <Box marginLeft="l">
                 <Text
-                  fontSize={18}
+                  fontSize={wp(4.5)}
                   textTransform="uppercase"
                   variant="title"
                   color="headline"
@@ -146,7 +218,7 @@ const HomeScreen: FC = () => {
                   Wilkommen
                 </Text>
                 <Text
-                  fontSize={18}
+                  fontSize={wp(4.5)}
                   textTransform="uppercase"
                   variant="title"
                   color="headline"
@@ -161,9 +233,11 @@ const HomeScreen: FC = () => {
               }}
             >
               <Box
-                paddingHorizontal="ms"
-                paddingVertical="ms"
-                borderRadius="l"
+                width={wp(12)}
+                height={wp(12)}
+                alignItems="center"
+                justifyContent="center"
+                borderRadius="xxl"
                 backgroundColor="mainBackground"
                 borderWidth={1}
                 borderColor={
@@ -177,154 +251,59 @@ const HomeScreen: FC = () => {
                     top={-5}
                     borderRadius="xl"
                     backgroundColor="error"
+                    width={wp(5)}
+                    height={wp(5)}
+                    alignItems="center"
                   >
-                    <Text
-                      variant="title"
-                      fontSize={12}
-                      color="textOnDark"
-                      paddingVertical="xxs"
-                      paddingHorizontal="s"
-                    >
+                    <Text variant="title" fontSize={wp(3.5)} color="textOnDark">
                       {searchValue || selectedFilters ? "+" : null}
                     </Text>
                   </Box>
                 ) : null}
-                <SimpleLineIcons
-                  name="magnifier"
-                  size={24}
+                <SearchNormal1
+                  size={wp(6.5)}
                   color={
                     searchBarState
                       ? theme.colors.primaryGreenColor
-                      : theme.colors.iconInactive
+                      : theme.colors.textHighContrast
                   }
+                  variant="Broken"
                 />
               </Box>
             </Pressable>
           </Box>
-          {searchBarState && (
-            <Box>
-              <Box
-                marginVertical="s"
-                flexDirection="row"
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <Search
-                  primaryBg={true}
-                  searchValue={searchValue}
-                  searchTrick={setSearchValue}
-                  placeholder="Suche nach Bonsais..."
-                />
-                <Pressable onPress={() => openFilter(!filterOpen)}>
-                  <Box
-                    marginLeft="m"
-                    paddingHorizontal="ms"
-                    paddingVertical="ms"
-                    borderRadius="xxl"
-                    backgroundColor="mainBackground"
-                    borderWidth={1}
-                    borderColor={
-                      filterOpen ? "primaryGreenColor" : "iconInactive"
-                    }
-                  >
-                    {selectedFilters.length > 0 ? (
-                      <Box
-                        position="absolute"
-                        right={-5}
-                        top={-5}
-                        borderRadius="xl"
-                        backgroundColor="error"
-                      >
-                        <Text
-                          variant="title"
-                          fontSize={12}
-                          color="textOnDark"
-                          paddingVertical="xxs"
-                          paddingHorizontal="s"
-                        >
-                          {searchValue || selectedFilters ? "+" : null}
-                        </Text>
-                      </Box>
-                    ) : null}
-                    <SimpleLineIcons
-                      name="equalizer"
-                      size={23}
-                      color={
-                        filterOpen
-                          ? theme.colors.primaryGreenColor
-                          : theme.colors.iconInactive
-                      }
-                    />
-                  </Box>
-                </Pressable>
-              </Box>
-              <Box
-                flexDirection="row"
-                flexWrap="wrap"
-                justifyContent="flex-start"
-                marginBottom="s"
-              >
-                {filterOpen &&
-                  allFilter.map((item, index) => {
-                    return (
-                      <Box marginRight="s">
-                        <FilterCards
-                          key={filterData.indexOf(item.id)}
-                          selectedFilters={selectedFilters}
-                          filterItem={item}
-                          filterOnPress={setSelectedFilterLogic}
-                        />
-                      </Box>
-                    );
-                  })}
-              </Box>
-              {filterOpen && selectedFilters.length > 0 && (
-                <Box>
-                  <Text variant="inputTitle" color="text" marginBottom="ms">
-                    Ausgewählte Filter
-                  </Text>
-                  <Box
-                    flexDirection="row"
-                    flexWrap="wrap"
-                    justifyContent="flex-start"
-                    marginBottom="s"
-                  >
-                    {selectedFilters.length > 0
-                      ? selectedFilters.map((item) => {
-                          return (
-                            <Box marginRight="s">
-                              <FilterCards
-                                selectedFilters={selectedFilters}
-                                filterItem={item}
-                                filterOnPress={deleteSelectedFilters}
-                                key={filterData.indexOf(item.id)}
-                              />
-                            </Box>
-                          );
-                        })
-                      : null}
-                  </Box>
-                </Box>
-              )}
-            </Box>
-          )}
+          <Box>
+            {searchBarState && (
+              <SearchAndFilterBar
+                searchValue={searchValue}
+                setSearchValue={setSearchValue}
+                openFilter={openFilter}
+                filterOpen={filterOpen}
+                selectedFilters={selectedFilters}
+                allFilter={allFilter}
+                deleteSelectedFilters={deleteSelectedFilters}
+                setSelectedFilterLogic={setSelectedFilterLogic}
+              />
+            )}
+          </Box>
+
           <ScrollView>
-            {selectedFilters.length > 0 || searchValue ? (
+            {selectedFilters.length > 0 || searchValue !== "" ? (
               <Box>
                 <Text marginBottom="l" variant="h1">
                   Dein Suchergebnis
                 </Text>
                 {filterResults.length > 0 ? (
-                  filterResults.map((item) => {
-                    return <Feed bonsai={item} />;
+                  filterResults.map((item, index) => {
+                    return <Feed key={index} bonsai={item} />;
                   })
                 ) : (
                   <Box justifyContent="center" alignItems="center">
                     <Image
                       source={require("../assets/images/bonsai.jpg")}
                       style={{
-                        width: 100,
-                        height: 100,
+                        width: wp(23),
+                        height: wp(23),
                         borderRadius: theme.borderRadii.xxl,
                       }}
                     />
@@ -336,20 +315,67 @@ const HomeScreen: FC = () => {
               </Box>
             ) : (
               <Box>
-                {/* <Text marginBottom="l" variant="h1">
-                  Deine Bonsais
-                </Text>
-                {filterResults.map((item) => {
-                  return <Feed bonsai={item} key={item.id} />;
-                })}
+                <Box marginVertical="m">
+                  <Text variant="h1">Neue aktivitäten</Text>
+                </Box>
+                {newAktivities.length === 0 && (
+                  <Box
+                    flexDirection="row"
+                    backgroundColor="mainBackground"
+                    paddingVertical="xl"
+                    paddingHorizontal="l"
+                    alignItems="center"
+                    borderRadius="m"
+                    marginVertical="xs"
+                  >
+                    <Like
+                      size={40}
+                      color={theme.colors.error}
+                      variant="Outline"
+                    />
+                    <Box justifyContent="center">
+                      <Text variant="placeholder" color="error" marginLeft="m">
+                        Es gibt keine neuen Aktivitäten heute
+                      </Text>
+                      <Text
+                        variant="placeholder"
+                        color="error"
+                        marginLeft="m"
+                        fontSize={14}
+                      >
+                        Gück wieder später rein
+                      </Text>
+                    </Box>
+                  </Box>
+                )}
+
                 <Box>
-                  <Text marginBottom="l" variant="h1">
-                    Feed
-                  </Text>
-                  {myBonsais.map((item) => {
-                    return <Feed bonsai={item} key={item.id} />;
+                  {communityProfiles.map((userSub, index) => {
+                    let latestUpdates = communityBonsais.filter(
+                      (bonsai) => bonsai.userId === userSub.id && bonsai
+                    );
+
+                    let sortedList = latestUpdates.sort();
+                    let today = new Date();
+
+                    let newestBonsais = sortedList.filter((item) => {
+                      return (
+                        moment(item.updatedOn).format("D MMM. YY") ===
+                          moment(today).format("D MMM. YY") && item
+                      );
+                    });
+
+                    return (
+                      userData.subscribed.includes(userSub.id) &&
+                      newestBonsais.length !== 0 && (
+                        <NewAktivities
+                          userSub={userSub}
+                          newestBonsais={newestBonsais}
+                        />
+                      )
+                    );
                   })}
-                </Box> */}
+                </Box>
               </Box>
             )}
           </ScrollView>

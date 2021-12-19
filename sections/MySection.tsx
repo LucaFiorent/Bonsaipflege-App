@@ -15,7 +15,7 @@ import BonsaiView from "../components/BonsaiView/BonsaiView";
 import UpdateBonsai from "../components/MyScreen/UpdateBonsai/UpdateBonsai";
 import UpdateBonsaiStep2 from "../components/MyScreen/UpdateBonsai/UpdateBonsaiStep2";
 import WorkItemView from "../components/BonsaiView/Arbeiten/AddWorks/xxxWorkItemView";
-import { ProfileCircle } from "iconsax-react-native";
+import { ArrowCircleLeft2, ProfileCircle } from "iconsax-react-native";
 import EditProfilePage from "../components/MyScreen/EditProfile/EditProfilePage";
 
 type RootStackParams = {
@@ -124,10 +124,10 @@ const ProfileStack: FC = () => {
     <MainStack.Navigator
       screenOptions={{
         headerBackImage: () => (
-          <SimpleLineIcons
-            name="arrow-left-circle"
-            size={24}
+          <ArrowCircleLeft2
+            size={30}
             color={theme.colors.primaryGreenColor}
+            variant="Broken"
           />
         ),
       }}
@@ -176,10 +176,10 @@ const BonsaiViewStack: FC = () => {
     <MainStack.Navigator
       screenOptions={{
         headerBackImage: () => (
-          <SimpleLineIcons
-            name="arrow-left-circle"
-            size={24}
+          <ArrowCircleLeft2
+            size={30}
             color={theme.colors.primaryGreenColor}
+            variant="Broken"
           />
         ),
       }}
@@ -225,10 +225,10 @@ const MySection: FC = () => {
           paddingRight: 16,
         },
         headerBackImage: () => (
-          <SimpleLineIcons
-            name="arrow-left-circle"
-            size={24}
+          <ArrowCircleLeft2
+            size={30}
             color={theme.colors.primaryGreenColor}
+            variant="Broken"
           />
         ),
       }}

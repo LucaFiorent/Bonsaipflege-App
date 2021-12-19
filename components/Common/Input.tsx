@@ -5,7 +5,11 @@ import { TextInput } from "react-native";
 import { useTheme } from "@shopify/restyle";
 import { Theme } from "../../theme/theme";
 import Box from "./Box";
-import { SimpleLineIcons } from "@expo/vector-icons";
+import { Danger } from "iconsax-react-native";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 interface InputP {
   label: string;
@@ -41,7 +45,7 @@ const Input: FC<InputP> = ({
         value={value}
         onChangeText={onChange}
         style={{
-          fontSize: 16,
+          fontSize: wp(3.5),
           color: !value ? theme.colors.placeholderColor : theme.colors.text,
           borderColor: theme.colors.borderInput,
           paddingHorizontal: theme.spacing.xs,
@@ -52,7 +56,7 @@ const Input: FC<InputP> = ({
       />
       {inputMessage ? (
         <Box marginTop="xs" flexDirection="row">
-          <SimpleLineIcons name="exclamation" size={18} color={color} />
+          <Danger size={wp(5)} color={color} />
           <Text
             variant="inputTitle"
             style={color ? { color: color } : null}

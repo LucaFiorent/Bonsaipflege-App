@@ -1,16 +1,19 @@
 import * as React from "react";
 import { FC } from "react";
 import { Pressable } from "react-native";
-import Box from "../../../components/Common/Box";
-import Text from "../../../components/Common/Text";
+import Box from "../../Common/Box";
+import Text from "../../Common/Text";
 import theme from "../../../theme/theme";
-
-import { SimpleLineIcons } from "@expo/vector-icons";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import { TickCircle } from "iconsax-react-native";
 
 type FilterCardsProps = {
   selectedFilters: string;
   filterItem: string;
-  filterOnPress: (filterItem: string) => string[];
+  filterOnPress: (props: string) => void;
 };
 
 const FilterCards: FC<FilterCardsProps> = ({
@@ -29,7 +32,7 @@ const FilterCards: FC<FilterCardsProps> = ({
             ? "primaryGreenColor"
             : "primarySalmonColor"
         }
-        minWidth="23%"
+        minWidth={wp(20.5)}
         marginVertical="xs"
         paddingVertical="s"
         paddingHorizontal="s"
@@ -41,20 +44,24 @@ const FilterCards: FC<FilterCardsProps> = ({
             right={0.1}
             top={-6}
             backgroundColor="primaryGreenColor"
-            paddingHorizontal="xs"
-            paddingTop="xs"
-            paddingBottom="s"
+            // paddingHorizontal="xs"
+            // paddingTop="xs"
+            // paddingBottom="s"
             borderTopEndRadius="l"
             borderTopLeftRadius="l"
+            width={wp(5)}
+            height={wp(5)}
+            alignItems="center"
+            justifyContent="center"
           >
-            <SimpleLineIcons
-              name="check"
-              size={12}
+            <TickCircle
+              size={wp(3.5)}
               color={theme.colors.textOnDark}
+              variant="Broken"
             />
           </Box>
         )}
-        <Text variant="button" fontSize={12} color="textOnDark">
+        <Text variant="button" fontSize={wp(2.5)} color="textOnDark">
           {filterItem}
         </Text>
       </Box>

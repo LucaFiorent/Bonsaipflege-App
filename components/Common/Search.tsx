@@ -3,19 +3,23 @@ import Box from "./Box";
 import { Pressable, TextInput } from "react-native";
 import { useTheme } from "@shopify/restyle";
 import { Theme } from "../../theme/theme";
-import { SimpleLineIcons } from "@expo/vector-icons";
+import { CloseCircle, SearchNormal1 } from "iconsax-react-native";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 interface SearchProps {
   placeholder: string;
   primaryBg?: boolean;
-  searchTrick: Dispatch<SetStateAction<string>>;
+  setSearchValue: (props: string) => void;
   searchValue: string;
 }
 
 const Search: FC<SearchProps> = ({
   placeholder,
   primaryBg,
-  searchTrick,
+  setSearchValue,
   searchValue,
 }) => {
   const theme = useTheme<Theme>();
@@ -35,16 +39,14 @@ const Search: FC<SearchProps> = ({
     >
       <Box flexDirection="row" flex={1} justifyContent="space-between">
         <Box flexDirection="row" alignItems="center">
-          <SimpleLineIcons
-            name="magnifier"
-            size={19}
-            style={{
-              color: theme.colors.borderColor,
-            }}
+          <SearchNormal1
+            size={wp(6.5)}
+            color={theme.colors.borderColor}
+            variant="Broken"
           />
           <TextInput
             // TODO: continue
-            onChangeText={(search) => searchTrick(search)}
+            onChangeText={(search) => setSearchValue(search)}
             selectionColor={theme.colors.borderColor}
             showSoftInputOnFocus={true}
             placeholder={placeholder}
@@ -60,16 +62,10 @@ const Search: FC<SearchProps> = ({
         <Box flexDirection="row" alignItems="center">
           {searchValue !== "" ? (
             <Pressable
-              onPress={() => searchTrick("")}
+              onPress={() => setSearchValue("")}
               style={{ marginLeft: theme.spacing.m }}
             >
-              <SimpleLineIcons
-                name="close"
-                size={19}
-                style={{
-                  color: theme.colors.error,
-                }}
-              />
+              <CloseCircle size={wp(6.5)} color="#FF8A65" variant="Broken" />
             </Pressable>
           ) : null}
         </Box>

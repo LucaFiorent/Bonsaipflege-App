@@ -1,5 +1,8 @@
 import { createTheme } from "@shopify/restyle";
-import Colors from "../constants/Colors";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 export const palette = {
   salmonPrimary: "#FAA2A2",
@@ -57,25 +60,46 @@ const theme = createTheme({
     watering: palette.blue,
     fertilizer: palette.braun,
   },
+  // spacing: {
+  //   null: 0,
+  //   xxs: 3,
+  //   xs: 4,
+  //   s: 8,
+  //   ms: 12,
+  //   m: 16,
+  //   l: 24,
+  //   xl: 40,
+  //   xxl: 54,
+  //   x3l: 80,
+  // },
   spacing: {
     null: 0,
-    xxs: 3,
-    xs: 4,
-    s: 8,
-    ms: 12,
-    m: 16,
-    l: 24,
-    xl: 40,
-    xxl: 54,
-    x3l: 80,
+    xxs: wp(0.5),
+    xss: wp(0.8),
+    xs: wp(1.5),
+    s: wp(2),
+    ms: wp(3.5),
+    m: wp(4),
+    l: wp(4.5),
+    xl: wp(6),
+    xxl: wp(7),
+    x3l: wp(8),
   },
+  // borderRadii: {
+  //   xs: 4,
+  //   s: 8,
+  //   m: 16,
+  //   l: 32,
+  //   xl: 64,
+  //   xxl: 128,
+  // },
   borderRadii: {
-    xs: 4,
-    s: 8,
-    m: 16,
-    l: 32,
-    xl: 64,
-    xxl: 128,
+    xs: wp(1),
+    s: wp(2),
+    m: wp(3),
+    l: wp(6.5),
+    xl: wp(15),
+    xxl: wp(20),
   },
   breakpoints: {
     phone: 0,
@@ -84,50 +108,53 @@ const theme = createTheme({
   textVariants: {
     logo: {
       fontFamily: "HinaMincho-Regular",
-      fontSize: 28,
+      fontSize: wp(6),
+      // fontSize: 28,
     },
     h1: {
       fontFamily: "OpenSans-Regular",
-      fontSize: 25,
+      // fontSize: 25,
+      fontSize: wp(5.5),
       textTransform: "uppercase",
       color: "headline",
     },
     h2: {
       fontFamily: "OpenSans-Regular",
-      fontSize: 26,
+      // fontSize: 26,
+      fontSize: wp(5.7),
     },
     h3: {
       fontFamily: "OpenSans-Regular",
-      fontSize: 24,
+      fontSize: wp(4.5),
     },
     body: {
       fontFamily: "OpenSans-Regular",
-      fontSize: 16,
+      // fontSize: 16,
+      fontSize: wp(4),
     },
     button: {
       fontFamily: "OpenSans-Regular",
-      fontSize: 22,
+      // fontSize: 22,
+      fontSize: wp(3.8),
       textTransform: "uppercase",
     },
     buttonWithIcon: {
       fontFamily: "OpenSans-Regular",
-      fontSize: 12,
+      // fontSize: 12,
+      fontSize: wp(3),
     },
     description: {
       fontFamily: "OpenSans-Regular",
-      fontSize: 24,
     },
     placeholder: {
       fontFamily: "Ubuntu-Regular",
-      fontSize: 18,
+      fontSize: wp(3.8),
     },
     OpenSansPrimary: {
       fontFamily: "OpenSans-Bold",
-      fontSize: 24,
     },
     UbuntuPrimary: {
       fontFamily: "Ubuntu-Regular",
-      fontSize: 24,
     },
     OpenSansSekundaryBold: {
       fontFamily: "OpenSans-Bold",
@@ -135,11 +162,12 @@ const theme = createTheme({
     },
     inputTitle: {
       fontFamily: "Ubuntu-Regular",
-      fontSize: 16,
+      fontSize: wp(3.5),
       color: "primarySalmonColor",
     },
     title: {
-      fontSize: 18,
+      // fontSize: 18,
+      fontSize: wp(3.8),
       fontFamily: "OpenSans-Bold",
       textTransform: "uppercase",
     },

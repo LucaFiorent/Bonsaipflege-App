@@ -28,6 +28,8 @@ export type UpdateBonsaiStep2Props = {
         type: string;
         userId: string;
         tasks: Tasks[];
+        createdOn: Date;
+        updatedOn?: Date;
       };
       user: {
         avatar: string;
@@ -65,6 +67,8 @@ export type BonsaiViewParams = {
         type: string;
         userId: string;
         task: Tasks[];
+        createdOn: Date | undefined;
+        updatedOn?: Date | undefined;
       };
       user: {
         avatar: string;

@@ -10,6 +10,8 @@ import { Theme } from "../theme/theme";
 import CommunityUserProfileView from "../components/Community/CommunityUserProfileView";
 import CommunityScreen from "../screens/CommunityScreen";
 import BonsaiView from "../components/BonsaiView/BonsaiView";
+import AbonnamentsView from "../components/Community/Abbonaments/AbonnamentsView";
+import { ArrowCircleLeft2 } from "iconsax-react-native";
 
 type RootStackParams = {
   CommunityStack: undefined;
@@ -20,6 +22,7 @@ type MainStackCommunityParams = {
   Community: undefined;
   CommunityUserProfileView: { navigation: any; userOfBonsai: any };
   BonsaiView: { bonsai: any; user: any };
+  AbonnamentsView: { navigation: any; route: any };
 };
 
 type CommunityScreenRouteProp = RouteProp<RootStackParams, "CommunityStack">;
@@ -58,6 +61,20 @@ export type BonsaiViewProps = {
   navigation: BonsaiViewNavigationProp;
 };
 
+type AbonnamentsViewRouteProp = RouteProp<
+  MainStackCommunityParams,
+  "AbonnamentsView"
+>;
+type AbonnamentsViewNavigationProp = StackNavigationProp<
+  MainStackCommunityParams,
+  "AbonnamentsView"
+>;
+
+export type AbonnamentsViewProps = {
+  route: AbonnamentsViewRouteProp;
+  navigation: AbonnamentsViewNavigationProp;
+};
+
 const CommunityStack: FC = () => {
   const MainStack = createStackNavigator<MainStackCommunityParams>();
   const theme = useTheme<Theme>();
@@ -66,10 +83,10 @@ const CommunityStack: FC = () => {
     <MainStack.Navigator
       screenOptions={{
         headerBackImage: () => (
-          <SimpleLineIcons
-            name="arrow-left-circle"
-            size={24}
+          <ArrowCircleLeft2
+            size={30}
             color={theme.colors.primaryGreenColor}
+            variant="Broken"
           />
         ),
       }}
@@ -77,7 +94,7 @@ const CommunityStack: FC = () => {
       <MainStack.Screen
         name="Community"
         component={CommunityScreen}
-        options={{ headerBackTitleVisible: false, headerShown: true }}
+        options={{ headerBackTitleVisible: false, headerShown: false }}
       />
       <MainStack.Screen
         name="CommunityUserProfileView"
@@ -87,6 +104,14 @@ const CommunityStack: FC = () => {
       <MainStack.Screen
         name="BonsaiView"
         component={BonsaiView}
+        options={{
+          headerBackTitleVisible: false,
+          headerShown: true,
+        }}
+      />
+      <MainStack.Screen
+        name="AbonnamentsView"
+        component={AbonnamentsView}
         options={{
           headerBackTitleVisible: false,
           headerShown: true,
@@ -110,10 +135,10 @@ const MySection: FC = () => {
           paddingRight: 16,
         },
         headerBackImage: () => (
-          <SimpleLineIcons
-            name="arrow-left-circle"
-            size={24}
+          <ArrowCircleLeft2
+            size={30}
             color={theme.colors.primaryGreenColor}
+            variant="Broken"
           />
         ),
       }}

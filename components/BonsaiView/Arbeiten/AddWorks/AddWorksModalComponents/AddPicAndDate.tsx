@@ -4,7 +4,7 @@ import Text from "../../../../Common/Text";
 import { Pressable, Image } from "react-native";
 
 // styling
-import { Camera } from "iconsax-react-native";
+import { CalendarAdd, CalendarTick, Camera } from "iconsax-react-native";
 import theme from "../../../../../theme/theme";
 import { SimpleLineIcons } from "@expo/vector-icons";
 
@@ -16,6 +16,11 @@ import moment from "moment";
 import ImagePickerModal from "../../../../Common/ImagePickerModal";
 //types
 import { AddPicAndDateProps } from "../../../../../types/WorkViewTypes";
+
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 const AddPicAndDate: FC<AddPicAndDateProps> = ({
   openImagePicker,
@@ -39,10 +44,10 @@ const AddPicAndDate: FC<AddPicAndDateProps> = ({
                 setmodalImagePickerVisible(!modalImagePickerVisible)
               }
             >
-              <Box width={80}>
+              <Box width={wp(18)}>
                 <Image
                   source={{ uri: image }}
-                  style={{ width: "100%", height: 80, borderRadius: 20 }}
+                  style={{ width: "100%", height: wp(18), borderRadius: 20 }}
                 />
               </Box>
             </Pressable>
@@ -57,19 +62,19 @@ const AddPicAndDate: FC<AddPicAndDateProps> = ({
                   borderColor="borderColor"
                   borderWidth={1}
                   borderRadius="m"
-                  width={80}
-                  height={80}
+                  width={wp(18)}
+                  height={wp(18)}
                   alignItems="center"
                   justifyContent="center"
                 >
                   <Camera
-                    size={40}
+                    size={wp(8)}
                     color={theme.colors.iconColor}
                     variant="Broken"
                   />
                 </Box>
                 <Box marginTop="xs">
-                  <Text fontSize={10}>Bild hinzufügen</Text>
+                  <Text fontSize={wp(2.2)}>Bild hinzufügen</Text>
                 </Box>
               </Box>
             </Pressable>
@@ -94,7 +99,7 @@ const AddPicAndDate: FC<AddPicAndDateProps> = ({
                 <Box flex={1} borderBottomWidth={1} borderColor="borderInput">
                   <Text
                     style={{
-                      fontSize: 16,
+                      fontSize: wp(3.5),
                       color: !date
                         ? theme.colors.placeholderColor
                         : theme.colors.text,
@@ -110,7 +115,10 @@ const AddPicAndDate: FC<AddPicAndDateProps> = ({
                 </Box>
               </Box>
               <Box
-                padding="m"
+                alignItems="center"
+                justifyContent="center"
+                width={wp(13)}
+                height={wp(13)}
                 backgroundColor={
                   date ? "primaryGreenColor" : "primarySalmonColor"
                 }
@@ -118,32 +126,19 @@ const AddPicAndDate: FC<AddPicAndDateProps> = ({
                 position="absolute"
                 right={0}
               >
-                {date && (
-                  <Box
-                    position="absolute"
-                    flex={1}
-                    alignItems="center"
-                    justifyContent="center"
-                    right={11}
-                    bottom={11}
-                    backgroundColor="textOnDark"
-                    borderRadius="xl"
-                    zIndex={1}
-                    style={{ padding: 2 }}
-                  >
-                    <SimpleLineIcons
-                      size={11}
-                      name="check"
-                      color={theme.colors.primaryGreenColor}
-                    />
-                  </Box>
+                {date ? (
+                  <CalendarTick
+                    size={wp(7)}
+                    color={theme.colors.textOnDark}
+                    variant="Broken"
+                  />
+                ) : (
+                  <CalendarAdd
+                    size={wp(7)}
+                    color={theme.colors.textOnDark}
+                    variant="Broken"
+                  />
                 )}
-
-                <SimpleLineIcons
-                  size={24}
-                  name="calendar"
-                  color={theme.colors.textOnDark}
-                />
               </Box>
             </Box>
           </Pressable>

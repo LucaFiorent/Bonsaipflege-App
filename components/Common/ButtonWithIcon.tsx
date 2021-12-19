@@ -2,14 +2,13 @@ import React, { FC } from "react";
 import Box from "./Box";
 import Text from "./Text";
 import { Pressable } from "react-native";
-import { SimpleLineIcons } from "@expo/vector-icons";
-import theme from "../../theme/theme";
+import { Folder2 } from "iconsax-react-native";
 
 interface ButtonProps {
   onPress: () => void;
   title: string;
   primary?: string;
-  icon?: string | undefined;
+  icon?: any;
 }
 
 const ButtonWithIcon: FC<ButtonProps> = ({ onPress, title, primary, icon }) => {
@@ -25,11 +24,8 @@ const ButtonWithIcon: FC<ButtonProps> = ({ onPress, title, primary, icon }) => {
           borderRadius="xl"
           flexDirection="row"
         >
-          <SimpleLineIcons
-            name={icon}
-            size={24}
-            color={theme.colors.textOnDark}
-          />
+          <Box>{icon}</Box>
+
           <Text
             variant="buttonWithIcon"
             style={{ color: primary ? "#fff" : "#385168" }}

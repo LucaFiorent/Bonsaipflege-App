@@ -13,6 +13,7 @@ import * as ImagePicker from "expo-image-picker";
 import firebase from "firebase";
 import { v4 as uuidv4 } from "uuid";
 import db from "../../../firebase/firebaseConfig";
+import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 type EditProfilePageProps = {
   navigation: any;
@@ -113,8 +114,8 @@ const EditProfilePage: React.FC<EditProfilePageProps> = ({ navigation }) => {
                 : { uri: image }
             }
             style={{
-              width: 100,
-              height: 100,
+              width: wp(22),
+              height: wp(22),
               borderRadius: theme.borderRadii.xxl,
             }}
           />
@@ -126,15 +127,15 @@ const EditProfilePage: React.FC<EditProfilePageProps> = ({ navigation }) => {
             >
               <Box
                 backgroundColor="primarySalmonColor"
-                width={45}
-                height={45}
+                width={wp(10)}
+                height={wp(10)}
                 alignItems="center"
                 justifyContent="center"
                 borderRadius="xxl"
                 zIndex={1}
               >
                 <Camera
-                  size={28}
+                  size={wp(5.8)}
                   color={theme.colors.textOnDark}
                   variant="Broken"
                 />
@@ -153,7 +154,7 @@ const EditProfilePage: React.FC<EditProfilePageProps> = ({ navigation }) => {
           </Box>
           <Box marginLeft="m" width="20%">
             <Edit2
-              size={30}
+              size={wp(6.5)}
               color={theme.colors.iconInactive}
               variant="Broken"
             />

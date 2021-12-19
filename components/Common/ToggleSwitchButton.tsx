@@ -4,6 +4,7 @@ import theme from "../../theme/theme";
 import { ToggleSwitchButtonProps } from "../../types/bottomSheetTypes";
 import Box from "./Box";
 import Text from "./Text";
+import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 const ToggleSwitchButton: FC<ToggleSwitchButtonProps> = ({
   publicBonsai,
@@ -19,7 +20,7 @@ const ToggleSwitchButton: FC<ToggleSwitchButtonProps> = ({
       marginVertical="l"
     >
       <Box marginHorizontal="m">
-        <Text variant="inputTitle" color="headline" fontSize={14}>
+        <Text variant="inputTitle" color="headline" fontSize={wp(2.9)}>
           {title}
         </Text>
       </Box>

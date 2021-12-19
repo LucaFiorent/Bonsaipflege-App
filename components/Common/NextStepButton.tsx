@@ -2,8 +2,10 @@ import React, { FC } from "react";
 import Box from "./Box";
 import Text from "./Text";
 import { Pressable } from "react-native";
-import { SimpleLineIcons } from "@expo/vector-icons";
-import theme from "../../theme/theme";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 interface ButtonProps {
   onPress: () => void;
@@ -39,14 +41,10 @@ const NextStepButton: FC<ButtonProps> = ({
             justifyContent="center"
             alignItems="center"
             borderRadius="xxl"
-            width={54}
-            height={54}
+            width={wp(12)}
+            height={wp(12)}
           >
-            <SimpleLineIcons
-              size={24}
-              name={icon}
-              color={theme.colors.textOnDark}
-            />
+            {icon}
           </Box>
         </Box>
       </Pressable>

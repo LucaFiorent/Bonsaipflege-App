@@ -7,7 +7,6 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { ThemeProvider } from "@shopify/restyle";
 import theme from "./theme/theme";
 //components
-import CommunityScreen from "./screens/CommunityScreen";
 //import MySectionScreen from "./screens/MySectionScreen";
 //react navigation
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -31,8 +30,11 @@ import HomeSection from "./sections/HomeSection";
 import MySection from "./sections/MySection";
 import { Home2, Profile2User } from "iconsax-react-native";
 
-import { useNavigationContainerRef } from "@react-navigation/native";
 import CommunitySection from "./sections/CommunitySection";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 export default function App() {
   const appTheme = theme;
@@ -89,38 +91,38 @@ export default function App() {
                   tabBarShowIcon: true,
                   tabBarIcon: ({ color }) => {
                     if (route.name === "Home") {
-                      return <Home2 size={24} color={color} variant="Broken" />;
+                      return (
+                        <Home2 size={wp(5.5)} color={color} variant="Broken" />
+                      );
                     } else if (route.name === "Community") {
                       return (
                         <Profile2User
-                          size={24}
+                          size={wp(5.5)}
                           color={color}
                           variant="Outline"
                         />
                       );
                     } else if (route.name === "Me") {
                       return (
-                        <Box flex={1}>
-                          <Image
-                            source={
-                              userData.avatar
-                                ? { uri: userData.avatar }
-                                : require("./assets/images/programmer.png")
-                            }
-                            style={{
-                              width: 26,
-                              height: 26,
-                              borderRadius: theme.borderRadii.xxl,
-                            }}
-                          />
-                        </Box>
+                        <Image
+                          source={
+                            userData.avatar
+                              ? { uri: userData.avatar }
+                              : require("./assets/images/programmer.png")
+                          }
+                          style={{
+                            width: wp(5.5),
+                            height: wp(5.5),
+                            borderRadius: theme.borderRadii.xxl,
+                          }}
+                        />
                       );
                     }
                   },
                   tabBarActiveTintColor: theme.colors.text,
                   tabBarInactiveTintColor: theme.palette.greenDark,
                   tabBarStyle: {
-                    height: 60,
+                    height: hp(7.5),
                     paddingTop: theme.spacing.s,
                     paddingBottom: theme.spacing.s,
                     backgroundColor: theme.colors.primaryBGColor,
