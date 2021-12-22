@@ -1,8 +1,5 @@
 import { createTheme } from "@shopify/restyle";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
+import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 export const palette = {
   salmonPrimary: "#FAA2A2",

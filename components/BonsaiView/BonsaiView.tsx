@@ -46,15 +46,21 @@ import {
 const Tab = createMaterialTopTabNavigator();
 
 const BonsaiView: FC<BonsaiViewParams> = ({ navigation, route }) => {
-  // console.log(route);
-
   React.useLayoutEffect(() => {
-    route.params.pagePath !== "community"
+    route.params.pagePath === "community"
+      ? route.params.user.id === userData.id
+        ? navigation.setOptions({
+            headerTitle: "Dein Bonsai: " + selectedBonsai.name,
+          })
+        : navigation.setOptions({
+            headerTitle: selectedBonsai.name,
+          })
+      : route.params.pagePath === "home"
       ? navigation.setOptions({
-          headerTitle: "BonsaiViews" && "Alle Bonsais",
+          headerTitle: selectedBonsai.name,
         })
       : navigation.setOptions({
-          headerTitle: "BonsaiViews" && selectedBonsai.name,
+          headerTitle: selectedBonsai.name,
         });
   }, [navigation]);
 
@@ -63,6 +69,7 @@ const BonsaiView: FC<BonsaiViewParams> = ({ navigation, route }) => {
   const { myBonsais } = userBonsaisStore();
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [selected, setSelectedInfo] = useState(false);
+
   const bonsaiDTasksFertilize = null;
   const bonsaiDTasksWatering = null;
 
@@ -140,7 +147,6 @@ const BonsaiView: FC<BonsaiViewParams> = ({ navigation, route }) => {
         (item) => item.id === selectedBonsai.id
       );
       let formatElement = mySelBonsai[0];
-      console.log("formatElement", formatElement);
 
       if (task) {
         db.collection("bonsais")
@@ -255,6 +261,7 @@ const BonsaiView: FC<BonsaiViewParams> = ({ navigation, route }) => {
               />
             </Box>
           </Pressable>
+
           <Pressable onPress={() => setAddWorksVisible(!addWorksVisible)}>
             <Box>
               <Box
@@ -290,36 +297,45 @@ const BonsaiView: FC<BonsaiViewParams> = ({ navigation, route }) => {
             <Box>
               {/* User Image and Name only to Bonsai of Community   */}
               {user.id !== userData.id ? (
-                <Box
-                  flexDirection="row"
-                  alignSelf="flex-end"
-                  alignItems="center"
-                  borderRadius="xxl"
-                  paddingVertical="xs"
-                  marginTop="ms"
-                  paddingRight="xs"
-                  paddingLeft="m"
-                  backgroundColor="mainBackground"
-                  style={{ marginBottom: wp(-6), zIndex: 1 }}
+                <Pressable
+                  style={{ zIndex: 2 }}
+                  onPress={() => {
+                    navigation.navigate("CommunityUserProfileView", {
+                      userOfBonsai: user,
+                    });
+                  }}
                 >
-                  <Box marginRight="m">
-                    <Text variant="title" color="headline">
-                      {user.nickname}
-                    </Text>
+                  <Box
+                    flexDirection="row"
+                    alignSelf="flex-end"
+                    alignItems="center"
+                    borderRadius="xxl"
+                    paddingVertical="xs"
+                    marginTop="ms"
+                    paddingRight="xs"
+                    paddingLeft="m"
+                    backgroundColor="mainBackground"
+                    style={{ marginBottom: wp(-6), zIndex: 1 }}
+                  >
+                    <Box marginRight="m">
+                      <Text variant="title" color="headline">
+                        {user.nickname}
+                      </Text>
+                    </Box>
+                    <Image
+                      source={
+                        user.avatar === ""
+                          ? require("../../assets/images/programmer.png")
+                          : { uri: user.avatar }
+                      }
+                      style={{
+                        width: wp(8),
+                        height: wp(8),
+                        borderRadius: theme.borderRadii.xxl,
+                      }}
+                    />
                   </Box>
-                  <Image
-                    source={
-                      user.avatar === ""
-                        ? require("../../assets/images/programmer.png")
-                        : { uri: user.avatar }
-                    }
-                    style={{
-                      width: wp(8),
-                      height: wp(8),
-                      borderRadius: theme.borderRadii.xxl,
-                    }}
-                  />
-                </Box>
+                </Pressable>
               ) : null}
 
               <Box flex={1}>

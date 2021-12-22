@@ -4,7 +4,6 @@ import {
 } from "@react-navigation/stack";
 import React, { FC } from "react";
 import { RouteProp } from "@react-navigation/native";
-import { SimpleLineIcons } from "@expo/vector-icons";
 import { useTheme } from "@shopify/restyle";
 import { Theme } from "../theme/theme";
 import { userData } from "../dataStores/accountStore";
@@ -14,8 +13,7 @@ import AddBonsaiStep2 from "../components/MyScreen/AddBonsai/AddBonsaiStep2";
 import BonsaiView from "../components/BonsaiView/BonsaiView";
 import UpdateBonsai from "../components/MyScreen/UpdateBonsai/UpdateBonsai";
 import UpdateBonsaiStep2 from "../components/MyScreen/UpdateBonsai/UpdateBonsaiStep2";
-import WorkItemView from "../components/BonsaiView/Arbeiten/AddWorks/xxxWorkItemView";
-import { ArrowCircleLeft2, ProfileCircle } from "iconsax-react-native";
+import { ArrowCircleLeft2 } from "iconsax-react-native";
 import EditProfilePage from "../components/MyScreen/EditProfile/EditProfilePage";
 
 type RootStackParams = {

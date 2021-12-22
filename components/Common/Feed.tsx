@@ -17,7 +17,6 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { BoxSearch } from "iconsax-react-native";
 
 export type FeedProps = {
   navigation?: any;
@@ -26,10 +25,9 @@ export type FeedProps = {
   route?: any;
 };
 
-const Feed: FC<FeedProps> = ({ navigation, bonsai, userOfBonsai }) => {
+const Feed: FC<FeedProps> = ({ navigation, route, bonsai, userOfBonsai }) => {
   const userData = userStore();
   const theme = useTheme<Theme>();
-
   return (
     <Box>
       {userOfBonsai && (
@@ -90,24 +88,14 @@ const Feed: FC<FeedProps> = ({ navigation, bonsai, userOfBonsai }) => {
         position="relative"
         justifyContent="center"
       >
+        {console.log(route)}
         <Pressable
           onPress={() =>
-            userOfBonsai.id === userData.id
-              ? navigation.navigate("BonsaiViewStack", {
-                  screen: "BonsaiView",
-                  params: {
-                    bonsai: bonsai,
-                    user: userOfBonsai,
-                  },
-                })
-              : navigation.navigate("CommunityStack", {
-                  screen: "BonsaiView",
-                  params: {
-                    bonsai: bonsai,
-                    user: userOfBonsai,
-                    pagePath: "community",
-                  },
-                })
+            navigation.navigate("BonsaiView", {
+              bonsai: bonsai,
+              user: userOfBonsai,
+              pagePath: "community",
+            })
           }
         >
           <Box flexDirection="row" alignItems="center">
@@ -134,23 +122,23 @@ const Feed: FC<FeedProps> = ({ navigation, bonsai, userOfBonsai }) => {
             >
               <Box width={wp(25)} marginRight="m">
                 <Box marginBottom="s">
-                  <Text fontSize={wp(3.2)}>Typ:</Text>
-                  <Text fontSize={wp(3.5)}>{bonsai.type}</Text>
+                  <Text fontSize={wp(3)}>Typ:</Text>
+                  <Text fontSize={wp(3.2)}>{bonsai.type}</Text>
                 </Box>
                 <Box>
-                  <Text fontSize={wp(3.2)}>Größe:</Text>
-                  <Text fontSize={wp(3.5)}>{bonsai.size}</Text>
+                  <Text fontSize={wp(3)}>Größe:</Text>
+                  <Text fontSize={wp(3.2)}>{bonsai.size}</Text>
                 </Box>
               </Box>
               <Box width={wp(25)}>
                 <Box marginBottom="s">
-                  <Text fontSize={wp(3.2)}>Form:</Text>
-                  <Text fontSize={wp(3.5)}>{bonsai.form}</Text>
+                  <Text fontSize={wp(3)}>Form:</Text>
+                  <Text fontSize={wp(3.2)}>{bonsai.form}</Text>
                 </Box>
                 <Box>
-                  <Text fontSize={wp(3.2)}>Alter:</Text>
-                  <Text fontSize={wp(3.5)}>
-                    {moment(bonsai.acquisitionDate).format("D MMM. YY")}
+                  <Text fontSize={wp(3)}>Alter:</Text>
+                  <Text fontSize={wp(3.2)}>
+                    {moment(bonsai.acquisitionDate).fromNow(true)}
                   </Text>
                 </Box>
               </Box>

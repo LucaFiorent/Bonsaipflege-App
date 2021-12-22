@@ -4,16 +4,27 @@ import {
 } from "@react-navigation/stack";
 import React, { FC } from "react";
 import { RouteProp } from "@react-navigation/native";
-import { SimpleLineIcons } from "@expo/vector-icons";
 import { useTheme } from "@shopify/restyle";
 import { Theme } from "../theme/theme";
 import HomeScreen from "../screens/HomeScreen";
 import { ArrowCircleLeft2 } from "iconsax-react-native";
+import CommunityScreen from "../screens/CommunityScreen";
+import CommunityUserProfileView from "../components/Community/CommunityUserProfileView";
+import BonsaiView from "../components/BonsaiView/BonsaiView";
 
-type MainStackParams = {
-  HomeScreen: undefined;
+// root stack
+type RootStackParams = {
+  HomeStack: undefined;
 };
 
+//main stack
+type MainStackParams = {
+  HomeScreen: undefined;
+  BonsaiView: { bonsai: any; user: any; pagePath: string };
+  CommunityUserProfileView: undefined;
+};
+
+type HomeScreenRouteProp = RouteProp<RootStackParams, "HomeStack">;
 type HomeScreenNavigationProp = StackNavigationProp<
   MainStackParams,
   "HomeScreen"
@@ -21,16 +32,34 @@ type HomeScreenNavigationProp = StackNavigationProp<
 
 export type HomeScreenProps = {
   navigation: HomeScreenNavigationProp;
+  route: HomeScreenRouteProp;
 };
 
-type RootStackParams = {
-  HomeStack: undefined;
+//main stack bonsai view screen
+type BonsaiViewNavigationProp = StackNavigationProp<
+  MainStackParams,
+  "BonsaiView"
+>;
+type BonsaiViewRouteProp = RouteProp<MainStackParams, "BonsaiView">;
+
+export type BonsaiViewProps = {
+  navigation: BonsaiViewNavigationProp;
+  route: BonsaiViewRouteProp;
 };
 
-type HomeStackRouteProp = RouteProp<RootStackParams, "HomeStack">;
+//main stack CommunityProfile view screen
+type CommunityUserProfileViewNavigationProp = StackNavigationProp<
+  MainStackParams,
+  "CommunityUserProfileView"
+>;
+type CommunityUserProfileViewRouteProp = RouteProp<
+  MainStackParams,
+  "CommunityUserProfileView"
+>;
 
-export type HomeStackProps = {
-  route: HomeStackRouteProp;
+export type CommunityUserProfileViewProps = {
+  navigation: CommunityUserProfileViewNavigationProp;
+  route: CommunityUserProfileViewRouteProp;
 };
 
 const HomeStack: FC = () => {
@@ -59,6 +88,19 @@ const HomeStack: FC = () => {
         component={HomeScreen}
         options={{ headerShown: false }}
       />
+      <MainStack.Screen
+        name="BonsaiView"
+        component={BonsaiView}
+        options={{
+          headerBackTitleVisible: false,
+          headerShown: true,
+        }}
+      />
+      <MainStack.Screen
+        name="CommunityUserProfileView"
+        component={CommunityUserProfileView}
+        options={{ headerBackTitleVisible: false, headerShown: true }}
+      />
     </MainStack.Navigator>
   );
 };
@@ -76,10 +118,10 @@ const HomeSection: FC = () => {
           paddingRight: 16,
         },
         headerBackImage: () => (
-          <SimpleLineIcons
-            name="arrow-left-circle"
-            size={24}
+          <ArrowCircleLeft2
+            size={30}
             color={theme.colors.primaryGreenColor}
+            variant="Broken"
           />
         ),
       }}

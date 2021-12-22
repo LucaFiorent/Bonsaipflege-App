@@ -17,12 +17,11 @@ import { Like, SearchNormal1 } from "iconsax-react-native";
 import moment from "moment";
 import NewAktivities from "../components/Home/NewAktivities/NewAktivities";
 import SearchAndFilterBar from "../components/Home/SearchAndFilterBar/SearchAndFilterBar";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
+import { widthPercentageToDP as wp } from "react-native-responsive-screen";
+import LastWorks from "../components/Home/LastWorks/LastWorks";
+import { HomeScreenProps } from "../sections/HomeSection";
 
-const HomeScreen: FC = () => {
+const HomeScreen: FC<HomeScreenProps> = ({ navigation, route }) => {
   const userData = userStore();
   const { myBonsais } = userBonsaisStore();
   const { communityBonsais } = communityBonsaisStore();
@@ -161,21 +160,103 @@ const HomeScreen: FC = () => {
   }
 
   let today = new Date();
-  const newAktivities = communityBonsais.filter(
-    (bonsai) =>
+  const newAktivities = communityBonsais.filter((bonsai) => {
+    if (
+      userData.id !== bonsai.userId &&
       moment(bonsai.updatedOn).format("D MMM. YY") ===
-      moment(today).format("D MMM. YY")
-  );
+        moment(today).format("D MMM. YY")
+    )
+      return bonsai;
+  });
+
+  const newAktivitiesUser = communityProfiles.filter((profile) => {
+    let newBonsai = newAktivities.filter(
+      (bonsaiEle) => profile.id === bonsaiEle.userId && bonsaiEle
+    );
+    if (newBonsai.length > 0) return profile.id;
+  });
+
+  const newAktivitiesComponent =
+    newAktivities.length > 0 ? (
+      newAktivitiesUser.map((user, index) => {
+        if (userData.subscribed.includes(user.id) && newAktivities.length !== 0)
+          return (
+            <Box>
+              {console.log("index: ", index)}
+              <NewAktivities
+                key={index}
+                userSub={user}
+                newestBonsais={newAktivities.filter(
+                  (bonsai) => bonsai.userId === user.id
+                )}
+                navigation={navigation}
+                route={route}
+              />
+            </Box>
+          );
+      })
+    ) : (
+      <Box
+        flexDirection="row"
+        backgroundColor="mainBackground"
+        paddingVertical="xl"
+        paddingHorizontal="l"
+        alignItems="center"
+        borderRadius="m"
+        marginVertical="xs"
+      >
+        <Like size={40} color={theme.colors.error} variant="Outline" />
+        <Box justifyContent="center">
+          <Text variant="placeholder" color="error" marginLeft="m">
+            Es gibt keine neuen Aktivitäten heute
+          </Text>
+          <Text
+            variant="placeholder"
+            color="error"
+            marginLeft="m"
+            fontSize={14}
+          >
+            Gück wieder später rein
+          </Text>
+        </Box>
+      </Box>
+    );
+
+  const myLatestWorks = myBonsais.filter((bonsai) => {
+    const lastWork = bonsai.tasks.filter((task) => {
+      if (
+        (task.doneTask.includes("Bewässerung") &&
+          moment(task.taskDate).format("D MMM. YY") ===
+            moment(today).format("D MMM. YY")) ||
+        (task.doneTask.includes("Dünger") &&
+          moment(task.taskDate).format("D MMM. YY") ===
+            moment(today).format("D MMM. YY"))
+      )
+        return task;
+    });
+
+    if (lastWork.length > 0) return bonsai;
+  });
+
+  const myLatestWorksComponent =
+    myLatestWorks.length > 0 &&
+    myLatestWorks.map((bonsai, index) => {
+      return (
+        <Box>
+          <LastWorks
+            key={index}
+            myLatestWorks={bonsai}
+            navigation={navigation}
+            route={route}
+          />
+        </Box>
+      );
+    });
 
   return (
     <>
       <Box alignItems="center" backgroundColor="primaryGreenColor">
-        <Text
-          variant="logo"
-          marginVertical="m"
-          // fontSize={wp(6)}
-          // fontFamily="HinaMincho-Regular"
-        >
+        <Text variant="logo" marginVertical="m">
           BONSAI
         </Text>
       </Box>
@@ -215,7 +296,7 @@ const HomeScreen: FC = () => {
                   variant="title"
                   color="headline"
                 >
-                  Wilkommen
+                  Willkommen
                 </Text>
                 <Text
                   fontSize={wp(4.5)}
@@ -295,7 +376,19 @@ const HomeScreen: FC = () => {
                 </Text>
                 {filterResults.length > 0 ? (
                   filterResults.map((item, index) => {
-                    return <Feed key={index} bonsai={item} />;
+                    let user = communityProfiles.filter(
+                      (user) => item.userId === user.id
+                    );
+
+                    return (
+                      <>
+                        <Feed
+                          key={index}
+                          bonsai={item}
+                          userOfBonsai={user[0]}
+                        />
+                      </>
+                    );
                   })
                 ) : (
                   <Box justifyContent="center" alignItems="center">
@@ -314,67 +407,18 @@ const HomeScreen: FC = () => {
                 )}
               </Box>
             ) : (
-              <Box>
-                <Box marginVertical="m">
-                  <Text variant="h1">Neue aktivitäten</Text>
-                </Box>
-                {newAktivities.length === 0 && (
-                  <Box
-                    flexDirection="row"
-                    backgroundColor="mainBackground"
-                    paddingVertical="xl"
-                    paddingHorizontal="l"
-                    alignItems="center"
-                    borderRadius="m"
-                    marginVertical="xs"
-                  >
-                    <Like
-                      size={40}
-                      color={theme.colors.error}
-                      variant="Outline"
-                    />
-                    <Box justifyContent="center">
-                      <Text variant="placeholder" color="error" marginLeft="m">
-                        Es gibt keine neuen Aktivitäten heute
-                      </Text>
-                      <Text
-                        variant="placeholder"
-                        color="error"
-                        marginLeft="m"
-                        fontSize={14}
-                      >
-                        Gück wieder später rein
-                      </Text>
-                    </Box>
-                  </Box>
-                )}
-
+              <Box marginBottom="xl">
                 <Box>
-                  {communityProfiles.map((userSub, index) => {
-                    let latestUpdates = communityBonsais.filter(
-                      (bonsai) => bonsai.userId === userSub.id && bonsai
-                    );
-
-                    let sortedList = latestUpdates.sort();
-                    let today = new Date();
-
-                    let newestBonsais = sortedList.filter((item) => {
-                      return (
-                        moment(item.updatedOn).format("D MMM. YY") ===
-                          moment(today).format("D MMM. YY") && item
-                      );
-                    });
-
-                    return (
-                      userData.subscribed.includes(userSub.id) &&
-                      newestBonsais.length !== 0 && (
-                        <NewAktivities
-                          userSub={userSub}
-                          newestBonsais={newestBonsais}
-                        />
-                      )
-                    );
-                  })}
+                  <Box marginVertical="m">
+                    <Text variant="h1">Letze Arbeiten</Text>
+                  </Box>
+                  <Box>{myLatestWorks && myLatestWorksComponent}</Box>
+                </Box>
+                <Box>
+                  <Box marginVertical="m">
+                    <Text variant="h1">Neue aktivitäten</Text>
+                  </Box>
+                  <Box>{newAktivities && newAktivitiesComponent}</Box>
                 </Box>
               </Box>
             )}

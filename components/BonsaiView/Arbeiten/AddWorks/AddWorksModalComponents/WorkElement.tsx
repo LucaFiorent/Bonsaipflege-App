@@ -3,10 +3,7 @@ import Box from "../../../../Common/Box";
 import Text from "../../../../Common/Text";
 import { Pressable } from "react-native";
 import { WorkElementProps } from "../../../../../types/WorkViewTypes";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
+import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 const WorkElement: FC<WorkElementProps> = ({
   item,

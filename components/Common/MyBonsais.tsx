@@ -119,12 +119,12 @@ const MyBonsais: FC<MyBonsaisProps> = ({ bonsaiData, navigation, user }) => {
             >
               <Box>
                 <Box marginBottom="s">
-                  <Text fontSize={wp(3.2)}>Typ:</Text>
-                  <Text fontSize={wp(3.4)}>{bonsaiData.type}</Text>
+                  <Text fontSize={wp(3)}>Typ:</Text>
+                  <Text fontSize={wp(3.2)}>{bonsaiData.type}</Text>
                 </Box>
                 <Box marginBottom="s">
-                  <Text fontSize={wp(3.2)}>Form:</Text>
-                  <Text fontSize={wp(3.4)}>{bonsaiData.form}</Text>
+                  <Text fontSize={wp(3)}>Form:</Text>
+                  <Text fontSize={wp(3.2)}>{bonsaiData.form}</Text>
                 </Box>
               </Box>
               <Box>
@@ -135,8 +135,8 @@ const MyBonsais: FC<MyBonsaisProps> = ({ bonsaiData, navigation, user }) => {
                   justifyContent="flex-end"
                 >
                   <Text fontSize={wp(3)}>Alter: </Text>
-                  <Text fontSize={wp(3.5)}>
-                    {moment(bonsaiData.acquisitionDate).format("D MMM. YY")}
+                  <Text fontSize={wp(3.2)}>
+                    {moment(bonsaiData.acquisitionDate).fromNow(true)}
                   </Text>
                 </Box>
                 <Box
@@ -146,7 +146,7 @@ const MyBonsais: FC<MyBonsaisProps> = ({ bonsaiData, navigation, user }) => {
                   justifyContent="flex-end"
                 >
                   <Text fontSize={wp(3)}>Bewässerung: </Text>
-                  <Text fontSize={wp(3.4)}>
+                  <Text fontSize={wp(3.2)}>
                     {bonsaiDTasksWatering ? bonsaiDTasksWatering : "~"}
                   </Text>
                 </Box>
@@ -157,7 +157,7 @@ const MyBonsais: FC<MyBonsaisProps> = ({ bonsaiData, navigation, user }) => {
                   justifyContent="flex-end"
                 >
                   <Text fontSize={wp(3)}>Düngung: </Text>
-                  <Text fontSize={wp(3.4)}>
+                  <Text fontSize={wp(3.2)}>
                     {bonsaiDTasksFertilize ? bonsaiDTasksFertilize : "~"}
                   </Text>
                 </Box>

@@ -35,6 +35,8 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import moment from "moment";
+import "moment/locale/de";
 
 export default function App() {
   const appTheme = theme;

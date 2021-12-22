@@ -8,6 +8,7 @@ import { FC } from "react";
 import { userBonsaisStore, userStore } from "../dataStores/accountStore";
 import MyBonsais from "../components/Common/MyBonsais";
 import { AddCircle } from "iconsax-react-native";
+import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 const MyScreen: FC<MyScreenProps> = ({ navigation }) => {
   const userData = userStore();
@@ -24,7 +25,7 @@ const MyScreen: FC<MyScreenProps> = ({ navigation }) => {
         title="Neuer Bonsai"
         icon={
           <AddCircle
-            size={26}
+            size={wp(6.5)}
             color={theme.colors.textOnDark}
             variant="Broken"
           />

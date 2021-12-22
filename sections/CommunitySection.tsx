@@ -21,7 +21,7 @@ type RootStackParams = {
 type MainStackCommunityParams = {
   Community: undefined;
   CommunityUserProfileView: { navigation: any; userOfBonsai: any };
-  BonsaiView: { bonsai: any; user: any };
+  BonsaiView: { bonsai: any; user: any; pagePath: string };
   AbonnamentsView: { navigation: any; route: any };
 };
 
