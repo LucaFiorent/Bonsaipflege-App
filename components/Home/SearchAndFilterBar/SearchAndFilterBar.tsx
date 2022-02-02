@@ -67,14 +67,11 @@ const SearchAndFilterBar: FC<SearchAndFilterBarProps> = ({
                 top={-5}
                 borderRadius="xl"
                 backgroundColor="error"
+                width={wp(5)}
+                height={wp(5)}
+                alignItems="center"
               >
-                <Text
-                  variant="title"
-                  fontSize={wp(3.5)}
-                  color="textOnDark"
-                  paddingVertical="xxs"
-                  paddingHorizontal="s"
-                >
+                <Text variant="title" fontSize={wp(3.5)} color="textOnDark">
                   {searchValue || selectedFilters ? "+" : null}
                 </Text>
               </Box>

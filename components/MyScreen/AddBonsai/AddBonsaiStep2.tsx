@@ -2,7 +2,14 @@
 import * as React from "react";
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Alert, Image, Platform, Pressable, ScrollView } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  Image,
+  Platform,
+  Pressable,
+  ScrollView,
+} from "react-native";
 //expo
 import Constants from "expo-constants";
 
@@ -15,7 +22,7 @@ import NextStepButton from "../../Common/NextStepButton";
 import Box from "../../Common/Box";
 import Text from "../../Common/Text";
 //data
-
+import Modal from "react-native-modal";
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
@@ -64,6 +71,8 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
   const [date, setDate] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [loadingReady, setLoadingReady] = useState(false);
 
   const onChange = (event: any, selectedDate: any) => {
     const currentDate = selectedDate || acquisitionDate;
@@ -168,8 +177,10 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
     if (imageResult) {
       addPicture(image, bonsai.name)
         .then(() => {
-          navigation.navigate("MyScreen");
-          Alert.alert("Sie haben ein Bonsai erfolgreich hinzugefügt.");
+          setTimeout(() => {
+            setLoading(false);
+            navigation.navigate("MyScreen");
+          }, 1000);
         })
         .catch((err) => {
           Alert.alert(err);
@@ -179,6 +190,7 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
 
   // function that send the Bonsai Data to the Firebase database
   const addPicture = async (imagePath: any, imageName: any) => {
+    setLoading(true);
     const response = await fetch(imagePath);
     const blob = await response.blob();
     var ref = firebase
@@ -195,16 +207,16 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
         createdOn: firebase.firestore.FieldValue.serverTimestamp(),
         updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
       });
+    setLoadingReady(true);
   };
 
   moment.locale("de");
 
-  //return component
   return (
     <>
       <NextStepButton
         onPress={addNewBonsai}
-        primary={theme.colors.primarySalmonColor}
+        primary="primaryGreenColor"
         title="Bonsai Speichern"
         icon={
           <ClipboardTick
@@ -276,7 +288,7 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
                   borderColor="borderInput"
                 >
                   <Text
-                    color={selectedForm === "" ? "placeholderColor" : "text"}
+                    color={selectedSize === "" ? "placeholderColor" : "text"}
                   >
                     {selectedSize === ""
                       ? "Wähle dir Größe deines Bonsai.."
@@ -377,6 +389,34 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
           </ScrollView>
         </SafeAreaView>
       </Box>
+      <Modal
+        backdropOpacity={0.5}
+        isVisible={loading}
+        backdropColor={theme.colors.textOnDark}
+      >
+        {!loadingReady ? (
+          <ActivityIndicator
+            size={wp(15)}
+            color={theme.colors.primarySalmonColor}
+          />
+        ) : (
+          <Box alignItems="center" justifyContent="center">
+            <Box
+              alignItems="center"
+              backgroundColor="mainBackground"
+              justifyContent="center"
+              width={wp(25)}
+              height={wp(25)}
+              borderRadius="xxl"
+            >
+              <ClipboardTick
+                size={wp(14)}
+                color={theme.colors.primarySalmonColor}
+              />
+            </Box>
+          </Box>
+        )}
+      </Modal>
 
       <BottomSheetModalProvider>
         <BottomSheetModal

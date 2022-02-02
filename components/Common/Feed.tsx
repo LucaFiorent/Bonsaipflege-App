@@ -88,7 +88,6 @@ const Feed: FC<FeedProps> = ({ navigation, route, bonsai, userOfBonsai }) => {
         position="relative"
         justifyContent="center"
       >
-        {console.log(route)}
         <Pressable
           onPress={() =>
             navigation.navigate("BonsaiView", {

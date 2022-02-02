@@ -111,7 +111,7 @@ const HomeScreen: FC<HomeScreenProps> = ({ navigation, route }) => {
           const entity = doc.data();
           entity.id = doc.id;
           entity.acquisitionDate = entity.acquisitionDate.toDate();
-          entity.createdOn = entity.createdOn.toDate();
+          entity.createdOn = entity.updatedOn && entity.createdOn.toDate();
           entity.updatedOn = entity.updatedOn && entity.updatedOn.toDate();
           entity.tasks &&
             (entity.tasks = entity.tasks.map((task: any) => ({
@@ -182,7 +182,6 @@ const HomeScreen: FC<HomeScreenProps> = ({ navigation, route }) => {
         if (userData.subscribed.includes(user.id) && newAktivities.length !== 0)
           return (
             <Box>
-              {console.log("index: ", index)}
               <NewAktivities
                 key={index}
                 userSub={user}

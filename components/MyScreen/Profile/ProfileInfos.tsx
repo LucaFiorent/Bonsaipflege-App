@@ -13,13 +13,7 @@ import { userStore } from "../../../dataStores/accountStore";
 
 import "react-native-gesture-handler";
 import { FC, useState } from "react";
-import {
-  Flash,
-  FlashSlash,
-  Logout,
-  ProfileAdd,
-  UserTick,
-} from "iconsax-react-native";
+import { Logout, ProfileAdd, Setting2, UserTick } from "iconsax-react-native";
 import db from "../../../firebase/firebaseConfig";
 import { communityDataStore } from "../../../dataStores/communityStore";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
@@ -108,17 +102,11 @@ const ProfileInfos: FC<ProfileInfosProps> = ({ navigation, user, bonsais }) => {
               </Text>
             </Box>
           </Pressable>
-          <Pressable onPress={() => setLightOn(!lightOn)}>
+          <Pressable onPress={() => navigation.navigate("EditProfile")}>
             <Box alignItems="center" width={wp(12)}>
-              <Box>
-                {lightOn ? (
-                  <Flash size={wp(7)} color={theme.colors.primarySalmonColor} />
-                ) : (
-                  <FlashSlash size={wp(7)} color={theme.colors.iconInactive} />
-                )}
-              </Box>
-              <Text fontSize={wp(2)} color="iconInactive">
-                {!lightOn ? "Dark Mode" : "Light Mode"}
+              <Setting2 size={wp(7)} color={theme.colors.iconInactive} />
+              <Text fontSize={wp(2)} color="iconInactive" textAlign="center">
+                Konto
               </Text>
             </Box>
           </Pressable>

@@ -2,7 +2,14 @@
 import * as React from "react";
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Alert, Image, Platform, Pressable, ScrollView } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  Image,
+  Platform,
+  Pressable,
+  ScrollView,
+} from "react-native";
 //expo
 import Constants from "expo-constants";
 
@@ -16,6 +23,7 @@ import Box from "../../Common/Box";
 import Text from "../../Common/Text";
 //data
 
+import Modal from "react-native-modal";
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
@@ -36,6 +44,7 @@ import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 import { CalendarAdd, CalendarTick, ClipboardTick } from "iconsax-react-native";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
+import { motion } from "framer-motion";
 
 const AddBonsaiStep2: FC<UpdateBonsaiStep2Props> = ({ route, navigation }) => {
   const updateBonsai = route.params.bonsai;
@@ -112,6 +121,8 @@ const AddBonsaiStep2: FC<UpdateBonsaiStep2Props> = ({ route, navigation }) => {
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
   const [date, setDate] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [loadingReady, setLoadingReady] = useState(false);
 
   // Logic for calendar
   const onChange = (event: any, selectedDate: any) => {
@@ -182,8 +193,10 @@ const AddBonsaiStep2: FC<UpdateBonsaiStep2Props> = ({ route, navigation }) => {
     if (imageResult) {
       addPicture(image, bonsai.name, updateBonsai.image)
         .then(() => {
-          Alert.alert("Success");
-          navigation.navigate("MyScreen");
+          setTimeout(() => {
+            setLoading(false);
+            navigation.navigate("MyScreen");
+          }, 1000);
         })
         .catch((err) => {
           Alert.alert(err);
@@ -199,7 +212,7 @@ const AddBonsaiStep2: FC<UpdateBonsaiStep2Props> = ({ route, navigation }) => {
   ) => {
     var fileRef = firebase.storage().refFromURL(oldImage);
     var delPic = fileRef.delete();
-
+    setLoading(true);
     const response = await fetch(imagePath);
     const blob = await response.blob();
     var ref = firebase
@@ -217,6 +230,7 @@ const AddBonsaiStep2: FC<UpdateBonsaiStep2Props> = ({ route, navigation }) => {
         image: imageUrl,
         updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
       });
+    setLoadingReady(true);
   };
 
   moment.locale("de");
@@ -395,6 +409,35 @@ const AddBonsaiStep2: FC<UpdateBonsaiStep2Props> = ({ route, navigation }) => {
           </ScrollView>
         </SafeAreaView>
       </Box>
+
+      <Modal
+        backdropOpacity={0.5}
+        isVisible={loading}
+        backdropColor={theme.colors.textOnDark}
+      >
+        {!loadingReady ? (
+          <ActivityIndicator
+            size={wp(15)}
+            color={theme.colors.primarySalmonColor}
+          />
+        ) : (
+          <Box alignItems="center" justifyContent="center">
+            <Box
+              alignItems="center"
+              backgroundColor="mainBackground"
+              justifyContent="center"
+              width={wp(25)}
+              height={wp(25)}
+              borderRadius="xxl"
+            >
+              <ClipboardTick
+                size={wp(14)}
+                color={theme.colors.primarySalmonColor}
+              />
+            </Box>
+          </Box>
+        )}
+      </Modal>
 
       <BottomSheetModalProvider>
         <BottomSheetModal

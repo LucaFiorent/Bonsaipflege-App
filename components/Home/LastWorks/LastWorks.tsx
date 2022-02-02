@@ -22,8 +22,6 @@ const LastWorks: FC<LastWorksProps> = ({
   navigation,
   route,
 }) => {
-  console.log(route);
-
   const userData = userStore();
   let today = new Date();
   const bonsaiTasksWatering = myLatestWorks.tasks.filter(

@@ -30,13 +30,21 @@ const NextStepButton: FC<ButtonProps> = ({
           alignItems="center"
           backgroundColor="mainBackground"
           borderRadius="xl"
+          borderWidth={1}
+          borderColor={
+            primary === "primarySalmonColor"
+              ? "primarySalmonColor"
+              : "primaryGreenColor"
+          }
         >
           <Text marginLeft="m" marginRight="m" color="text">
             {title}
           </Text>
           <Box
             backgroundColor={
-              primary ? "primarySalmonColor" : "primaryGreenColor"
+              primary === "primarySalmonColor"
+                ? "primarySalmonColor"
+                : "primaryGreenColor"
             }
             justifyContent="center"
             alignItems="center"

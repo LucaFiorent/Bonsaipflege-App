@@ -24,7 +24,7 @@ import {
 
 const AddBonsai: FC<AddBonsaiProps> = ({ navigation }) => {
   const theme = useTheme<Theme>();
-  const [errMss, setErrMss] = useState(null);
+  const [errMss, setErrMss] = useState<any>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [image, setImage] = useState<string>(
     "https://firebasestorage.googleapis.com/v0/b/bonsaipflege-app.appspot.com/o/bonsai-pic.jpg?alt=media&token=a04f373c-7501-4d78-ad0c-159597daa4e3"
@@ -76,7 +76,7 @@ const AddBonsai: FC<AddBonsaiProps> = ({ navigation }) => {
     <>
       <NextStepButton
         onPress={NavigateToNextPage}
-        primary={theme.colors.primarySalmonColor}
+        primary="primarySalmonColor"
         title="nächster Schritt"
         index={1}
         icon={

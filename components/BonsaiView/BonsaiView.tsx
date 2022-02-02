@@ -1,4 +1,4 @@
-import { useTheme, visible } from "@shopify/restyle";
+import { useTheme } from "@shopify/restyle";
 import * as React from "react";
 import { Image, Pressable, SafeAreaView, ScrollView } from "react-native";
 import { Theme } from "../../theme/theme";
@@ -19,7 +19,7 @@ import db from "../../firebase/firebaseConfig";
 import { BonsaiViewParams } from "../../types/bottomSheetTypes";
 
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import EreignisView from "./Ereignis/EreignisView";
+// import EreignisView from "./Ereignis/EreignisView";
 import WorksView from "./Arbeiten/WorksView";
 import {
   AddCircle,
@@ -70,19 +70,18 @@ const BonsaiView: FC<BonsaiViewParams> = ({ navigation, route }) => {
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [selected, setSelectedInfo] = useState(false);
 
-  const bonsaiDTasksFertilize = null;
-  const bonsaiDTasksWatering = null;
-
   const selRouteBonsai = route.params.bonsai;
   const user = route.params.user;
 
   const selectedFilterBonsai = myBonsais.filter((bonsai) => {
     if (bonsai.id === selRouteBonsai.id) return bonsai;
   });
+
   const selectedBonsai =
     user.id === userData.id ? selectedFilterBonsai[0] : selRouteBonsai;
 
   const deleteBonsaiHandler = async () => {
+    setDeleteModalVisible(!deleteModalVisible);
     let newBonsaiList = myBonsais.filter(
       (bonsai) => bonsai.id !== selRouteBonsai.id
     );
@@ -94,10 +93,8 @@ const BonsaiView: FC<BonsaiViewParams> = ({ navigation, route }) => {
       var fileRef = firebase.storage().refFromURL(selRouteBonsai.image);
       fileRef.delete();
     }
-
     const allBonsais = db.collection("bonsais").doc(selRouteBonsai.id);
     allBonsais.delete();
-    setModalVisible(!visible);
     navigation.navigate("MyScreen");
   };
 
@@ -518,7 +515,7 @@ const BonsaiView: FC<BonsaiViewParams> = ({ navigation, route }) => {
               )}
               name="arbeiten"
             />
-            <Tab.Screen name="ereignis" children={() => <EreignisView />} />
+            {/* <Tab.Screen name="ereignis" children={() => <EreignisView />} /> */}
           </Tab.Navigator>
         </SafeAreaView>
         {/* Delete Modal  */}
