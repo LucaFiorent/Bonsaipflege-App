@@ -2,19 +2,15 @@ import React, { useEffect } from "react";
 import db from "./firebase/firebaseConfig";
 import firebase from "firebase";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-
 //theme
 import { ThemeProvider } from "@shopify/restyle";
 import theme from "./theme/theme";
 //components
-//import MySectionScreen from "./screens/MySectionScreen";
 //react navigation
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 //expo
-import Box from "./components/Common/Box";
-import Text from "./components/Common/Text";
 import { useFonts } from "expo-font";
 import AppLoading from "expo-app-loading";
 import { Image, StatusBar } from "react-native";
@@ -35,8 +31,12 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import moment from "moment";
 import "moment/locale/de";
+import Text from "./components/Common/Text";
+
+import { LogBox } from "react-native";
+LogBox.ignoreLogs(["Warning: ..."]); // Ignore log notification by message
+LogBox.ignoreAllLogs(); //Ignore all log notifications
 
 export default function App() {
   const appTheme = theme;
@@ -104,7 +104,7 @@ export default function App() {
                           variant="Outline"
                         />
                       );
-                    } else if (route.name === "Me") {
+                    } else if (route.name === "Mein Profil") {
                       return (
                         <Image
                           source={
@@ -121,8 +121,57 @@ export default function App() {
                       );
                     }
                   },
-                  tabBarActiveTintColor: theme.colors.text,
-                  tabBarInactiveTintColor: theme.palette.greenDark,
+
+                  tabBarActiveTintColor: theme.palette.black,
+                  tabBarInactiveTintColor: theme.palette.greenPrimary,
+                  tabBarLabel: ({ focused }) => {
+                    if (route.name === "Home") {
+                      return (
+                        <Text
+                          fontSize={wp(2.3)}
+                          color="primaryGreenColor"
+                          style={
+                            focused && {
+                              fontWeight: "bold",
+                              color: theme.palette.black,
+                            }
+                          }
+                        >
+                          Home
+                        </Text>
+                      );
+                    } else if (route.name === "Community") {
+                      return (
+                        <Text
+                          fontSize={wp(2.3)}
+                          color="primaryGreenColor"
+                          style={
+                            focused && {
+                              fontWeight: "bold",
+                              color: theme.palette.black,
+                            }
+                          }
+                        >
+                          Community
+                        </Text>
+                      );
+                    } else if (route.name === "Mein Profil") {
+                      return (
+                        <Text
+                          fontSize={wp(2.3)}
+                          color="primaryGreenColor"
+                          style={
+                            focused && {
+                              fontWeight: "bold",
+                              color: theme.palette.black,
+                            }
+                          }
+                        >
+                          Mein Profil
+                        </Text>
+                      );
+                    }
+                  },
                   tabBarStyle: {
                     height: hp(7.5),
                     paddingTop: theme.spacing.s,
@@ -142,7 +191,7 @@ export default function App() {
                   options={{ headerShown: false }}
                 />
                 <Tab.Screen
-                  name="Me"
+                  name="Mein Profil"
                   component={MySection}
                   options={{ headerShown: false }}
                 />

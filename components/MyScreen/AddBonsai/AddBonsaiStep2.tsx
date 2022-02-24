@@ -1,4 +1,4 @@
-//react
+// imports
 import * as React from "react";
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -10,32 +10,19 @@ import {
   Pressable,
   ScrollView,
 } from "react-native";
-//expo
 import Constants from "expo-constants";
-
-//restyle/shopyfi theme
 import { useTheme } from "@shopify/restyle";
 import { Theme } from "../../../theme/theme";
-//components
 import NextStepButton from "../../Common/NextStepButton";
-//common components
-import Box from "../../Common/Box";
-import Text from "../../Common/Text";
-//data
 import Modal from "react-native-modal";
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
 import BottomSheetModalContainer from "./BottomSheetModalContainer";
-import { FormsData, SizesData } from "../../../types/firebaseTypes";
-
 import db from "../../../firebase/firebaseConfig";
-import Input from "../../Common/Input";
 import ToggleSwitchButton from "../../Common/ToggleSwitchButton";
 import { AddBonsaiStep2Props } from "../../../types/bottomSheetTypes";
-import { userStore } from "../../../dataStores/accountStore";
-
 import DateTimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
 import firebase from "firebase";
@@ -43,6 +30,14 @@ import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 import { CalendarAdd, CalendarTick, ClipboardTick } from "iconsax-react-native";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
+//common components
+import Box from "../../Common/Box";
+import Text from "../../Common/Text";
+import Input from "../../Common/Input";
+//data
+import { userStore } from "../../../dataStores/accountStore";
+//types
+import { FormsData, SizesData } from "../../../types/firebaseTypes";
 
 const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
   const theme = useTheme<Theme>();
@@ -106,7 +101,7 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
         setFormsFirestore(newEntities);
       },
       (error: any) => {
-        console.log(error, "no forms found");
+        console.log(error, "Keine Formen gefunden");
       }
     );
     entityRefSizes.onSnapshot(
@@ -120,7 +115,7 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
         setSizesFirestore(newEntities);
       },
       (error: any) => {
-        console.log(error, "no sizes found");
+        console.log(error, "Keine Größen gefunden");
       }
     );
   }, []);
@@ -157,6 +152,7 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
   const selectedValue =
     currentlyEditing === "Größen" ? selectedSize : selectedForm;
 
+  // prepare bonsai data
   const bonsai = {
     image: "",
     name: bonsaiName,
@@ -216,8 +212,8 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
     <>
       <NextStepButton
         onPress={addNewBonsai}
-        primary="primaryGreenColor"
-        title="Bonsai Speichern"
+        primary="primarySalmonColor"
+        title="Bonsai speichern"
         icon={
           <ClipboardTick
             size={wp(6.5)}
@@ -266,7 +262,7 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
                     color={selectedForm === "" ? "placeholderColor" : "text"}
                   >
                     {selectedForm === ""
-                      ? "Wähle dir Form deines Bonsai.."
+                      ? "Wähle die Form deines Bonsais.."
                       : selectedForm}
                   </Text>
                 </Box>
@@ -291,7 +287,7 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
                     color={selectedSize === "" ? "placeholderColor" : "text"}
                   >
                     {selectedSize === ""
-                      ? "Wähle dir Größe deines Bonsai.."
+                      ? "Wähle die Größe deines Bonsais.."
                       : selectedSize}
                   </Text>
                 </Box>
@@ -299,8 +295,8 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
             </Pressable>
             <Box>
               <Input
-                label="Baum Art"
-                placeholder="Wähle die Art deines Bonsai.."
+                label="Baumart"
+                placeholder="Wähle die Art deines Bonsais.."
                 value={treeType}
                 onChange={(treeType) => setTreeType(treeType)}
               />
@@ -323,7 +319,7 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
                   marginBottom="xs"
                   style={{ color: theme.colors.headline }}
                 >
-                  Erwerbsdatum
+                  Alter
                 </Text>
                 <Box
                   flexDirection="row"
@@ -345,7 +341,7 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
                     >
                       {date
                         ? moment(acquisitionDate).format("D MMMM YYYY")
-                        : "Datum Auswählen..."}
+                        : "Datum auswählen..."}
                     </Text>
                   </Box>
                 </Box>
@@ -380,11 +376,7 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
             <ToggleSwitchButton
               publicBonsai={publicBonsai}
               setPublic={setPublic}
-              title={
-                !publicBonsai
-                  ? "Bonsai ist privat"
-                  : "Bonsai wird veröffentlichen"
-              }
+              title={"Bonsai veröffentlichen"}
             />
           </ScrollView>
         </SafeAreaView>

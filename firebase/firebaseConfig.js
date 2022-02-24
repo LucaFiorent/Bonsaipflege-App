@@ -1,6 +1,6 @@
 import * as firebase from "firebase";
 import "firebase/firestore";
-
+// firebase config
 export const firebaseConfig = {
   apiKey: "AIzaSyDDvdfnTHT9G6ASYdvnMZQMDzPRaM5t5WY",
   authDomain: "bonsaipflege-app.firebaseapp.com",

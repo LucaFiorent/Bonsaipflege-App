@@ -171,22 +171,5 @@ const theme = createTheme({
   },
 });
 
-export const darkTheme: Theme = {
-  ...theme,
-  colors: {
-    ...theme.colors,
-    iconInactive: palette.white,
-    textHighContrast: palette.white,
-    btnBg: palette.salmonLight,
-    mainBackground: "#17141B",
-    headline: palette.white,
-    text: "rgba(255,255,255, 0.9)",
-    descriptionText: palette.salmonLight,
-    borderColor: "#272738",
-    success: palette.greenLight,
-    error: palette.orangeWarning,
-  },
-};
-
 export type Theme = typeof theme;
 export default theme;

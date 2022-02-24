@@ -20,7 +20,15 @@ const ButtonWithIcon: FC<ButtonProps> = ({ onPress, title, primary, icon }) => {
           justifyContent="center"
           paddingVertical="s"
           paddingHorizontal="l"
-          backgroundColor={primary ? "primarySalmonColor" : "primaryGreenColor"}
+          backgroundColor={
+            primary === "primarySalmonColor"
+              ? "primarySalmonColor"
+              : primary === "notAktiv"
+              ? "iconInactive"
+              : primary === "primaryGreenColor"
+              ? "primaryGreenColor"
+              : "error"
+          }
           borderRadius="xl"
           flexDirection="row"
         >

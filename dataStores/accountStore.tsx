@@ -1,5 +1,4 @@
 import create from "zustand";
-import firebase from "firebase";
 type Task = {
   taskID: string;
   doneTask: string[];
@@ -19,7 +18,7 @@ type Bonsai = {
   publicBonsai: boolean;
   userId: string;
   tasks: Task[];
-  createdOn: Date;
+  createdOn?: Date;
   updatedOn?: Date;
 };
 

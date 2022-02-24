@@ -43,9 +43,12 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 
+import Modal from "react-native-modal";
+
 const Tab = createMaterialTopTabNavigator();
 
 const BonsaiView: FC<BonsaiViewParams> = ({ navigation, route }) => {
+  // prepare alternative titels for navigations
   React.useLayoutEffect(() => {
     route.params.pagePath === "community"
       ? route.params.user.id === userData.id
@@ -65,14 +68,18 @@ const BonsaiView: FC<BonsaiViewParams> = ({ navigation, route }) => {
   }, [navigation]);
 
   const theme = useTheme<Theme>();
+  //get data from store
   const userData = userStore();
   const { myBonsais } = userBonsaisStore();
-  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-  const [selected, setSelectedInfo] = useState(false);
 
+  // get data trow route params
   const selRouteBonsai = route.params.bonsai;
   const user = route.params.user;
 
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [selected, setSelectedInfo] = useState(false);
+
+  // delete bonsai logic
   const selectedFilterBonsai = myBonsais.filter((bonsai) => {
     if (bonsai.id === selRouteBonsai.id) return bonsai;
   });
@@ -98,6 +105,7 @@ const BonsaiView: FC<BonsaiViewParams> = ({ navigation, route }) => {
     navigation.navigate("MyScreen");
   };
 
+  // add work logic
   const [addWorksVisible, setAddWorksVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -118,16 +126,16 @@ const BonsaiView: FC<BonsaiViewParams> = ({ navigation, route }) => {
       ],
       taskNote:
         fastTask === "Dünger"
-          ? "Würde am " + moment(taskDate).format("D MMM. YY") + " gedüngt."
+          ? "Wurde am " + moment(taskDate).format("D MMM YY") + " gedüngt."
           : fastTask === "Beschneidung"
-          ? "Würde am " + moment(taskDate).format("D MMM. YY") + " beschnitten."
+          ? "Wurde am " + moment(taskDate).format("D MMM YY") + " beschnitten."
           : fastTask === "Bewässerung" &&
-            "Würde am " + moment(taskDate).format("D MMM. YY") + " bewässert.",
+            "Wurde am " + moment(taskDate).format("D MMM YY") + " bewässert.",
     };
     addData(task);
     setAddWorksVisible(!addWorksVisible);
   };
-
+  // send tasks to database
   const addData = async (task: any) => {
     if (task) {
       userBonsaisStore.setState((state) => {
@@ -161,7 +169,7 @@ const BonsaiView: FC<BonsaiViewParams> = ({ navigation, route }) => {
       {user.id === userData.id && !addWorksVisible && (
         <NextStepButton
           onPress={() => setAddWorksVisible(!addWorksVisible)}
-          title="Arbeit Hinzufügen"
+          title="Arbeit hinzufügen"
           primary="primarySalmonColor"
           index={1}
           icon={
@@ -174,111 +182,189 @@ const BonsaiView: FC<BonsaiViewParams> = ({ navigation, route }) => {
         />
       )}
       {addWorksVisible && (
-        <Box position="absolute" right={15} bottom={20} zIndex={1}>
-          <Pressable onPress={() => setModalVisible(!modalVisible)}>
-            <Box
-              backgroundColor="primarySalmonColor"
-              justifyContent="center"
-              alignItems="center"
-              borderRadius="xxl"
-              width={wp(12)}
-              height={wp(12)}
-              marginTop="m"
-            >
-              <More
-                size={wp(6.5)}
-                variant="Outline"
-                color={theme.colors.textOnDark}
-              />
-            </Box>
-          </Pressable>
-
-          <Pressable
-            onPress={() => {
-              sendTasks("Dünger");
-            }}
-          >
-            <Box
-              backgroundColor="fertilizer"
-              justifyContent="center"
-              alignItems="center"
-              borderRadius="xxl"
-              width={wp(12)}
-              height={wp(12)}
-              marginTop="m"
-            >
-              <Bubble
-                size={wp(6.5)}
-                variant="Broken"
-                color={theme.colors.textOnDark}
-              />
-            </Box>
-          </Pressable>
-
-          <Pressable
-            onPress={() => {
-              sendTasks("Beschneidung");
-            }}
-          >
-            <Box
-              backgroundColor="primaryBGColor"
-              justifyContent="center"
-              alignItems="center"
-              borderRadius="xxl"
-              width={wp(12)}
-              height={wp(12)}
-              marginTop="m"
-            >
-              <Scissor
-                size={wp(6.5)}
-                variant="Outline"
-                color={theme.colors.textOnDark}
-              />
-            </Box>
-          </Pressable>
-
-          <Pressable
-            onPress={() => {
-              sendTasks("Bewässerung");
-            }}
-          >
-            <Box
-              backgroundColor="watering"
-              justifyContent="center"
-              alignItems="center"
-              borderRadius="xxl"
-              width={wp(12)}
-              height={wp(12)}
-              marginTop="m"
-            >
-              <Drop
-                size={wp(6.5)}
-                variant="Broken"
-                color={theme.colors.textOnDark}
-              />
-            </Box>
-          </Pressable>
-
-          <Pressable onPress={() => setAddWorksVisible(!addWorksVisible)}>
-            <Box>
+        <Modal
+          backdropOpacity={0.7}
+          isVisible={addWorksVisible}
+          style={{ marginHorizontal: wp(3.1) }}
+          animationIn="bounceInRight"
+          animationInTiming={700}
+          backdropColor={theme.colors.textOnDark}
+          backdropTransitionInTiming={500}
+          backdropTransitionOutTiming={500}
+        >
+          <Box position="absolute" right={0} bottom={68} zIndex={1}>
+            <Pressable onPress={() => setModalVisible(!modalVisible)}>
               <Box
-                backgroundColor="error"
-                justifyContent="center"
+                flexDirection="row"
                 alignItems="center"
-                borderRadius="xxl"
-                width={wp(12)}
-                height={wp(12)}
+                justifyContent="flex-end"
                 marginTop="m"
               >
-                <CloseCircle
-                  size={wp(6.5)}
-                  variant="Broken"
-                  color={theme.colors.textOnDark}
-                />
+                <Text
+                  marginRight="m"
+                  color="textHighContrast"
+                  fontSize={wp(3)}
+                  variant="title"
+                >
+                  mehr
+                </Text>
+                <Box
+                  backgroundColor="primarySalmonColor"
+                  justifyContent="center"
+                  alignItems="center"
+                  borderRadius="xxl"
+                  width={wp(12)}
+                  height={wp(12)}
+                >
+                  <More
+                    size={wp(6.5)}
+                    variant="Outline"
+                    color={theme.colors.textOnDark}
+                  />
+                </Box>
               </Box>
-            </Box>
-          </Pressable>
-        </Box>
+            </Pressable>
+
+            <Pressable
+              onPress={() => {
+                sendTasks("Dünger");
+              }}
+            >
+              <Box
+                flexDirection="row"
+                alignItems="center"
+                justifyContent="flex-end"
+                marginTop="m"
+              >
+                <Text
+                  marginRight="m"
+                  color="textHighContrast"
+                  fontSize={wp(3)}
+                  variant="title"
+                >
+                  düngen
+                </Text>
+                <Box
+                  backgroundColor="fertilizer"
+                  justifyContent="center"
+                  alignItems="center"
+                  borderRadius="xxl"
+                  width={wp(12)}
+                  height={wp(12)}
+                >
+                  <Bubble
+                    size={wp(6.5)}
+                    variant="Broken"
+                    color={theme.colors.textOnDark}
+                  />
+                </Box>
+              </Box>
+            </Pressable>
+
+            <Pressable
+              onPress={() => {
+                sendTasks("Beschneidung");
+              }}
+            >
+              <Box
+                flexDirection="row"
+                alignItems="center"
+                justifyContent="flex-end"
+                marginTop="m"
+              >
+                <Text
+                  marginRight="m"
+                  color="textHighContrast"
+                  fontSize={wp(3)}
+                  variant="title"
+                >
+                  schneiden
+                </Text>
+                <Box
+                  backgroundColor="primaryBGColor"
+                  justifyContent="center"
+                  alignItems="center"
+                  borderRadius="xxl"
+                  width={wp(12)}
+                  height={wp(12)}
+                >
+                  <Scissor
+                    size={wp(6.5)}
+                    variant="Outline"
+                    color={theme.colors.textOnDark}
+                  />
+                </Box>
+              </Box>
+            </Pressable>
+            <Pressable
+              onPress={() => {
+                sendTasks("Bewässerung");
+              }}
+            >
+              <Box
+                flexDirection="row"
+                alignItems="center"
+                justifyContent="flex-end"
+                marginTop="m"
+              >
+                <Text
+                  marginRight="m"
+                  color="textHighContrast"
+                  fontSize={wp(3)}
+                  variant="title"
+                >
+                  bewässern
+                </Text>
+                <Box
+                  backgroundColor="watering"
+                  justifyContent="center"
+                  alignItems="center"
+                  borderRadius="xxl"
+                  width={wp(12)}
+                  height={wp(12)}
+                >
+                  <Drop
+                    size={wp(6.5)}
+                    variant="Broken"
+                    color={theme.colors.textOnDark}
+                  />
+                </Box>
+              </Box>
+            </Pressable>
+
+            <Pressable onPress={() => setAddWorksVisible(!addWorksVisible)}>
+              <Box
+                flexDirection="row"
+                alignItems="center"
+                justifyContent="flex-end"
+                marginTop="m"
+              >
+                <Text
+                  marginRight="m"
+                  color="error"
+                  fontSize={wp(3)}
+                  variant="title"
+                >
+                  abbrechen
+                </Text>
+                <Box
+                  backgroundColor="error"
+                  justifyContent="center"
+                  alignItems="center"
+                  borderRadius="xxl"
+                  width={wp(12)}
+                  height={wp(12)}
+                >
+                  <CloseCircle
+                    size={wp(6.5)}
+                    variant="Broken"
+                    color={theme.colors.textOnDark}
+                  />
+                </Box>
+              </Box>
+            </Pressable>
+          </Box>
+        </Modal>
       )}
       <AddWorksModal
         setModalVisible={setModalVisible}
@@ -427,7 +513,7 @@ const BonsaiView: FC<BonsaiViewParams> = ({ navigation, route }) => {
                   >
                     <Box flex={1} maxWidth="45%">
                       <Box marginVertical="xs">
-                        <Text fontSize={wp(3)}>Typ:</Text>
+                        <Text fontSize={wp(3)}>Art:</Text>
                         <Text fontSize={wp(3.4)}>{selectedBonsai.type}</Text>
                       </Box>
                       <Box
@@ -456,9 +542,7 @@ const BonsaiView: FC<BonsaiViewParams> = ({ navigation, route }) => {
                       <Box marginVertical="xs">
                         <Text fontSize={wp(3)}>Alter: </Text>
                         <Text fontSize={wp(3.4)}>
-                          {moment(selectedBonsai.acquisitionDate).format(
-                            "D MMM. YY"
-                          )}
+                          {moment(selectedBonsai.acquisitionDate).fromNow(true)}
                         </Text>
                       </Box>
                     </Box>
@@ -511,7 +595,12 @@ const BonsaiView: FC<BonsaiViewParams> = ({ navigation, route }) => {
           >
             <Tab.Screen
               children={() => (
-                <WorksView user={user} bonsaiData={selectedBonsai} />
+                <WorksView
+                  user={user}
+                  bonsaiData={selectedBonsai}
+                  setAddWorksVisible={setAddWorksVisible}
+                  addWorksVisible={addWorksVisible}
+                />
               )}
               name="arbeiten"
             />

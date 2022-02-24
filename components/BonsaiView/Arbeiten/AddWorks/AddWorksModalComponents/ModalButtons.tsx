@@ -19,20 +19,6 @@ const ModalButtons: FC<ModalButtonsProps> = ({
         marginBottom="xl"
         marginHorizontal="s"
       >
-        <Pressable onPress={() => onSend()}>
-          <Box
-            alignItems="center"
-            paddingVertical="s"
-            paddingHorizontal="l"
-            backgroundColor="primarySalmonColor"
-            borderRadius="xl"
-          >
-            <Text variant="button" color="textOnDark">
-              Hinzufügen
-            </Text>
-          </Box>
-        </Pressable>
-
         <Pressable onPress={() => setModalVisible(!visible)}>
           <Box
             alignItems="center"
@@ -43,6 +29,19 @@ const ModalButtons: FC<ModalButtonsProps> = ({
           >
             <Text variant="button" color="textHighContrast">
               Abbrechen
+            </Text>
+          </Box>
+        </Pressable>
+        <Pressable onPress={() => onSend()}>
+          <Box
+            alignItems="center"
+            paddingVertical="s"
+            paddingHorizontal="l"
+            backgroundColor="primarySalmonColor"
+            borderRadius="xl"
+          >
+            <Text variant="button" color="textOnDark">
+              Hinzufügen
             </Text>
           </Box>
         </Pressable>

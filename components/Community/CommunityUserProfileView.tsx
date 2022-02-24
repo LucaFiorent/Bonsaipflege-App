@@ -12,16 +12,18 @@ const CommunityUserProfileView: FC<CommunityUserProfileViewProps> = ({
   navigation,
   route,
 }) => {
+  // prepare alternative title for navigation
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: "Profil von " + userOfSelectedBonsai.nickname,
     });
   }, [navigation]);
 
+  // get data from store
   const { communityBonsais } = communityBonsaisStore();
-
+  // get data passes from route like params
   const userOfSelectedBonsai = route.params.userOfBonsai;
-
+  // prepare data for use
   const bonsaisOfSelUsr = communityBonsais.filter(
     (bonsai) => bonsai.userId === userOfSelectedBonsai.id
   );

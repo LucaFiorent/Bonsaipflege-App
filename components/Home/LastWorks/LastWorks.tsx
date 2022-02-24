@@ -4,11 +4,9 @@ import Box from "../../Common/Box";
 import Text from "../../Common/Text";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import theme from "../../../theme/theme";
-
 import { Image, Pressable } from "react-native";
 import { Bubble, Drop } from "iconsax-react-native";
 import moment from "moment";
-import { NavigationEvents } from "react-navigation";
 import { userStore } from "../../../dataStores/accountStore";
 
 type LastWorksProps = {
@@ -22,26 +20,51 @@ const LastWorks: FC<LastWorksProps> = ({
   navigation,
   route,
 }) => {
+  // get data from store
   const userData = userStore();
-  let today = new Date();
-  const bonsaiTasksWatering = myLatestWorks.tasks.filter(
-    (task: any) =>
-      task.doneTask.includes("Bewässerung") &&
-      moment(task.taskDate).format("D MMM. YY") ===
-        moment(today).format("D MMM. YY")
+
+  // prepare data for use
+  // let today = new Date();
+  // const bonsaiTasksWatering = myLatestWorks.tasks.filter(
+  //   (task: any) =>
+  //     task.doneTask.includes("Bewässerung") &&
+  //     moment(task.taskDate).format("D MMM. YY") ===
+  //       moment(today).format("D MMM. YY")
+  // );
+
+  // const sortWateringTasks = bonsaiTasksWatering.sort();
+  // const lastWatering = sortWateringTasks[sortWateringTasks.length - 1];
+
+  // const bonsaiTasksFertilize = myLatestWorks.tasks.filter(
+  //   (task: any) =>
+  //     task.doneTask.includes("Dünger") &&
+  //     moment(task.taskDate).format("D MMM. YY") ===
+  //       moment(today).format("D MMM. YY")
+  // );
+  // const sortTasks = bonsaiTasksFertilize.sort();
+  // const lastFertilize = sortTasks[sortTasks.length - 1];
+
+  // prepare data for use
+
+  const sortedTasks = myLatestWorks.tasks
+    .sort(
+      (taskA: any, taskB: any) =>
+        moment(taskA.taskDate).format("YYYYMMDD") -
+        moment(taskB.taskDate).format("YYYYMMDD")
+    )
+    .reverse();
+
+  const bonsaiTasksWatering = sortedTasks.filter((task: any) =>
+    task.doneTask.includes("Bewässerung")
   );
 
-  const sortWateringTasks = bonsaiTasksWatering.sort();
-  const lastWatering = sortWateringTasks[sortWateringTasks.length - 1];
+  const lastWatering = bonsaiTasksWatering[0];
 
-  const bonsaiTasksFertilize = myLatestWorks.tasks.filter(
-    (task: any) =>
-      task.doneTask.includes("Dünger") &&
-      moment(task.taskDate).format("D MMM. YY") ===
-        moment(today).format("D MMM. YY")
+  const bonsaiTasksFertilize = sortedTasks.filter((task: any) =>
+    task.doneTask.includes("Dünger")
   );
-  const sortTasks = bonsaiTasksFertilize.sort();
-  const lastFertilize = sortTasks[sortTasks.length - 1];
+
+  const lastFertilize = bonsaiTasksFertilize[0];
 
   return (
     <Box>
@@ -87,6 +110,7 @@ const LastWorks: FC<LastWorksProps> = ({
                 flexDirection="column"
                 alignItems="center"
                 justifyContent="flex-end"
+                width={wp(50)}
               >
                 <Box alignItems="center">
                   <Drop
@@ -94,7 +118,7 @@ const LastWorks: FC<LastWorksProps> = ({
                     color={theme.colors.watering}
                     variant="Broken"
                   />
-                  <Text fontSize={wp(2.5)}>Bewässert vor</Text>
+                  <Text fontSize={wp(2.5)}>bewässert vor</Text>
                 </Box>
                 <Text fontSize={wp(3.2)}>
                   {lastWatering
@@ -109,6 +133,7 @@ const LastWorks: FC<LastWorksProps> = ({
                 flexDirection="column"
                 alignItems="center"
                 justifyContent="flex-end"
+                width={wp(50)}
               >
                 <Box alignItems="center">
                   <Bubble
@@ -116,7 +141,7 @@ const LastWorks: FC<LastWorksProps> = ({
                     color={theme.colors.fertilizer}
                     variant="Broken"
                   />
-                  <Text fontSize={wp(2.5)}>Gedüngt vor</Text>
+                  <Text fontSize={wp(2.5)}>gedüngt vor</Text>
                 </Box>
 
                 <Text fontSize={wp(3.2)}>

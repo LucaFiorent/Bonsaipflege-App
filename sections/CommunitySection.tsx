@@ -10,8 +10,9 @@ import { Theme } from "../theme/theme";
 import CommunityUserProfileView from "../components/Community/CommunityUserProfileView";
 import CommunityScreen from "../screens/CommunityScreen";
 import BonsaiView from "../components/BonsaiView/BonsaiView";
-import AbonnamentsView from "../components/Community/Abbonaments/AbonnamentsView";
+import AbonnementsView from "../components/Community/Abonnements/AbonnementsView";
 import { ArrowCircleLeft2 } from "iconsax-react-native";
+import MyScreen from "../screens/MyScreen";
 
 type RootStackParams = {
   CommunityStack: undefined;
@@ -22,7 +23,7 @@ type MainStackCommunityParams = {
   Community: undefined;
   CommunityUserProfileView: { navigation: any; userOfBonsai: any };
   BonsaiView: { bonsai: any; user: any; pagePath: string };
-  AbonnamentsView: { navigation: any; route: any };
+  AbonnementsView: { navigation: any; route: any };
 };
 
 type CommunityScreenRouteProp = RouteProp<RootStackParams, "CommunityStack">;
@@ -61,18 +62,18 @@ export type BonsaiViewProps = {
   navigation: BonsaiViewNavigationProp;
 };
 
-type AbonnamentsViewRouteProp = RouteProp<
+type AbonnementsViewRouteProp = RouteProp<
   MainStackCommunityParams,
-  "AbonnamentsView"
+  "AbonnementsView"
 >;
-type AbonnamentsViewNavigationProp = StackNavigationProp<
+type AbonnementsViewNavigationProp = StackNavigationProp<
   MainStackCommunityParams,
-  "AbonnamentsView"
+  "AbonnementsView"
 >;
 
-export type AbonnamentsViewProps = {
-  route: AbonnamentsViewRouteProp;
-  navigation: AbonnamentsViewNavigationProp;
+export type AbonnementsViewProps = {
+  route: AbonnementsViewRouteProp;
+  navigation: AbonnementsViewNavigationProp;
 };
 
 const CommunityStack: FC = () => {
@@ -110,8 +111,8 @@ const CommunityStack: FC = () => {
         }}
       />
       <MainStack.Screen
-        name="AbonnamentsView"
-        component={AbonnamentsView}
+        name="AbonnementsView"
+        component={AbonnementsView}
         options={{
           headerBackTitleVisible: false,
           headerShown: true,
@@ -121,7 +122,7 @@ const CommunityStack: FC = () => {
   );
 };
 
-const MySection: FC = () => {
+const CommunitySection: FC = () => {
   const RootStack = createStackNavigator<RootStackParams>();
   const theme = useTheme<Theme>();
 
@@ -155,4 +156,4 @@ const MySection: FC = () => {
   );
 };
 
-export default MySection;
+export default CommunitySection;

@@ -16,7 +16,7 @@ interface InputP {
   placeholder: string;
   value: string;
   onChange: Dispatch<SetStateAction<string>>;
-  color?: string;
+  color?: string | null;
   inputMessage?: string;
   type?: string;
 }
@@ -43,6 +43,7 @@ const Input: FC<InputP> = ({
       <TextInput
         placeholder={placeholder}
         value={value}
+        secureTextEntry={type === "password" ? true : false}
         onChangeText={onChange}
         style={{
           fontSize: wp(3.5),

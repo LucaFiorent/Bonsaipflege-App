@@ -60,13 +60,14 @@ const LoginScreen = ({ navigation }) => {
 
         <Input
           label="E-Mail"
-          placeholder="Add your E-Mail"
+          placeholder="E-Mail eingeben"
           value={email}
           onChange={(email) => setEmail(email)}
         />
         <Input
-          label="Password"
-          placeholder="add your password"
+          label="Passwort"
+          placeholder="Passwort eingeben"
+          type="password"
           value={password}
           onChange={(password) => setPassword(password)}
         />
@@ -78,13 +79,25 @@ const LoginScreen = ({ navigation }) => {
             primary={theme.colors.primarySalmonColor}
           />
         </Box>
-        <Box alignItems="center" marginTop="l">
-          <Pressable onPress={() => navigation.navigate("signup")}>
-            <Text color="primarySalmonColor">
-              Du hast noch keinen Account? Hier registrieren
+
+        <Pressable onPress={() => navigation.navigate("signup")}>
+          <Box
+            alignItems="center"
+            marginTop="l"
+            flexDirection="row"
+            justifyContent="center"
+          >
+            <Text color="primarySalmonColor">Du hast noch keinen Account?</Text>
+            <Text
+              color="primarySalmonColor"
+              fontWeight="bold"
+              marginLeft="s"
+              textDecorationLine="underline"
+            >
+              Hier registrieren
             </Text>
-          </Pressable>
-        </Box>
+          </Box>
+        </Pressable>
       </Box>
     </ImageBackground>
   );

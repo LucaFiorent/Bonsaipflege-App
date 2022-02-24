@@ -141,7 +141,7 @@ const ProfileStack: FC = () => {
         options={{
           headerBackTitleVisible: false,
           headerShown: true,
-          headerTitle: "Profil Bearbeiten",
+          headerTitle: "Profil bearbeiten",
         }}
       />
       <MainStack.Screen
@@ -193,7 +193,7 @@ const BonsaiViewStack: FC = () => {
         options={{
           headerBackTitleVisible: false,
           headerShown: true,
-          headerTitle: "update Bonsai",
+          headerTitle: "Bonsai bearbeiten",
         }}
       />
       <MainStack.Screen
@@ -202,7 +202,7 @@ const BonsaiViewStack: FC = () => {
         options={{
           headerBackTitleVisible: false,
           headerShown: true,
-          headerTitle: "update Bonsai",
+          headerTitle: "Bonsai bearbeiten",
         }}
       />
     </MainStack.Navigator>

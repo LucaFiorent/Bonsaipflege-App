@@ -27,15 +27,16 @@ export type ProfileInfosProps = {
 const ProfileInfos: FC<ProfileInfosProps> = ({ navigation, user, bonsais }) => {
   const userData = userStore();
   const theme = useTheme<Theme>();
-  const [lightOn, setLightOn] = useState(false);
 
   const { communityProfiles } = communityDataStore();
 
+  // prepare data
   const selCommunityUserRaw = communityProfiles.filter(
     (selectedUser) => selectedUser.id === user.id
   );
-
   const selCommunityUser = selCommunityUserRaw[0];
+
+  // logic for the follow user handler
   const followUserHandler = (selUser: any) => {
     if (
       !userData.subscribed.includes(selUser.id) &&
@@ -94,9 +95,18 @@ const ProfileInfos: FC<ProfileInfosProps> = ({ navigation, user, bonsais }) => {
           flexDirection="row"
           justifyContent="space-between"
         >
-          <Pressable onPress={() => loggingOut()}>
+          <Pressable
+            onPress={() => {
+              loggingOut();
+              navigation.navigate("Home");
+            }}
+          >
             <Box justifyContent="center" alignItems="center" width={wp(12)}>
-              <Logout size={wp(7)} color={theme.colors.iconInactive} />
+              <Logout
+                size={wp(7)}
+                color={theme.colors.iconInactive}
+                variant="Broken"
+              />
               <Text fontSize={wp(2)} color="iconInactive">
                 Logout
               </Text>
@@ -131,7 +141,7 @@ const ProfileInfos: FC<ProfileInfosProps> = ({ navigation, user, bonsais }) => {
               <Box alignItems="center">
                 <UserTick
                   size={wp(7)}
-                  color={theme.colors.primarySalmonColor}
+                  color={theme.colors.primaryGreenColor}
                   variant="Broken"
                 />
                 <Text fontSize={wp(2)}>Nicht Folgen</Text>
@@ -165,15 +175,15 @@ const ProfileInfos: FC<ProfileInfosProps> = ({ navigation, user, bonsais }) => {
         </Pressable>
       </Box>
       <Box flexDirection="row" justifyContent="space-around" marginBottom="m">
-        <Box alignItems="center">
+        <Box alignItems="center" width={wp(33)}>
           <Text color="primaryGreenColor">Bäume</Text>
           <Text color="primaryGreenColor">{bonsais}</Text>
         </Box>
-        <Box alignItems="center">
+        <Box alignItems="center" width={wp(33)}>
           <Text color="primaryGreenColor">Abonniert</Text>
           <Text color="primaryGreenColor">{selUser.subscribed.length}</Text>
         </Box>
-        <Box alignItems="center">
+        <Box alignItems="center" width={wp(33)}>
           <Text color="primaryGreenColor">Abonnenten</Text>
           <Text color="primaryGreenColor">{selUser.subscribers.length}</Text>
         </Box>

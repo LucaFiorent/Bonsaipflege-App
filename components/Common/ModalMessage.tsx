@@ -86,18 +86,18 @@ const ModalMessage: FC<ButtonProps> = ({
               justifyContent="center"
             >
               <Text variant="body" style={{ color: theme.colors.text }}>
-                Möchten Sie wirklich
+                Möchtest du wirklich
                 {category === "bonsai"
                   ? " den Bonsai"
                   : category === "work"
-                  ? " die arbeit vom"
+                  ? " die Arbeit vom"
                   : null}
               </Text>
               <Text variant="title" style={{ color: primary }}>
                 {` "` + data + `" `}
               </Text>
               <Text variant="body" style={{ color: theme.colors.text }}>
-                Löschen?
+                löschen?
               </Text>
             </Box>
           ) : type === "error" ? (
@@ -131,7 +131,7 @@ const ModalMessage: FC<ButtonProps> = ({
                 marginRight="l"
               >
                 <Text variant="button" color="textHighContrast">
-                  Löschen
+                  löschen
                 </Text>
               </Box>
             </Pressable>

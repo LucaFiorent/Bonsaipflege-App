@@ -110,7 +110,7 @@ const AddPicAndDate: FC<AddPicAndDateProps> = ({
                   >
                     {date
                       ? moment(taskDate).format("D MMMM YYYY")
-                      : "Datum Auswählen..."}
+                      : "Datum auswählen..."}
                   </Text>
                 </Box>
               </Box>

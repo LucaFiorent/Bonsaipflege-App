@@ -33,9 +33,12 @@ const EditProfilePage: React.FC<EditProfilePageProps> = ({ navigation }) => {
         : await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (status !== "granted") {
-      if (type === "camera") alert("Sorry, we need camera");
+      if (type === "camera")
+        alert("Sorry, wir benötigen die Zugriffserlaubnis zu deiner Kamera!");
       if (type === "library")
-        alert("Media Library roll permissions to make this work!");
+        alert(
+          "Sorry, wir benötigen die Zugriffserlaubnis zu deiner Media Library!"
+        );
     }
 
     let pickerResult =
@@ -63,7 +66,7 @@ const EditProfilePage: React.FC<EditProfilePageProps> = ({ navigation }) => {
     if (imageResult) {
       addData(image, nickname, userData.avatar)
         .then(() => {
-          Alert.alert("Success");
+          Alert.alert("Dein Profil wurde erfolgreich aktualisiert!");
           navigation.navigate("MyScreen");
         })
         .catch((err) => {
@@ -72,7 +75,7 @@ const EditProfilePage: React.FC<EditProfilePageProps> = ({ navigation }) => {
     }
   };
 
-  // function that send the Bonsai Data to the Firebase database
+  // logic to aktualise profile data in db
   const addData = async (
     imagePath: string,
     imageName: string,
@@ -102,7 +105,6 @@ const EditProfilePage: React.FC<EditProfilePageProps> = ({ navigation }) => {
       .doc(userData.id)
       .set({ ...userData, avatar: imageUrl, nickname: nickname });
   };
-
   return (
     <Box>
       <Box alignItems="center" marginTop="l">
@@ -146,7 +148,7 @@ const EditProfilePage: React.FC<EditProfilePageProps> = ({ navigation }) => {
         <Box width="50%" flexDirection="row" alignItems="center" marginTop="xl">
           <Box width="80%">
             <Input
-              label="Spitzname"
+              label="Benutzername"
               placeholder={nickname}
               value={nickname}
               onChange={updateNickname}

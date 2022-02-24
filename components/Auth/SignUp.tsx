@@ -61,26 +61,28 @@ const SignUp = ({ navigation }) => {
           <Text variant="h1">Profil Anmelden</Text>
         </Box>
         <Input
-          label="Nickname"
-          placeholder="add your password"
+          label="Benutzername"
+          placeholder="Benutzername eingeben"
           value={nickname}
           onChange={(nickname) => setNickname(nickname)}
         />
         <Input
           label="E-Mail"
-          placeholder="Add your E-Mail"
+          placeholder="E-Mail eingeben"
           value={email}
           onChange={(email) => setEmail(email)}
         />
         <Input
-          label="Password"
-          placeholder="add your password"
+          label="Passwort"
+          placeholder="Passwort eingeben"
+          type="password"
           value={password}
           onChange={(password) => setPassword(password)}
         />
         <Input
           label="Passwort wiederholen"
-          placeholder="add your password"
+          placeholder="Wiederhole dein Passwort"
+          type="password"
           value={passwordReapeat}
           onChange={(passwordReapeat) => setPasswordReapeat(passwordReapeat)}
         />
@@ -91,13 +93,24 @@ const SignUp = ({ navigation }) => {
             primary={theme.colors.primarySalmonColor}
           />
         </Box>
-        <Box marginTop="l" alignItems="center">
-          <Pressable onPress={() => navigation.navigate("login")}>
-            <Text color="primarySalmonColor">
-              Schon angemeldet? Log dich ein!
+        <Pressable onPress={() => navigation.navigate("login")}>
+          <Box
+            alignItems="center"
+            marginTop="l"
+            flexDirection="row"
+            justifyContent="center"
+          >
+            <Text color="primarySalmonColor"> Schon angemeldet?</Text>
+            <Text
+              color="primarySalmonColor"
+              fontWeight="bold"
+              marginLeft="s"
+              textDecorationLine="underline"
+            >
+              Log dich ein!
             </Text>
-          </Pressable>
-        </Box>
+          </Box>
+        </Pressable>
       </Box>
     </ImageBackground>
   );

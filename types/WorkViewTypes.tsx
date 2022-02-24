@@ -47,4 +47,6 @@ export type WorkItemProps = {
 export type WorksViewProps = {
   user: any;
   bonsaiData: any;
+  setAddWorksVisible: any;
+  addWorksVisible: boolean;
 };

@@ -5,8 +5,6 @@ import { Platform, Alert } from "react-native";
 import theme from "../../../../theme/theme";
 import Modal from "react-native-modal";
 import { Additem } from "iconsax-react-native";
-
-//expo
 import * as ImagePicker from "expo-image-picker";
 import ImagePickerModal from "../../../Common/ImagePickerModal";
 import { works } from "../../../../data/bonsaiData";
@@ -16,7 +14,6 @@ import WorkElement from "./AddWorksModalComponents/WorkElement";
 import ModalButtons from "./AddWorksModalComponents/ModalButtons";
 import db from "../../../../firebase/firebaseConfig";
 import firebase from "firebase";
-
 import { v4 as uuidv4 } from "uuid";
 import { userBonsaisStore } from "../../../../dataStores/accountStore";
 import { AddWorksModalProps } from "../../../../types/WorkViewTypes";
@@ -36,8 +33,9 @@ const AddWorksModal: FC<AddWorksModalProps> = ({
   const { myBonsais } = userBonsaisStore();
 
   const [modalImagePickerVisible, setmodalImagePickerVisible] = useState(false);
+
   // calender logic
-  const [taskDate, settaskDate] = useState(new Date());
+  const [taskDate, settaskDate] = useState<Date>(new Date());
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
   const [date, setDate] = useState(false);
@@ -69,9 +67,10 @@ const AddWorksModal: FC<AddWorksModalProps> = ({
 
     if (status !== "granted") {
       alert(
-        "Sorry, we need " + (type === "camera")
-          ? "camera"
-          : "Media Library" + " roll permissions to make this work!"
+        "Sorry, wir benötigen die Zugriffserlaubnis zu deiner " +
+          (type === "camera")
+          ? "Kamera"
+          : "Media Library" + "!"
       );
     }
 
@@ -117,14 +116,14 @@ const AddWorksModal: FC<AddWorksModalProps> = ({
   const sendTasks = () => {
     let imageResult = image;
     if (imageResult) {
+      setModalVisible(!visible);
+      setAddWorksVisible(!visible);
       addData(image)
         .then(() => {
           setSelectedWorks([]);
           settaskNote("");
           setImage("");
           settaskDate(new Date());
-          setModalVisible(!visible);
-          setAddWorksVisible(!visible);
         })
         .catch((err) => {
           Alert.alert(err);
@@ -146,7 +145,7 @@ const AddWorksModal: FC<AddWorksModalProps> = ({
     }
 
     if (task) {
-      userBonsaisStore.setState((state) => {
+      await userBonsaisStore.setState((state) => {
         let newBonsaiTask = state.myBonsais.map((item) => {
           if (item.id === data.id) {
             let bonsaiTasks = item.tasks;
@@ -156,11 +155,12 @@ const AddWorksModal: FC<AddWorksModalProps> = ({
         });
       });
 
-      let mySelBonsai = myBonsais.filter((item) => item.id === data.id);
+      let mySelBonsai = await myBonsais.filter((item) => item.id === data.id);
       let formatElement = mySelBonsai[0];
 
       if (task) {
-        db.collection("bonsais")
+        await db
+          .collection("bonsais")
           .doc(data.id)
           .set({
             ...formatElement,
@@ -171,7 +171,11 @@ const AddWorksModal: FC<AddWorksModalProps> = ({
   };
 
   return (
-    <Modal backdropOpacity={0.5} isVisible={visible}>
+    <Modal
+      backdropOpacity={0.5}
+      isVisible={visible}
+      style={{ marginHorizontal: wp(4) }}
+    >
       <Box
         backgroundColor="mainBackground"
         borderColor="primarySalmonColor"
@@ -179,12 +183,7 @@ const AddWorksModal: FC<AddWorksModalProps> = ({
         borderRadius="m"
         paddingHorizontal="l"
       >
-        <Box
-          justifyContent="center"
-          alignItems="center"
-          paddingTop="xl"
-          marginBottom="m"
-        >
+        <Box justifyContent="center" alignItems="center" paddingTop="xl">
           <Box alignItems="center">
             <Box
               alignItems="center"
@@ -227,7 +226,7 @@ const AddWorksModal: FC<AddWorksModalProps> = ({
           onChange={onChange}
         />
         <Box>
-          <Box marginBottom="m">
+          <Box marginBottom="s">
             <Text variant="inputTitle" color="headline">
               Arbeiten
             </Text>
@@ -249,8 +248,8 @@ const AddWorksModal: FC<AddWorksModalProps> = ({
           </Box>
         </Box>
         <Input
-          label="Hinweis"
-          placeholder="Füge ein Hinweis zur durchgeführten Arbeit hinzu"
+          label="Notiz"
+          placeholder="Notiz zur durchgeführten Arbeit hinzufügen"
           value={taskNote}
           onChange={(taskNote) => settaskNote(taskNote)}
         />

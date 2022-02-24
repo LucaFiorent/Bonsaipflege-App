@@ -16,7 +16,12 @@ import * as ImagePicker from "expo-image-picker";
 //stores
 import { UpdateBonsaiProps } from "../../../types/bottomSheetTypes";
 import ModalMessage from "../../Common/ModalMessage";
-import { ArrowCircleRight, Camera, Folder2 } from "iconsax-react-native";
+import {
+  ArrowCircleRight,
+  Camera,
+  Folder2,
+  TickCircle,
+} from "iconsax-react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -24,19 +29,22 @@ import {
 
 const UpdateBonsai: FC<UpdateBonsaiProps> = ({ navigation, route }) => {
   const updateBonsai = route.params.bonsai;
-
+  // prepare alternative title for navigation
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      headerTitle: 'Update "' + updateBonsai.name + '"',
+      headerTitle: '"' + updateBonsai.name + '" bearbeiten',
     });
   }, [navigation]);
 
   const theme = useTheme<Theme>();
-  const [errMss, setErrMss] = useState(null);
+  const [errMss, setErrMss] = useState<any>(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [image, setImage] = useState<string>(updateBonsai.image);
+
+  const [imageSetInfo, setImageSetInfo] = useState(false);
+  const [image, setImage] = useState(updateBonsai.image);
   const [bonsaiName, setbonsaiName] = useState(updateBonsai.name);
 
+  //image picker logic
   const openImagePicker = async (type: any) => {
     const { status } =
       type === "camera"
@@ -44,9 +52,12 @@ const UpdateBonsai: FC<UpdateBonsaiProps> = ({ navigation, route }) => {
         : await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (status !== "granted") {
-      if (type === "camera") alert("Sorry, we need camera");
+      if (type === "camera")
+        alert("Sorry, wir benötigen die Zugriffserlaubnis zu deiner Kamera!");
       if (type === "library")
-        alert("Media Library roll permissions to make this work!");
+        alert(
+          "Sorry, wir benötigen die Zugriffserlaubnis zu deiner Media Library!"
+        );
     }
 
     let pickerResult =
@@ -61,10 +72,12 @@ const UpdateBonsai: FC<UpdateBonsaiProps> = ({ navigation, route }) => {
           });
 
     if (!pickerResult.cancelled) {
+      setImageSetInfo(true);
       setImage(pickerResult.uri);
     }
   };
 
+  // function to navigate to step 2 and send with it selected variables like params
   const NavigateToNextPage = () => {
     if (bonsaiName) {
       setErrMss(null);
@@ -75,7 +88,9 @@ const UpdateBonsai: FC<UpdateBonsaiProps> = ({ navigation, route }) => {
       });
     } else {
       setModalVisible(!modalVisible);
-      setErrMss("Füge ein Namen für dein Bonsai hinzu um weiter zu gehen!");
+      setErrMss(
+        "Füge einen Spitznamen für deinen Bonsai hinzu, um weiter zu gehen!"
+      );
     }
   };
 
@@ -83,7 +98,7 @@ const UpdateBonsai: FC<UpdateBonsaiProps> = ({ navigation, route }) => {
     <>
       <NextStepButton
         onPress={NavigateToNextPage}
-        primary={theme.colors.primarySalmonColor}
+        primary={bonsaiName.length > 0 ? "primarySalmonColor" : "notAktiv"}
         title="nächster Schritt"
         icon={
           <ArrowCircleRight
@@ -116,25 +131,69 @@ const UpdateBonsai: FC<UpdateBonsaiProps> = ({ navigation, route }) => {
               <ButtonWithIcon
                 onPress={() => openImagePicker("camera")}
                 title="Kamera"
-                primary={theme.colors.primarySalmonColor}
+                primary={
+                  imageSetInfo === true
+                    ? "primaryGreenColor"
+                    : "primarySalmonColor"
+                }
                 icon={
-                  <Camera
-                    size={wp(5.5)}
-                    color={theme.colors.textOnDark}
-                    variant="Broken"
-                  />
+                  <Box>
+                    <Camera
+                      size={wp(5.5)}
+                      color={theme.colors.textOnDark}
+                      variant="Broken"
+                    />
+                    {imageSetInfo === true && (
+                      <Box
+                        position="absolute"
+                        right={-6}
+                        bottom={-4}
+                        backgroundColor="primaryGreenColor"
+                        padding="xxs"
+                        borderRadius="xxl"
+                      >
+                        <TickCircle
+                          size={wp(3.2)}
+                          color={theme.colors.textOnDark}
+                          variant="Broken"
+                        />
+                      </Box>
+                    )}
+                  </Box>
                 }
               />
               <ButtonWithIcon
                 onPress={() => openImagePicker("library")}
                 title="Durchsuchen"
-                primary={theme.colors.primarySalmonColor}
+                primary={
+                  imageSetInfo === true
+                    ? "primaryGreenColor"
+                    : "primarySalmonColor"
+                }
                 icon={
-                  <Folder2
-                    size={wp(5.5)}
-                    color={theme.colors.textOnDark}
-                    variant="Broken"
-                  />
+                  <Box>
+                    <Folder2
+                      size={wp(5.5)}
+                      color={theme.colors.textOnDark}
+                      variant="Broken"
+                    />
+                    {imageSetInfo === true && (
+                      <Box
+                        position="absolute"
+                        right={-4}
+                        bottom={-4}
+                        backgroundColor="primaryGreenColor"
+                        padding="xxs"
+                        borderRadius="xxl"
+                      >
+                        <TickCircle
+                          size={wp(3.2)}
+                          color={theme.colors.textOnDark}
+                          variant="Broken"
+                        />
+                      </Box>
+                    )}
+                  </Box>
                 }
               />
             </Box>

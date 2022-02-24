@@ -16,7 +16,12 @@ import * as ImagePicker from "expo-image-picker";
 //stores
 import { AddBonsaiProps } from "../../../types/bottomSheetTypes";
 import ModalMessage from "../../Common/ModalMessage";
-import { ArrowCircleRight, Camera, Folder2 } from "iconsax-react-native";
+import {
+  ArrowCircleRight,
+  Camera,
+  Folder2,
+  TickCircle,
+} from "iconsax-react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -30,7 +35,9 @@ const AddBonsai: FC<AddBonsaiProps> = ({ navigation }) => {
     "https://firebasestorage.googleapis.com/v0/b/bonsaipflege-app.appspot.com/o/bonsai-pic.jpg?alt=media&token=a04f373c-7501-4d78-ad0c-159597daa4e3"
   );
   const [bonsaiName, setbonsaiName] = useState("");
+  const [imageSetInfo, setImageSetInfo] = useState(false);
 
+  // logic for image picker
   const openImagePicker = async (type: any) => {
     const { status } =
       type === "camera"
@@ -38,9 +45,12 @@ const AddBonsai: FC<AddBonsaiProps> = ({ navigation }) => {
         : await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (status !== "granted") {
-      if (type === "camera") alert("Sorry, we need camera");
+      if (type === "camera")
+        alert("Sorry, wir benötigen die Zugriffserlaubnis zu deiner Kamera!");
       if (type === "library")
-        alert("Media Library roll permissions to make this work!");
+        alert(
+          "Sorry, wir benötigen die Zugriffserlaubnis zu deiner Media Library!"
+        );
     }
 
     let pickerResult =
@@ -55,10 +65,12 @@ const AddBonsai: FC<AddBonsaiProps> = ({ navigation }) => {
           });
 
     if (!pickerResult.cancelled) {
+      setImageSetInfo(true);
       setImage(pickerResult.uri);
     }
   };
 
+  // navigate to step 2 and send data as parameter to route
   const NavigateToNextPage = () => {
     if (bonsaiName) {
       setErrMss(null);
@@ -68,7 +80,9 @@ const AddBonsai: FC<AddBonsaiProps> = ({ navigation }) => {
       });
     } else {
       setModalVisible(!modalVisible);
-      setErrMss("Füge ein Namen für dein Bonsai hinzu um weiter zu gehen!");
+      setErrMss(
+        "Füge einen Spitznamen für deinen Bonsai hinzu, um weiter zu gehen!"
+      );
     }
   };
 
@@ -76,7 +90,7 @@ const AddBonsai: FC<AddBonsaiProps> = ({ navigation }) => {
     <>
       <NextStepButton
         onPress={NavigateToNextPage}
-        primary="primarySalmonColor"
+        primary={bonsaiName.length > 0 ? "primarySalmonColor" : "notAktiv"}
         title="nächster Schritt"
         index={1}
         icon={
@@ -91,7 +105,7 @@ const AddBonsai: FC<AddBonsaiProps> = ({ navigation }) => {
         <ModalMessage
           setModalVisible={setModalVisible}
           visible={modalVisible}
-          title="Etwas ist Schiefgelaufen!"
+          title="Etwas ist schiefgelaufen!"
           type="error"
           message={errMss}
           primary={theme.colors.error}
@@ -110,31 +124,73 @@ const AddBonsai: FC<AddBonsaiProps> = ({ navigation }) => {
               <ButtonWithIcon
                 onPress={() => openImagePicker("camera")}
                 title="Kamera"
-                primary={theme.colors.primarySalmonColor}
+                primary={
+                  imageSetInfo === true
+                    ? "primaryGreenColor"
+                    : "primarySalmonColor"
+                }
                 icon={
-                  <Camera
-                    size={wp(5.5)}
-                    color={theme.colors.textOnDark}
-                    variant="Broken"
-                  />
+                  <Box>
+                    <Camera
+                      size={wp(5.5)}
+                      color={theme.colors.textOnDark}
+                      variant="Broken"
+                    />
+                    {imageSetInfo === true && (
+                      <Box
+                        position="absolute"
+                        right={-6}
+                        bottom={-4}
+                        backgroundColor="primaryGreenColor"
+                        padding="xxs"
+                        borderRadius="xxl"
+                      >
+                        <TickCircle
+                          size={wp(3.2)}
+                          color={theme.colors.textOnDark}
+                          variant="Broken"
+                        />
+                      </Box>
+                    )}
+                  </Box>
                 }
               />
               <ButtonWithIcon
                 onPress={() => openImagePicker("library")}
                 title="Durchsuchen"
-                primary={theme.colors.primarySalmonColor}
+                primary={
+                  imageSetInfo ? "primaryGreenColor" : "primarySalmonColor"
+                }
                 icon={
-                  <Folder2
-                    size={wp(5.5)}
-                    color={theme.colors.textOnDark}
-                    variant="Broken"
-                  />
+                  <Box>
+                    <Folder2
+                      size={wp(5.5)}
+                      color={theme.colors.textOnDark}
+                      variant="Broken"
+                    />
+                    {imageSetInfo === true && (
+                      <Box
+                        position="absolute"
+                        right={-4}
+                        bottom={-4}
+                        backgroundColor="primaryGreenColor"
+                        padding="xxs"
+                        borderRadius="xxl"
+                      >
+                        <TickCircle
+                          size={wp(3.2)}
+                          color={theme.colors.textOnDark}
+                          variant="Broken"
+                        />
+                      </Box>
+                    )}
+                  </Box>
                 }
               />
             </Box>
             <Input
               label="Spitzname"
-              placeholder="Füge ein Spitznamen für dein Bonsai hinzu"
+              placeholder="Füge einen Spitznamen für deinen Bonsai hinzu"
               value={bonsaiName}
               onChange={(bonsaiName) => setbonsaiName(bonsaiName)}
               color={errMss ? theme.colors.error : ""}

@@ -30,6 +30,37 @@ const Feed: FC<FeedProps> = ({ navigation, route, bonsai, userOfBonsai }) => {
   const theme = useTheme<Theme>();
   return (
     <Box>
+      <Box position="absolute" zIndex={3}>
+        <Pressable
+          onPress={() =>
+            navigation.navigate("BonsaiView", {
+              bonsai: bonsai,
+              user: userOfBonsai,
+              pagePath: "community",
+            })
+          }
+        >
+          <Box
+            backgroundColor="mainBackground"
+            alignSelf="flex-start"
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="center"
+            borderTopEndRadius="xxl"
+            borderTopStartRadius="xxl"
+            borderBottomEndRadius="xxl"
+            paddingRight="xs"
+            paddingLeft="s"
+            style={{ marginTop: wp(2), marginLeft: wp(7.55) }}
+          >
+            <Text fontSize={wp(3)} color="textHighContrast" variant="title">
+              {bonsai.name.length > 15
+                ? bonsai.name.slice(0, 15) + ".."
+                : bonsai.name}
+            </Text>
+          </Box>
+        </Pressable>
+      </Box>
       {userOfBonsai && (
         <Box
           zIndex={2}
@@ -40,7 +71,7 @@ const Feed: FC<FeedProps> = ({ navigation, route, bonsai, userOfBonsai }) => {
           <Pressable
             onPress={() => {
               userOfBonsai.id === userData.id
-                ? navigation.navigate("Me")
+                ? navigation.navigate("MyScreen")
                 : navigation.navigate("CommunityUserProfileView", {
                     userOfBonsai: userOfBonsai,
                   });
@@ -66,6 +97,7 @@ const Feed: FC<FeedProps> = ({ navigation, route, bonsai, userOfBonsai }) => {
                       : { uri: userOfBonsai.avatar }
                   }
                   style={{
+                    zIndex: 1,
                     width: wp(7),
                     height: wp(7),
                     borderRadius: theme.borderRadii.xxl,
@@ -121,7 +153,7 @@ const Feed: FC<FeedProps> = ({ navigation, route, bonsai, userOfBonsai }) => {
             >
               <Box width={wp(25)} marginRight="m">
                 <Box marginBottom="s">
-                  <Text fontSize={wp(3)}>Typ:</Text>
+                  <Text fontSize={wp(3)}>Art:</Text>
                   <Text fontSize={wp(3.2)}>{bonsai.type}</Text>
                 </Box>
                 <Box>

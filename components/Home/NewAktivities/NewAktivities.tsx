@@ -20,48 +20,58 @@ const NewAktivities: FC<NewAktivitiesProps> = ({
   route,
 }) => {
   return (
-    <Pressable
-      onPress={() =>
-        navigation.navigate("CommunityUserProfileView", {
-          userOfBonsai: userSub,
-        })
-      }
-    >
-      <Box
-        flexDirection="row"
-        backgroundColor="mainBackground"
-        padding="xs"
-        alignItems="center"
-        borderRadius="xxl"
-        marginVertical="xs"
-        justifyContent="space-between"
+    <Box marginRight="l">
+      <Pressable
+        onPress={() =>
+          navigation.navigate("CommunityUserProfileView", {
+            userOfBonsai: userSub,
+          })
+        }
       >
-        <Box flex={3} flexDirection="row" alignItems="center">
-          <Image
-            source={
-              userSub.avatar === ""
-                ? require("../../../assets/images/programmer.png")
-                : { uri: userSub.avatar }
-            }
-            style={{
-              width: wp(20),
-              height: wp(20),
-              borderRadius: theme.borderRadii.xxl,
-            }}
-          />
-          <Box marginLeft="m">
-            <Text variant="title" marginVertical="xs" color="headline">
-              {userSub.nickname}
+        <Box
+          width={wp(55)}
+          flexDirection="row"
+          backgroundColor="mainBackground"
+          padding="xs"
+          alignItems="center"
+          borderRadius="xxl"
+          marginVertical="xs"
+          justifyContent="space-between"
+        >
+          <Box flex={3} flexDirection="row" alignItems="center" zIndex={2}>
+            <Image
+              source={
+                userSub.avatar === ""
+                  ? require("../../../assets/images/programmer.png")
+                  : { uri: userSub.avatar }
+              }
+              style={{
+                width: wp(15),
+                height: wp(15),
+                borderRadius: theme.borderRadii.xxl,
+              }}
+            />
+            <Box borderRadius="xxl" paddingHorizontal="s">
+              <Text
+                variant="title"
+                marginVertical="xs"
+                color="headline"
+                fontSize={wp(3)}
+              >
+                {userSub.nickname.length > 11
+                  ? userSub.nickname.slice(0, 11) + ".."
+                  : userSub.nickname}
+              </Text>
+            </Box>
+          </Box>
+          <Box flex={1} alignItems="center">
+            <Text variant="title" color="headline" marginHorizontal="s">
+              +{newestBonsais.length}
             </Text>
           </Box>
         </Box>
-        <Box flex={1} alignItems="center">
-          <Text variant="title" color="headline">
-            +{newestBonsais.length}
-          </Text>
-        </Box>
-      </Box>
-    </Pressable>
+      </Pressable>
+    </Box>
   );
 };
 

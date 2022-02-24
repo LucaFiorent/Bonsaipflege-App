@@ -9,7 +9,7 @@ import {
 
 interface ButtonProps {
   onPress: () => void;
-  primary?: string;
+  primary?: string | null;
   title?: string;
   icon?: any;
   index?: number;
@@ -34,7 +34,11 @@ const NextStepButton: FC<ButtonProps> = ({
           borderColor={
             primary === "primarySalmonColor"
               ? "primarySalmonColor"
-              : "primaryGreenColor"
+              : primary === "notAktiv"
+              ? "iconInactive"
+              : primary === "primaryGreenColor"
+              ? "primaryGreenColor"
+              : "error"
           }
         >
           <Text marginLeft="m" marginRight="m" color="text">
@@ -44,7 +48,11 @@ const NextStepButton: FC<ButtonProps> = ({
             backgroundColor={
               primary === "primarySalmonColor"
                 ? "primarySalmonColor"
-                : "primaryGreenColor"
+                : primary === "notAktiv"
+                ? "iconInactive"
+                : primary === "primaryGreenColor"
+                ? "primaryGreenColor"
+                : "error"
             }
             justifyContent="center"
             alignItems="center"

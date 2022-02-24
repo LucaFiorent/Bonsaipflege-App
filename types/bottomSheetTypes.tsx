@@ -66,7 +66,7 @@ export type BonsaiViewParams = {
         size: string;
         type: string;
         userId: string;
-        task: Tasks[];
+        tasks: Tasks[];
         createdOn: Date | undefined;
         updatedOn?: Date | undefined;
       };

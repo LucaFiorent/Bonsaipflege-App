@@ -11,6 +11,7 @@ import { ArrowCircleLeft2 } from "iconsax-react-native";
 import CommunityScreen from "../screens/CommunityScreen";
 import CommunityUserProfileView from "../components/Community/CommunityUserProfileView";
 import BonsaiView from "../components/BonsaiView/BonsaiView";
+import MyScreen from "../screens/MyScreen";
 
 // root stack
 type RootStackParams = {

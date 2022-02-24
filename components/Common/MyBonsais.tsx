@@ -30,6 +30,7 @@ const MyBonsais: FC<MyBonsaisProps> = ({ bonsaiData, navigation, user }) => {
   const theme = useTheme<Theme>();
   const userData = userStore();
 
+  // prepare data for use
   const bonsaiTasksWatering = bonsaiData.tasks.filter(
     (task: any) => task.doneTask.includes("Bewässerung") && task.doneTask
   );
@@ -80,6 +81,24 @@ const MyBonsais: FC<MyBonsaisProps> = ({ bonsaiData, navigation, user }) => {
         borderBottomStartRadius="xxl"
         padding="xs"
       >
+        <Box
+          position="absolute"
+          backgroundColor="mainBackground"
+          alignSelf="flex-start"
+          flexDirection="row"
+          alignItems="center"
+          justifyContent="center"
+          borderTopEndRadius="xxl"
+          borderTopStartRadius="xxl"
+          borderBottomEndRadius="xxl"
+          paddingRight="xs"
+          paddingLeft="s"
+          style={{ marginTop: wp(-2.8), marginLeft: wp(7.55) }}
+        >
+          <Text fontSize={wp(3)} color="textHighContrast" variant="title">
+            {bonsaiData.name}
+          </Text>
+        </Box>
         <Box flexDirection="row" alignItems="center">
           <Box alignItems="center">
             <Image
@@ -93,41 +112,45 @@ const MyBonsais: FC<MyBonsaisProps> = ({ bonsaiData, navigation, user }) => {
           </Box>
 
           <Box flex={1}>
-            {user.id === userData.id && bonsaiData.publicBonsai && (
-              <Box
-                backgroundColor="mainBackground"
-                alignSelf="flex-end"
-                flexDirection="row"
-                alignItems="center"
-                justifyContent="center"
-                borderRadius="xxl"
-                borderWidth={1}
-                borderColor="greyBackground"
-                paddingRight="xs"
-                paddingLeft="s"
-                style={{ marginTop: wp(-3.2) }}
-              >
-                <Box marginRight="s">
-                  <Text fontSize={wp(2.3)}>öffentlich</Text>
-                </Box>
+            <Box>
+              {user.id === userData.id && bonsaiData.publicBonsai && (
                 <Box
+                  backgroundColor="mainBackground"
+                  alignSelf="flex-end"
+                  flexDirection="row"
                   alignItems="center"
                   justifyContent="center"
                   borderRadius="xxl"
                   borderWidth={1}
-                  borderColor="primarySalmonColor"
+                  borderColor="greyBackground"
+                  paddingRight="xs"
+                  paddingLeft="s"
+                  style={{ marginTop: wp(-3.2) }}
                 >
+                  <Box marginRight="s">
+                    <Text fontSize={wp(2.3)} color="textHighContrast">
+                      öffentlich
+                    </Text>
+                  </Box>
                   <Box
-                    width={wp(2)}
-                    height={wp(2)}
-                    backgroundColor="primaryGreenColor"
+                    alignItems="center"
+                    justifyContent="center"
                     borderRadius="xxl"
                     borderWidth={1}
-                    borderColor="textOnDark"
-                  />
+                    borderColor="primarySalmonColor"
+                  >
+                    <Box
+                      width={wp(2)}
+                      height={wp(2)}
+                      backgroundColor="primaryGreenColor"
+                      borderRadius="xxl"
+                      borderWidth={1}
+                      borderColor="textOnDark"
+                    />
+                  </Box>
                 </Box>
-              </Box>
-            )}
+              )}
+            </Box>
 
             <Box
               flex={1}
@@ -138,14 +161,18 @@ const MyBonsais: FC<MyBonsaisProps> = ({ bonsaiData, navigation, user }) => {
             >
               <Box>
                 <Box marginBottom="s">
-                  <Text fontSize={wp(2.5)}>Art:</Text>
-                  <Text fontSize={wp(3)}>
+                  <Text fontSize={wp(2.5)} color="textHighContrast">
+                    Art:
+                  </Text>
+                  <Text fontSize={wp(3)} color="textHighContrast">
                     {bonsaiData.type ? bonsaiData.type : "keine Art eingegeben"}
                   </Text>
                 </Box>
                 <Box marginBottom="s">
-                  <Text fontSize={wp(2.5)}>Form:</Text>
-                  <Text fontSize={wp(3)}>
+                  <Text fontSize={wp(2.5)} color="textHighContrast">
+                    Form:
+                  </Text>
+                  <Text fontSize={wp(3)} color="textHighContrast">
                     {bonsaiData.form ? bonsaiData.form : "noch keine Form"}
                   </Text>
                 </Box>
@@ -157,8 +184,14 @@ const MyBonsais: FC<MyBonsaisProps> = ({ bonsaiData, navigation, user }) => {
                   alignItems="center"
                   justifyContent="flex-end"
                 >
-                  <Text fontSize={wp(2.4)}>Alter: </Text>
-                  <Text fontSize={wp(2.7)}>
+                  <Text fontSize={wp(2.4)} color="textHighContrast">
+                    Alter:
+                  </Text>
+                  <Text
+                    fontSize={wp(2.7)}
+                    color="textHighContrast"
+                    marginLeft="s"
+                  >
                     {moment(bonsaiData.acquisitionDate).fromNow(true)}
                   </Text>
                 </Box>
@@ -182,7 +215,11 @@ const MyBonsais: FC<MyBonsaisProps> = ({ bonsaiData, navigation, user }) => {
                       variant="Broken"
                     />
                   </Box>
-                  <Text fontSize={wp(2.7)} marginLeft="s">
+                  <Text
+                    fontSize={wp(2.7)}
+                    marginLeft="s"
+                    color="textHighContrast"
+                  >
                     {lastWatering
                       ? moment(lastWatering.taskDate).fromNow(true)
                       : "~"}
@@ -208,7 +245,11 @@ const MyBonsais: FC<MyBonsaisProps> = ({ bonsaiData, navigation, user }) => {
                       variant="Broken"
                     />
                   </Box>
-                  <Text fontSize={wp(2.7)} marginLeft="s">
+                  <Text
+                    fontSize={wp(2.7)}
+                    marginLeft="s"
+                    color="textHighContrast"
+                  >
                     {lastFertilize
                       ? moment(lastFertilize.taskDate).fromNow(true)
                       : "~"}

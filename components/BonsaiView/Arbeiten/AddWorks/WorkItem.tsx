@@ -16,12 +16,15 @@ import {
 } from "react-native-responsive-screen";
 
 const WorkItem: FC<WorkItemProps> = ({ task, bonsai, user }) => {
-  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  // get data from store
   const userData = userStore();
-
+  // prepare local hour
   moment.locale("de");
+  // delete task handler
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
   const deleteTaskHandler = () => {
+    setDeleteModalVisible(!deleteModalVisible);
     let taskID = task.taskID;
 
     let selTask = bonsai.tasks.filter((taskItem: any) => {
@@ -40,7 +43,6 @@ const WorkItem: FC<WorkItemProps> = ({ task, bonsai, user }) => {
         tasks: selTask,
         updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
       });
-    setDeleteModalVisible(!deleteModalVisible);
   };
 
   return (
@@ -172,7 +174,7 @@ const WorkItem: FC<WorkItemProps> = ({ task, bonsai, user }) => {
           <Box flex={0} alignItems="flex-end" justifyContent="flex-end">
             <Box marginRight="xs">
               <Text variant="body" fontSize={wp(2.3)}>
-                Dürchgeführt:
+                durchgeführt:
               </Text>
             </Box>
             <Box marginRight="xs">

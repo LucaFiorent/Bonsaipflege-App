@@ -1,9 +1,9 @@
 import * as React from "react";
 import { FC } from "react";
-import { FlatList, SafeAreaView, ScrollView } from "react-native";
+import { FlatList, SafeAreaView } from "react-native";
 import Box from "../components/Common/Box";
 import Text from "../components/Common/Text";
-import Abonnaments from "../components/Community/Abbonaments/Abonnaments";
+import Abonnements from "../components/Community/Abonnements/Abonnements";
 import Feed from "../components/Common/Feed";
 import { userStore } from "../dataStores/accountStore";
 import {
@@ -24,14 +24,20 @@ const CommunityScreen: FC<CommunityScreenProps> = ({ navigation, route }) => {
       <SafeAreaView style={{ flex: 1 }}>
         <Box marginHorizontal="m" marginTop="l">
           {userData.subscribed.length !== 0 && (
-            <Abonnaments navigation={navigation} />
+            <Abonnements navigation={navigation} />
           )}
 
           <Box>
             <Text marginTop="l" marginBottom="m" variant="h1">
               Feed
             </Text>
-            <Box style={{ marginBottom: hp(48.2) }}>
+            <Box
+              style={
+                userData.subscribed.length !== 0
+                  ? { marginBottom: hp(48.2) }
+                  : { marginBottom: hp(23) }
+              }
+            >
               <FlatList
                 maxToRenderPerBatch={5}
                 updateCellsBatchingPeriod={100}

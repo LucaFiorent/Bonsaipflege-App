@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useTheme } from "@shopify/restyle";
 import { FC } from "react";
-import { ScrollView } from "react-native";
+import { Pressable, ScrollView } from "react-native";
 import { Theme } from "../../../theme/theme";
 //components
 import Box from "../../Common/Box";
@@ -13,9 +13,17 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import moment from "moment";
+import { userStore } from "../../../dataStores/accountStore";
 
-const WorksView: FC<WorksViewProps> = ({ user, bonsaiData }) => {
+const WorksView: FC<WorksViewProps> = ({
+  user,
+  bonsaiData,
+  setAddWorksVisible,
+  addWorksVisible,
+}) => {
   const theme = useTheme<Theme>();
+  const userData = userStore();
 
   return (
     <Box flex={1}>
@@ -30,6 +38,49 @@ const WorksView: FC<WorksViewProps> = ({ user, bonsaiData }) => {
                 user={user}
               />
             ))
+          ) : user.id === userData.id ? (
+            <Pressable onPress={() => setAddWorksVisible(!addWorksVisible)}>
+              <Box
+                alignItems="center"
+                backgroundColor="mainBackground"
+                marginTop="xs"
+                marginBottom="m"
+                borderRadius="m"
+                padding="s"
+                justifyContent="center"
+              >
+                <Box
+                  alignItems="center"
+                  justifyContent="center"
+                  width="80%"
+                  paddingVertical="l"
+                >
+                  <NoteAdd
+                    size={wp(14)}
+                    color={theme.colors.iconInactive}
+                    variant="Broken"
+                  />
+                  <Box justifyContent="center" marginTop="l">
+                    <Text
+                      variant="h3"
+                      color="iconInactive"
+                      textAlign="center"
+                      fontWeight="bold"
+                    >
+                      Du hast noch keine Arbeiten hinzugefügt!
+                    </Text>
+                    <Text
+                      marginTop="m"
+                      variant="placeholder"
+                      color="iconInactive"
+                      textAlign="center"
+                    >
+                      Füge neue Arbeiten hinzu
+                    </Text>
+                  </Box>
+                </Box>
+              </Box>
+            </Pressable>
           ) : (
             <Box
               alignItems="center"
@@ -40,26 +91,35 @@ const WorksView: FC<WorksViewProps> = ({ user, bonsaiData }) => {
               padding="s"
               justifyContent="center"
             >
-              <Box alignItems="center" justifyContent="center" width="80%">
+              <Box
+                alignItems="center"
+                justifyContent="center"
+                width="80%"
+                paddingVertical="l"
+              >
                 <NoteAdd
                   size={wp(14)}
-                  color={theme.colors.error}
+                  color={theme.colors.iconInactive}
                   variant="Broken"
                 />
-                <Box justifyContent="center">
+                <Box justifyContent="center" marginTop="l">
                   <Text
                     variant="h3"
-                    color="error"
+                    color="iconInactive"
                     textAlign="center"
                     fontWeight="bold"
                   >
-                    Du hast noch keine Arbeiten hinzugefügt!
+                    {user.nickname} hat noch keine Arbeiten hinzugefügt!
                   </Text>
-                  <Text variant="placeholder" color="error" textAlign="center">
+                  <Text
+                    marginTop="m"
+                    variant="placeholder"
+                    color="iconInactive"
+                    textAlign="center"
+                  >
                     Füge neue Arbeiten hinzu
                   </Text>
                 </Box>
-                <Text></Text>
               </Box>
             </Box>
           )}

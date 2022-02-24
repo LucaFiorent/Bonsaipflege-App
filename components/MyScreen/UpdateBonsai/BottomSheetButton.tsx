@@ -34,9 +34,56 @@ const BottomSheetButton: FC<BottomSheetButtonProps> = ({
       borderRadius="l"
     >
       <Box flexDirection="row" key={title}>
+        <Box flex={1}>
+          <Pressable key={title} onPress={() => onPress(title)}>
+            <Box
+              flex={1}
+              alignItems="center"
+              flexDirection="row"
+              paddingRight="l"
+              paddingVertical="m"
+              borderRadius="l"
+            >
+              {selectedValue === title ? (
+                <Box marginLeft="m">
+                  <TickCircle
+                    size={wp(5.3)}
+                    color={theme.colors.textOnDark}
+                    variant="Broken"
+                  />
+                </Box>
+              ) : (
+                <Box
+                  marginLeft="m"
+                  borderColor="descriptionText"
+                  borderWidth={1.2}
+                  width={wp(4.3)}
+                  height={wp(4.3)}
+                  borderRadius="xxl"
+                />
+              )}
+              <Box>
+                <Text
+                  marginLeft="ms"
+                  variant="body"
+                  color={
+                    selectedValue === title ? "textOnDark" : "descriptionText"
+                  }
+                >
+                  {title}
+                </Text>
+              </Box>
+            </Box>
+          </Pressable>
+        </Box>
         <Box flex={0}>
           <Pressable onPress={() => setInfoBox(!infoBox)}>
-            <Box paddingLeft="l" paddingRight="m" paddingVertical="m">
+            <Box
+              paddingLeft="l"
+              paddingRight="m"
+              paddingVertical="m"
+              alignItems="center"
+            >
               <InfoCircle
                 style={{
                   transform: [{ rotateX: "180deg" }],
@@ -49,39 +96,6 @@ const BottomSheetButton: FC<BottomSheetButtonProps> = ({
                 }
                 variant="Broken"
               />
-            </Box>
-          </Pressable>
-        </Box>
-        <Box flex={1}>
-          <Pressable key={title} onPress={() => onPress(title)}>
-            <Box
-              flex={1}
-              justifyContent="space-between"
-              flexDirection="row"
-              paddingRight="l"
-              paddingVertical="m"
-              borderRadius="l"
-            >
-              <Box>
-                <Text
-                  marginLeft="s"
-                  variant="body"
-                  color={
-                    selectedValue === title ? "textOnDark" : "descriptionText"
-                  }
-                >
-                  {title}
-                </Text>
-              </Box>
-              {selectedValue === title ? (
-                <Box>
-                  <TickCircle
-                    size={wp(5.3)}
-                    color={theme.colors.textOnDark}
-                    variant="Broken"
-                  />
-                </Box>
-              ) : null}
             </Box>
           </Pressable>
         </Box>
@@ -103,7 +117,7 @@ const BottomSheetButton: FC<BottomSheetButtonProps> = ({
                       selectedValue === title ? "textOnDark" : "descriptionText"
                     }
                   >
-                    In Deutsch:
+                    Auf Deutsch:
                   </Text>
                   <Text
                     color={
@@ -149,7 +163,7 @@ const BottomSheetButton: FC<BottomSheetButtonProps> = ({
                       selectedValue === title ? "textOnDark" : "descriptionText"
                     }
                   >
-                    In Deutsch:
+                    Auf Deutsch:
                   </Text>
                   <Text
                     color={

@@ -20,7 +20,7 @@ export async function registration(email, password, nickname) {
       subscribers: [],
     });
   } catch (err) {
-    Alert.alert("There is something wrong!!!!", err.message);
+    Alert.alert("Upps! Etwas ist schiefgelaufen.", err.message);
     return false;
   }
 }
@@ -29,8 +29,7 @@ export async function login(email, password) {
   try {
     await firebase.auth().signInWithEmailAndPassword(email, password);
   } catch (err) {
-    console.log("something went wrong");
-    Alert.alert("There is something wrong!", err.message);
+    Alert.alert("Upps! Etwas ist schiefgelaufen.", err.message);
   }
 }
 
@@ -38,6 +37,6 @@ export async function loggingOut() {
   try {
     await firebase.auth().signOut();
   } catch (err) {
-    Alert.alert("There is something wrong!", err.message);
+    Alert.alert("Upps! Etwas ist schiefgelaufen.", err.message);
   }
 }

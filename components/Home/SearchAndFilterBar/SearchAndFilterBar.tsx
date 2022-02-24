@@ -4,7 +4,7 @@ import Box from "../../Common/Box";
 import Text from "../../Common/Text";
 import Search from "../../Common/Search";
 import FilterCards from "./FilterCards";
-import { Setting3 } from "iconsax-react-native";
+import { Setting3, TickCircle } from "iconsax-react-native";
 import theme from "../../../theme/theme";
 import { FC } from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -70,10 +70,11 @@ const SearchAndFilterBar: FC<SearchAndFilterBarProps> = ({
                 width={wp(5)}
                 height={wp(5)}
                 alignItems="center"
+                justifyContent="center"
               >
-                <Text variant="title" fontSize={wp(3.5)} color="textOnDark">
-                  {searchValue || selectedFilters ? "+" : null}
-                </Text>
+                {searchValue || selectedFilters ? (
+                  <TickCircle size={wp(4)} color={theme.colors.textOnDark} />
+                ) : null}
               </Box>
             ) : null}
             <Setting3
