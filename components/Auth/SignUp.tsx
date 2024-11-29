@@ -9,7 +9,7 @@ import Button from "../Common/Button";
 import Input from "../Common/Input";
 import Text from "../Common/Text";
 
-const SignUp = ({ navigation }) => {
+const SignUp = ({ navigation }: any) => {
   // set theme
   const theme = useTheme<Theme>();
   // set bgimage
@@ -62,7 +62,7 @@ const SignUp = ({ navigation }) => {
         </Box>
         <Input
           label="Nickname"
-          placeholder="add your password"
+          placeholder="add your nickname"
           value={nickname}
           onChange={(nickname) => setNickname(nickname)}
         />
@@ -76,12 +76,14 @@ const SignUp = ({ navigation }) => {
           label="Password"
           placeholder="add your password"
           value={password}
+          type="password"
           onChange={(password) => setPassword(password)}
         />
         <Input
           label="Passwort wiederholen"
           placeholder="add your password"
           value={passwordReapeat}
+          type="password"
           onChange={(passwordReapeat) => setPasswordReapeat(passwordReapeat)}
         />
         <Box alignItems="center" marginTop="l">

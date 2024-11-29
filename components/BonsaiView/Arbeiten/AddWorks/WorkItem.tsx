@@ -8,12 +8,14 @@ import { WorkItemProps } from "../../../../types/WorkViewTypes";
 import { Bubble, Drop, Scissor, Trash } from "iconsax-react-native";
 import ModalMessage from "../../../Common/ModalMessage";
 import firebase from "firebase";
-import db from "../../../../firebase/firebaseConfig";
+import { db, storage } from "../../../../firebase/firebaseConfig";
 import { userStore } from "../../../../dataStores/accountStore";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import { deleteObject, ref } from "firebase/storage";
+import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 
 const WorkItem: FC<WorkItemProps> = ({ task, bonsai, user }) => {
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
@@ -21,25 +23,39 @@ const WorkItem: FC<WorkItemProps> = ({ task, bonsai, user }) => {
 
   moment.locale("de");
 
-  const deleteTaskHandler = () => {
+  const deleteTaskHandler = async () => {
     let taskID = task.taskID;
 
     let selTask = bonsai.tasks.filter((taskItem: any) => {
       if (taskItem.taskID !== taskID) return taskItem;
     });
 
-    if (selTask.taskImage) {
-      var fileRef = firebase.storage().refFromURL(task.taskImage);
-      fileRef.delete();
+    // if (selTask.taskImage) {
+    //   var fileRef = firebase.storage().refFromURL(task.taskImage);
+    //   fileRef.delete();
+    // }
+
+    // db.collection("bonsais")
+    //   .doc(bonsai.id)
+    //   .set({
+    //     ...bonsai,
+    //     tasks: selTask,
+    //     updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
+    //   });
+    // setDeleteModalVisible(!deleteModalVisible);
+    if (task.taskImage) {
+      const fileRef = ref(storage, task.taskImage);
+      await deleteObject(fileRef).catch((error) => {
+        console.error("Error deleting file:", error);
+      });
     }
 
-    db.collection("bonsais")
-      .doc(bonsai.id)
-      .set({
-        ...bonsai,
-        tasks: selTask,
-        updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
-      });
+    await updateDoc(doc(db, "bonsais", bonsai.id), {
+      ...bonsai,
+      tasks: selTask,
+      updatedOn: serverTimestamp(),
+    });
+
     setDeleteModalVisible(!deleteModalVisible);
   };
 

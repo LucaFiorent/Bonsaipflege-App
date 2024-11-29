@@ -1,5 +1,14 @@
-import * as firebase from "firebase";
-import "firebase/firestore";
+// import * as firebase from "firebase";
+// import "firebase/firestore";
+import { initializeApp } from "firebase/app";
+import {
+  getAuth,
+  initializeAuth,
+  getReactNativePersistence,
+} from "firebase/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 export const firebaseConfig = {
   apiKey: "AIzaSyDDvdfnTHT9G6ASYdvnMZQMDzPRaM5t5WY",
@@ -11,9 +20,33 @@ export const firebaseConfig = {
   measurementId: "G-SJR0JHDSTJ",
 };
 
-firebase.initializeApp(firebaseConfig);
+// Initialize Firebase app
+let app;
+let db;
+let auth;
+let storage;
 
-const db = firebase.firestore();
-db.settings({ timestampsInSnapshots: true });
+try {
+  // Initialize Firebase App
+  app = initializeApp(firebaseConfig);
+  // console.log("Firebase app initialized:", app);
 
-export default db;
+  // Initialize Firestore (Database)
+  db = getFirestore(app);
+  // console.log("Firestore (db) initialized:", db);
+
+  // Initialize Firebase Auth with AsyncStorage Persistence
+  auth = initializeAuth(app, {
+    persistence: getReactNativePersistence(AsyncStorage),
+  });
+  // console.log("Firebase Auth initialized:", auth);
+
+  // Initialize Firebase Storage
+  storage = getStorage(app);
+  // console.log("Firebase Storage initialized:", storage);
+} catch (error) {
+  console.error("Firebase initialization failed:", error);
+}
+
+// Export the initialized services for use in your app
+export { db, auth, storage };

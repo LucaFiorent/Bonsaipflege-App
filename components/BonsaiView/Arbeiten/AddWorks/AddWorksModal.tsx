@@ -14,7 +14,7 @@ import Input from "../../../Common/Input";
 import AddPicAndDate from "./AddWorksModalComponents/AddPicAndDate";
 import WorkElement from "./AddWorksModalComponents/WorkElement";
 import ModalButtons from "./AddWorksModalComponents/ModalButtons";
-import db from "../../../../firebase/firebaseConfig";
+import { db, storage } from "../../../../firebase/firebaseConfig";
 import firebase from "firebase";
 
 import { v4 as uuidv4 } from "uuid";
@@ -24,6 +24,8 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import { doc, setDoc } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 const AddWorksModal: FC<AddWorksModalProps> = ({
   setModalVisible,
@@ -133,41 +135,66 @@ const AddWorksModal: FC<AddWorksModalProps> = ({
   };
 
   const addData = async (imagePath: any) => {
+    // if (image) {
+    //   const response = await fetch(imagePath);
+    //   const blob = await response.blob();
+    //   var ref = firebase
+    //     .storage()
+    //     .ref()
+    //     .child("bonsaiTaskImages/" + uuidv4());
+    //   const snapshot = await ref.put(blob);
+    //   const imageUrl = await snapshot.ref.getDownloadURL();
+    //   task.taskImage = imageUrl;
+    // }
+
+    // if (task) {
+    //   userBonsaisStore.setState((state) => {
+    //     let newBonsaiTask = state.myBonsais.map((item) => {
+    //       if (item.id === data.id) {
+    //         let bonsaiTasks = item.tasks;
+    //         bonsaiTasks.push(task);
+    //         return bonsaiTasks;
+    //       }
+    //     });
+    //   });
+
+    //   let mySelBonsai = myBonsais.filter((item) => item.id === data.id);
+    //   let formatElement = mySelBonsai[0];
+
+    //   if (task) {
+    //     db.collection("bonsais")
+    //       .doc(data.id)
+    //       .set({
+    //         ...formatElement,
+    //         updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
+    //       });
+    //   }
+    // }
+    let imageUrl = "";
+
     if (image) {
       const response = await fetch(imagePath);
       const blob = await response.blob();
-      var ref = firebase
-        .storage()
-        .ref()
-        .child("bonsaiTaskImages/" + uuidv4());
-      const snapshot = await ref.put(blob);
-      const imageUrl = await snapshot.ref.getDownloadURL();
-      task.taskImage = imageUrl;
+      const storageRef = ref(storage, `bonsaiTaskImages/${uuidv4()}`);
+      await uploadBytes(storageRef, blob);
+      imageUrl = await getDownloadURL(storageRef);
     }
 
-    if (task) {
-      userBonsaisStore.setState((state) => {
-        let newBonsaiTask = state.myBonsais.map((item) => {
-          if (item.id === data.id) {
-            let bonsaiTasks = item.tasks;
-            bonsaiTasks.push(task);
-            return bonsaiTasks;
-          }
-        });
-      });
-
-      let mySelBonsai = myBonsais.filter((item) => item.id === data.id);
-      let formatElement = mySelBonsai[0];
-
-      if (task) {
-        db.collection("bonsais")
-          .doc(data.id)
-          .set({
-            ...formatElement,
-            updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
-          });
+    const updatedBonsai = myBonsais.map((item) => {
+      if (item.id === data.id) {
+        let bonsaiTasks = item.tasks || [];
+        bonsaiTasks.push({ ...task, taskImage: imageUrl });
+        return { ...item, tasks: bonsaiTasks, updatedOn: new Date() };
       }
-    }
+      return item;
+    });
+
+    userBonsaisStore.setState({ myBonsais: updatedBonsai });
+
+    await setDoc(doc(db, "bonsais", data.id), {
+      tasks: updatedBonsai.find((item) => item.id === data.id)?.tasks,
+      updatedOn: new Date(),
+    });
   };
 
   return (

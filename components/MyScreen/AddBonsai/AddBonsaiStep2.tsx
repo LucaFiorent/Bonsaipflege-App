@@ -23,7 +23,7 @@ import {
 import BottomSheetModalContainer from "./BottomSheetModalContainer";
 import { FormsData, SizesData } from "../../../types/firebaseTypes";
 
-import db from "../../../firebase/firebaseConfig";
+import { db, storage } from "../../../firebase/firebaseConfig";
 import Input from "../../Common/Input";
 import ToggleSwitchButton from "../../Common/ToggleSwitchButton";
 import { AddBonsaiStep2Props } from "../../../types/bottomSheetTypes";
@@ -31,11 +31,18 @@ import { userStore } from "../../../dataStores/accountStore";
 
 import DateTimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
-import firebase from "firebase";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 import { CalendarAdd, CalendarTick, ClipboardTick } from "iconsax-react-native";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
   const theme = useTheme<Theme>();
@@ -83,37 +90,75 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
 
   //get all Forms from Firestore Database
   useEffect(() => {
-    const entityRefForms = db.collection("forms");
-    const entityRefSizes = db.collection("sizes");
+    // const entityRefForms = db.collection("forms");
+    // const entityRefSizes = db.collection("sizes");
 
-    entityRefForms.onSnapshot(
-      (querySnapshot: any) => {
+    const formsRef = collection(db, "forms");
+    const sizesRef = collection(db, "sizes");
+
+    // entityRefForms.onSnapshot(
+    //   (querySnapshot: any) => {
+    //     const newEntities: any = [];
+    //     querySnapshot.forEach((doc: any) => {
+    //       const entity = doc.data();
+    //       entity.id = doc.id;
+    //       newEntities.push(entity);
+    //     });
+    //     setFormsFirestore(newEntities);
+    //   },
+    //   (error: any) => {
+    //     console.log(error, "no forms found");
+    //   }
+    // );
+    // entityRefSizes.onSnapshot(
+    //   (querySnapshot: any) => {
+    //     const newEntities: any = [];
+    //     querySnapshot.forEach((doc: any) => {
+    //       const entity = doc.data();
+    //       entity.id = doc.id;
+    //       newEntities.push(entity);
+    //     });
+    //     setSizesFirestore(newEntities);
+    //   },
+    //   (error: any) => {
+    //     console.log(error, "no sizes found");
+    //   }
+    // );
+    const unsubscribeForms = onSnapshot(
+      formsRef,
+      (querySnapshot) => {
         const newEntities: any = [];
-        querySnapshot.forEach((doc: any) => {
-          const entity = doc.data();
-          entity.id = doc.id;
+        querySnapshot.forEach((doc) => {
+          const entity = { ...doc.data(), id: doc.id };
           newEntities.push(entity);
         });
         setFormsFirestore(newEntities);
       },
-      (error: any) => {
-        console.log(error, "no forms found");
+      (error) => {
+        console.error(error, "no forms found");
       }
     );
-    entityRefSizes.onSnapshot(
-      (querySnapshot: any) => {
+
+    const unsubscribeSizes = onSnapshot(
+      sizesRef,
+      (querySnapshot) => {
         const newEntities: any = [];
-        querySnapshot.forEach((doc: any) => {
-          const entity = doc.data();
-          entity.id = doc.id;
+        querySnapshot.forEach((doc) => {
+          const entity = { ...doc.data(), id: doc.id };
           newEntities.push(entity);
         });
         setSizesFirestore(newEntities);
       },
-      (error: any) => {
-        console.log(error, "no sizes found");
+      (error) => {
+        console.error(error, "no sizes found");
       }
     );
+
+    // Cleanup subscriptions on unmount
+    return () => {
+      unsubscribeForms();
+      unsubscribeSizes();
+    };
   }, []);
 
   //modal logic
@@ -181,20 +226,30 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
   const addPicture = async (imagePath: any, imageName: any) => {
     const response = await fetch(imagePath);
     const blob = await response.blob();
-    var ref = firebase
-      .storage()
-      .ref()
-      .child("bonsaiImages/" + imageName + "-" + uuidv4());
-    const snapshot = await ref.put(blob);
-    const imageUrl = await snapshot.ref.getDownloadURL();
-    db.collection("bonsais")
-      .doc()
-      .set({
-        ...bonsai,
-        image: imageUrl,
-        createdOn: firebase.firestore.FieldValue.serverTimestamp(),
-        updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
-      });
+    // var ref = firebase
+    //   .storage()
+    //   .ref()
+    //   .child("bonsaiImages/" + imageName + "-" + uuidv4());
+    // const snapshot = await ref.put(blob);
+    // const imageUrl = await snapshot.ref.getDownloadURL();
+    // db.collection("bonsais")
+    //   .doc()
+    //   .set({
+    //     ...bonsai,
+    //     image: imageUrl,
+    //     createdOn: firebase.firestore.FieldValue.serverTimestamp(),
+    //     updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
+    //   });
+    const storageRef = ref(storage, `bonsaiImages/${imageName}-${uuidv4()}`);
+    await uploadBytes(storageRef, blob);
+    const imageUrl = await getDownloadURL(storageRef);
+
+    await setDoc(doc(db, "bonsais", uuidv4()), {
+      ...bonsai,
+      image: imageUrl,
+      createdOn: serverTimestamp(),
+      updatedOn: serverTimestamp(),
+    });
   };
 
   moment.locale("de");

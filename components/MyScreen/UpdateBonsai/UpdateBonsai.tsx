@@ -60,8 +60,8 @@ const UpdateBonsai: FC<UpdateBonsaiProps> = ({ navigation, route }) => {
             quality: 0.5,
           });
 
-    if (!pickerResult.cancelled) {
-      setImage(pickerResult.uri);
+    if (!pickerResult.canceled) {
+      setImage(pickerResult.assets[0].uri);
     }
   };
 

@@ -103,6 +103,11 @@ const theme = createTheme({
     tablet: 768,
   },
   textVariants: {
+    defaults: {
+      fontFamily: "OpenSans-Regular",
+      fontSize: wp(4),
+      color: "text",
+    },
     logo: {
       fontFamily: "HinaMincho-Regular",
       fontSize: wp(6),

@@ -8,14 +8,18 @@ import Box from "../Common/Box";
 import Text from "../Common/Text";
 
 //stores
-import { userBonsaisStore, userStore } from "../../dataStores/accountStore";
+import {
+  userBonsais,
+  userBonsaisStore,
+  userStore,
+} from "../../dataStores/accountStore";
 
 import "react-native-gesture-handler";
 import { FC, useState } from "react";
 
 import moment from "moment";
 import ModalMessage from "../Common/ModalMessage";
-import db from "../../firebase/firebaseConfig";
+import { db, storage } from "../../firebase/firebaseConfig";
 import { BonsaiViewParams } from "../../types/bottomSheetTypes";
 
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
@@ -34,7 +38,6 @@ import {
   TaskSquare,
   Trash,
 } from "iconsax-react-native";
-import firebase from "firebase";
 import AddWorksModal from "./Arbeiten/AddWorks/AddWorksModal";
 import NextStepButton from "../Common/NextStepButton";
 import { v4 as uuidv4 } from "uuid";
@@ -42,6 +45,8 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import { deleteObject, ref } from "firebase/storage";
+import { deleteDoc, doc, serverTimestamp, setDoc } from "firebase/firestore";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -90,14 +95,22 @@ const BonsaiView: FC<BonsaiViewParams> = ({ navigation, route }) => {
       newBonsaiList;
     });
 
+    // if (selRouteBonsai.image) {
+    //   var fileRef = firebase.storage().refFromURL(selRouteBonsai.image);
+    //   fileRef.delete();
+    // }
+
+    // const allBonsais = db.collection("bonsais").doc(selRouteBonsai.id);
+    // allBonsais.delete();
+    // setModalVisible(!visible);
+    // navigation.navigate("MyScreen");
     if (selRouteBonsai.image) {
-      var fileRef = firebase.storage().refFromURL(selRouteBonsai.image);
-      fileRef.delete();
+      const fileRef = ref(storage, selRouteBonsai.image);
+      await deleteObject(fileRef);
     }
 
-    const allBonsais = db.collection("bonsais").doc(selRouteBonsai.id);
-    allBonsais.delete();
-    setModalVisible(!visible);
+    await deleteDoc(doc(db, "bonsais", selRouteBonsai.id));
+    setModalVisible(false);
     navigation.navigate("MyScreen");
   };
 
@@ -147,15 +160,20 @@ const BonsaiView: FC<BonsaiViewParams> = ({ navigation, route }) => {
         (item) => item.id === selectedBonsai.id
       );
       let formatElement = mySelBonsai[0];
-
-      if (task) {
-        db.collection("bonsais")
-          .doc(selectedBonsai.id)
-          .set({
-            ...formatElement,
-            updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
-          });
+      if (mySelBonsai) {
+        await setDoc(doc(db, "bonsais", selectedBonsai.id), {
+          ...mySelBonsai,
+          updatedOn: serverTimestamp(),
+        });
       }
+      // if (task) {
+      //   db.collection("bonsais")
+      //     .doc(selectedBonsai.id)
+      //     .set({
+      //       ...formatElement,
+      //       updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
+      //     });
+      // }
     }
   };
 

@@ -31,6 +31,9 @@ const Input: FC<InputP> = ({
   type,
 }) => {
   const theme = useTheme<Theme>();
+
+  const inputType = type !== null &&
+    type === "password" && { secureTextEntry: true };
   return (
     <Box marginBottom="l">
       <Text
@@ -53,6 +56,7 @@ const Input: FC<InputP> = ({
           paddingTop: theme.spacing.xs,
           borderBottomWidth: 1,
         }}
+        {...inputType}
       />
       {inputMessage ? (
         <Box marginTop="xs" flexDirection="row">

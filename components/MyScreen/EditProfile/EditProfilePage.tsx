@@ -12,8 +12,16 @@ import { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import firebase from "firebase";
 import { v4 as uuidv4 } from "uuid";
-import db from "../../../firebase/firebaseConfig";
+import { db, storage } from "../../../firebase/firebaseConfig";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
+import {
+  deleteObject,
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
+import { doc, setDoc } from "firebase/firestore";
 
 type EditProfilePageProps = {
   navigation: any;
@@ -50,8 +58,8 @@ const EditProfilePage: React.FC<EditProfilePageProps> = ({ navigation }) => {
           });
     setmodalImagePickerVisible(!modalImagePickerVisible);
 
-    if (!pickerResult.cancelled) {
-      setImage(pickerResult.uri);
+    if (!pickerResult.canceled) {
+      setImage(pickerResult.assets[0].uri);
       setmodalImagePickerVisible(!modalImagePickerVisible);
     }
   };
@@ -78,29 +86,62 @@ const EditProfilePage: React.FC<EditProfilePageProps> = ({ navigation }) => {
     imageName: string,
     oldImage: string
   ) => {
+    // Delete the old image if it exists
     if (oldImage !== "") {
-      var fileRef = firebase.storage().refFromURL(oldImage);
-      fileRef.delete();
+      const oldImageRef = ref(storage, oldImage);
+      await deleteObject(oldImageRef).catch((error) => {
+        console.error("Error deleting old image: ", error);
+      });
     }
-
+    // Fetch the new image and convert it to a blob
     const response = await fetch(imagePath);
     const blob = await response.blob();
-    var ref = firebase
-      .storage()
-      .ref()
-      .child("profilePictures/" + uuidv4());
-    const snapshot = await ref.put(blob);
-    const imageUrl = await snapshot.ref.getDownloadURL();
 
+    // Create a reference to the new image
+    const newImageRef = ref(storage, `profilePictures/${uuidv4()}`);
+
+    // Upload the blob
+    const snapshot = await uploadBytes(newImageRef, blob);
+
+    // Get the download URL
+    const imageUrl = await getDownloadURL(snapshot.ref);
+
+    // Update the user store with the new avatar and nickname
     userStore.setState((state) => ({
       ...state,
       avatar: imageUrl,
       nickname: nickname,
     }));
 
-    db.collection("userData")
-      .doc(userData.id)
-      .set({ ...userData, avatar: imageUrl, nickname: nickname });
+    // Set the user data in Firestore
+    await setDoc(doc(db, "userData", userData.id), {
+      ...userData,
+      avatar: imageUrl,
+      nickname: nickname,
+    });
+    // if (oldImage !== "") {
+    //   var fileRef = firebase.storage().refFromURL(oldImage);
+    //   fileRef.delete();
+    // }
+
+    // const response = await fetch(imagePath);
+    // const blob = await response.blob();
+    // var ref = firebase
+    //   .storage()
+    //   .ref()
+    //   .child("profilePictures/" + uuidv4());
+    // const snapshot = await ref.put(blob);
+    // const imageUrl = await snapshot.ref.getDownloadURL();
+
+    // userStore.setState((state) => ({
+    //   ...state,
+    //   avatar: imageUrl,
+    //   nickname: nickname,
+    // }));
+
+    // db.collection("userData")
+    //   .doc(userData.id)
+    //   .set({ ...userData, avatar: imageUrl, nickname: nickname });
   };
 
   return (

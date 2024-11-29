@@ -1,5 +1,4 @@
 import * as React from "react";
-import db from "../firebase/firebaseConfig";
 import { FC, useEffect, useState } from "react";
 import { SafeAreaView, Image, ScrollView, Pressable } from "react-native";
 import Box from "../components/Common/Box";
@@ -20,6 +19,8 @@ import SearchAndFilterBar from "../components/Home/SearchAndFilterBar/SearchAndF
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import LastWorks from "../components/Home/LastWorks/LastWorks";
 import { HomeScreenProps } from "../sections/HomeSection";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { db } from "../firebase/firebaseConfig";
 
 const HomeScreen: FC<HomeScreenProps> = ({ navigation, route }) => {
   const userData = userStore();
@@ -50,84 +51,126 @@ const HomeScreen: FC<HomeScreenProps> = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-    const entityRef = db
-      .collection("bonsais")
-      .where("publicBonsai", "==", true);
-    entityRef.onSnapshot(
-      (querySnapshot: any) => {
+    // Create a reference to the "bonsais" collection
+    const bonsaisRef = collection(db, "bonsais");
+
+    // Create the query for public bonsais
+    const entityQuery = query(bonsaisRef, where("publicBonsai", "==", true));
+
+    // Real-time listener for the snapshot
+    const unsubscribeBonsais = onSnapshot(
+      entityQuery,
+      (querySnapshot) => {
         const newEntities: any = [];
-        querySnapshot.forEach((doc: any) => {
+        querySnapshot.forEach((doc) => {
           const entity = doc.data();
           entity.id = doc.id;
           entity.acquisitionDate = entity.acquisitionDate.toDate();
           entity.createdOn = entity.createdOn.toDate();
-          entity.updatedOn = entity.updatedOn && entity.updatedOn.toDate();
-          entity.tasks &&
-            (entity.tasks = entity.tasks.map((task: any) => ({
+          entity.updatedOn = entity.updatedOn
+            ? entity.updatedOn.toDate()
+            : null;
+
+          // Convert task dates if they exist
+          if (entity.tasks) {
+            entity.tasks = entity.tasks.map((task: any) => ({
               ...task,
               taskDate: task.taskDate.toDate(),
-            })));
+            }));
+          }
+
           newEntities.push(entity);
         });
 
+        // Update the state with the new entities
         communityBonsaisStore.setState((state) => ({
           communityBonsais: newEntities,
         }));
       },
-      (error: any) => {
-        console.log(error, "no Communitty Bonsais found");
+      (error) => {
+        console.log(error, "No Community Bonsais found");
       }
     );
 
-    const communityUserData = db.collection("userData");
+    // Query for community user data
+    const userDataRef = collection(db, "userData");
 
-    communityUserData.onSnapshot(
-      (querySnapshot: any) => {
+    // Listen for real-time updates on userData collection
+    const unsubscribeCommunityData = onSnapshot(
+      userDataRef,
+      (querySnapshot) => {
         const newCommunityEntities: any = [];
-        querySnapshot.forEach((doc: any) => {
+        querySnapshot.forEach((doc) => {
           const entity = doc.data();
-
           newCommunityEntities.push(entity);
         });
+
+        // Update community data store with new profiles
         communityDataStore.setState((state) => ({
           communityProfiles: newCommunityEntities,
         }));
       },
-      (error: any) => {
-        console.log(error, "no Community Data found");
+      (error) => {
+        console.log(error, "No Community Data found");
       }
     );
-  }, []);
+
+    // Cleanup subscriptions on unmount
+    return () => {
+      unsubscribeBonsais();
+      unsubscribeCommunityData();
+    };
+  }, [db]);
 
   useEffect(() => {
-    const entityRef = db
-      .collection("bonsais")
-      .where("userId", "==", userData.id);
+    // Ensure userData.id is available before querying
+    if (!userData.id) return;
 
-    entityRef.onSnapshot(
-      (querySnapshot: any) => {
+    // Reference to the "bonsais" collection
+    const bonsaisRef = collection(db, "bonsais");
+
+    // Create a query to fetch bonsais based on the user's ID
+    const entityQuery = query(bonsaisRef, where("userId", "==", userData.id));
+
+    // Real-time listener for the snapshot
+    const unsubscribe = onSnapshot(
+      entityQuery,
+      (querySnapshot) => {
         const newEntities: any = [];
-        querySnapshot.forEach((doc: any) => {
+        querySnapshot.forEach((doc) => {
           const entity = doc.data();
           entity.id = doc.id;
           entity.acquisitionDate = entity.acquisitionDate.toDate();
           entity.createdOn = entity.createdOn.toDate();
-          entity.updatedOn = entity.updatedOn && entity.updatedOn.toDate();
-          entity.tasks &&
-            (entity.tasks = entity.tasks.map((task: any) => ({
+          entity.updatedOn = entity.updatedOn
+            ? entity.updatedOn.toDate()
+            : null;
+
+          // Convert task dates if they exist
+          if (entity.tasks) {
+            entity.tasks = entity.tasks.map((task: any) => ({
               ...task,
               taskDate: task.taskDate.toDate(),
-            })));
+            }));
+          }
+
           newEntities.push(entity);
         });
+
+        // Update the state with the new entities
         userBonsaisStore.setState((state) => ({
           myBonsais: newEntities,
         }));
       },
-      (error: any) => {
-        console.log(error, "no Bonsais found");
+      (error) => {
+        console.log(error, "No Bonsais found");
       }
     );
+
+    // Cleanup the listener when the component unmounts
+    return () => {
+      unsubscribe();
+    };
   }, [userData]);
 
   let filterResults = communityBonsais;
@@ -182,7 +225,6 @@ const HomeScreen: FC<HomeScreenProps> = ({ navigation, route }) => {
         if (userData.subscribed.includes(user.id) && newAktivities.length !== 0)
           return (
             <Box>
-              {console.log("index: ", index)}
               <NewAktivities
                 key={index}
                 userSub={user}

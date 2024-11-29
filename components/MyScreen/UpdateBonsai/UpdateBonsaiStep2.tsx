@@ -23,7 +23,7 @@ import {
 import BottomSheetModalContainer from "./BottomSheetModalContainer";
 import { FormsData, SizesData } from "../../../types/firebaseTypes";
 
-import db from "../../../firebase/firebaseConfig";
+import { db, storage } from "../../../firebase/firebaseConfig";
 import Input from "../../Common/Input";
 import ToggleSwitchButton from "../../Common/ToggleSwitchButton";
 import { UpdateBonsaiStep2Props } from "../../../types/bottomSheetTypes";
@@ -36,6 +36,13 @@ import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 import { CalendarAdd, CalendarTick, ClipboardTick } from "iconsax-react-native";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
+import { collection, doc, onSnapshot, setDoc } from "firebase/firestore";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
 
 const AddBonsaiStep2: FC<UpdateBonsaiStep2Props> = ({ route, navigation }) => {
   const updateBonsai = route.params.bonsai;
@@ -60,37 +67,45 @@ const AddBonsaiStep2: FC<UpdateBonsaiStep2Props> = ({ route, navigation }) => {
 
   //get all Forms from Firestore Database
   useEffect(() => {
-    const entityRefForms = db.collection("forms");
-    const entityRefSizes = db.collection("sizes");
+    const entityRefForms = collection(db, "forms");
+    const entityRefSizes = collection(db, "sizes");
 
-    entityRefForms.onSnapshot(
-      (querySnapshot: any) => {
-        const newEntities: any = [];
-        querySnapshot.forEach((doc: any) => {
+    const unsubscribeForms = onSnapshot(
+      entityRefForms,
+      (querySnapshot) => {
+        const newEntities: FormsData[] = [];
+        querySnapshot.forEach((doc) => {
           const entity = doc.data();
           entity.id = doc.id;
           newEntities.push(entity);
         });
         setFormsFirestore(newEntities);
       },
-      (error: any) => {
+      (error) => {
         console.log(error, "no forms found");
       }
     );
-    entityRefSizes.onSnapshot(
-      (querySnapshot: any) => {
-        const newEntities: any = [];
-        querySnapshot.forEach((doc: any) => {
+
+    const unsubscribeSizes = onSnapshot(
+      entityRefSizes,
+      (querySnapshot) => {
+        const newEntities: SizesData[] = [];
+        querySnapshot.forEach((doc) => {
           const entity = doc.data();
           entity.id = doc.id;
           newEntities.push(entity);
         });
         setSizesFirestore(newEntities);
       },
-      (error: any) => {
+      (error) => {
         console.log(error, "no sizes found");
       }
     );
+
+    return () => {
+      unsubscribeForms();
+      unsubscribeSizes();
+    };
   }, []);
 
   //set forms and sizes gotten from Database
@@ -197,26 +212,41 @@ const AddBonsaiStep2: FC<UpdateBonsaiStep2Props> = ({ route, navigation }) => {
     imageName: string,
     oldImage: string
   ) => {
-    var fileRef = firebase.storage().refFromURL(oldImage);
-    var delPic = fileRef.delete();
+    // var fileRef = firebase.storage().refFromURL(oldImage);
+    // var delPic = fileRef.delete();
+
+    // const response = await fetch(imagePath);
+    // const blob = await response.blob();
+    // var ref = firebase
+    //   .storage()
+    //   .ref()
+    //   .child("bonsaiImages/" + imageName + "-" + uuidv4());
+
+    // const snapshot = await ref.put(blob);
+    // const imageUrl = await snapshot.ref.getDownloadURL();
+
+    // db.collection("bonsais")
+    //   .doc(updateBonsai.id)
+    //   .set({
+    //     ...bonsai,
+    //     image: imageUrl,
+    //     updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
+    //   });
+    const oldImageRef = ref(storage, oldImage);
+    await deleteObject(oldImageRef);
 
     const response = await fetch(imagePath);
     const blob = await response.blob();
-    var ref = firebase
-      .storage()
-      .ref()
-      .child("bonsaiImages/" + imageName + "-" + uuidv4());
+    const newImageRef = ref(storage, `bonsaiImages/${imageName}-${uuidv4()}`);
 
-    const snapshot = await ref.put(blob);
-    const imageUrl = await snapshot.ref.getDownloadURL();
+    await uploadBytes(newImageRef, blob);
+    const imageUrl = await getDownloadURL(newImageRef);
 
-    db.collection("bonsais")
-      .doc(updateBonsai.id)
-      .set({
-        ...bonsai,
-        image: imageUrl,
-        updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
-      });
+    await setDoc(doc(db, "bonsais", updateBonsai.id), {
+      ...bonsai,
+      image: imageUrl,
+      updatedOn: new Date(),
+    });
   };
 
   moment.locale("de");

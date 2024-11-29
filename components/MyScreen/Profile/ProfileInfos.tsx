@@ -20,9 +20,10 @@ import {
   ProfileAdd,
   UserTick,
 } from "iconsax-react-native";
-import db from "../../../firebase/firebaseConfig";
 import { communityDataStore } from "../../../dataStores/communityStore";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "../../../firebase/firebaseConfig";
 
 export type ProfileInfosProps = {
   navigation?: any;
@@ -42,54 +43,76 @@ const ProfileInfos: FC<ProfileInfosProps> = ({ navigation, user, bonsais }) => {
   );
 
   const selCommunityUser = selCommunityUserRaw[0];
-  const followUserHandler = (selUser: any) => {
-    if (
-      !userData.subscribed.includes(selUser.id) &&
-      !selCommunityUser.subscribers.includes(userData.id)
-    ) {
-      communityDataStore.setState((state) => {
-        state.communityProfiles.map((user) => {
-          user.id === selUser.id && user.subscribers.push(userData.id);
-        });
-      });
-      const selUserFromDB = db.collection("userData").doc(selUser.id);
-      selUserFromDB.set({
-        ...selCommunityUser,
-        subscribers: [...selCommunityUser.subscribers],
-      });
 
-      userStore.setState((state) => {
-        state.subscribed.push(selUser.id);
-      });
-      const userFromDB = db.collection("userData").doc(userData.id);
-      userFromDB.set({
-        ...userData,
-        subscribed: [...userData.subscribed],
-      });
-    } else {
-      const subscribersOfSelUser = selCommunityUser.subscribers.filter(
-        (subs) => subs != userData.id
-      );
-      communityDataStore.setState((state) => {
-        state.communityProfiles.map((user) => {
-          user.id === selUser.id && (user.subscribers = subscribersOfSelUser);
+  const followUserHandler = async (selUser: any) => {
+    try {
+      if (
+        !userData.subscribed.includes(selUser.id) &&
+        !selCommunityUser.subscribers.includes(userData.id)
+      ) {
+        communityDataStore.setState((state) => {
+          state.communityProfiles.map((user) => {
+            if (user.id === selUser.id) {
+              user.subscribers.push(userData.id);
+            }
+          });
         });
-      });
-      const selUserFromDB = db.collection("userData").doc(selUser.id);
-      selUserFromDB.set({
-        ...selCommunityUser,
-        subscribed: selCommunityUser.subscribed,
-      });
-      const followedUsersList = userData.subscribed.filter(
-        (followedUser) => followedUser != selUser.id
-      );
-      userStore.setState((state) => {
-        state.subscribed = followedUsersList;
-      });
-      const userFromDB = db.collection("userData").doc(userData.id);
-      userFromDB.set({ ...userData, subscribed: userData.subscribed });
+
+        // Update selected user in Firestore
+        const selUserFromDB = doc(db, "userData", selUser.id);
+        await setDoc(selUserFromDB, {
+          ...selCommunityUser,
+          subscribers: [...selCommunityUser.subscribers],
+        });
+
+        userStore.setState((state) => {
+          state.subscribed.push(selUser.id);
+        });
+
+        // Update current user in Firestore
+        const userFromDB = doc(db, "userData", userData.id);
+        await setDoc(userFromDB, {
+          ...userData,
+          subscribed: [...userData.subscribed],
+        });
+      } else {
+        const subscribersOfSelUser = selCommunityUser.subscribers.filter(
+          (subs) => subs !== userData.id
+        );
+        communityDataStore.setState((state) => {
+          state.communityProfiles.map((user) => {
+            if (user.id === selUser.id) {
+              user.subscribers = subscribersOfSelUser;
+            }
+          });
+        });
+
+        // Remove subscription from Firestore
+        const selUserFromDB = doc(db, "userData", selUser.id);
+        await setDoc(selUserFromDB, {
+          ...selCommunityUser,
+          subscribers: selCommunityUser.subscribers,
+        });
+
+        const followedUsersList = userData.subscribed.filter(
+          (followedUser) => followedUser !== selUser.id
+        );
+        userStore.setState((state) => {
+          state.subscribed = followedUsersList;
+        });
+
+        // Update current user in Firestore
+        const userFromDB = doc(db, "userData", userData.id);
+        await setDoc(userFromDB, {
+          ...userData,
+          subscribed: userData.subscribed,
+        });
+      }
+    } catch (error) {
+      console.error("Error following/unfollowing user:", error);
     }
   };
+
   const selUser = user.id === userData.id ? user : selCommunityUser;
 
   return (

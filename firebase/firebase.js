@@ -1,18 +1,32 @@
-import * as firebase from "firebase";
-import "firebase/firestore";
+import "firebase/auth"; // for authentication
+import "firebase/firestore"; // for Firestore
 import { Alert } from "react-native";
-import db from "./firebaseConfig";
+import { auth, db } from "./firebaseConfig";
+import { doc, setDoc } from "firebase/firestore";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
 
+// Registration Function
 export async function registration(email, password, nickname) {
   try {
-    await firebase.auth().createUserWithEmailAndPassword(email, password);
-    const currentUser = firebase.auth().currentUser;
+    // Create user with email and password
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    const currentUser = userCredential.user;
 
-    db.collection("users").doc(currentUser.uid).set({
+    // Store user data in Firestore
+    await setDoc(doc(db, "users", currentUser.uid), {
       email: currentUser.email,
       nickname: nickname,
     });
-    db.collection("userData").doc(currentUser.uid).set({
+
+    await setDoc(doc(db, "userData", currentUser.uid), {
       id: currentUser.uid,
       nickname: nickname,
       avatar: "",
@@ -25,18 +39,20 @@ export async function registration(email, password, nickname) {
   }
 }
 
+// Login Function
 export async function login(email, password) {
   try {
-    await firebase.auth().signInWithEmailAndPassword(email, password);
+    await signInWithEmailAndPassword(auth, email, password);
   } catch (err) {
     console.log("something went wrong");
     Alert.alert("There is something wrong!", err.message);
   }
 }
 
+// Logout Function
 export async function loggingOut() {
   try {
-    await firebase.auth().signOut();
+    await signOut(auth);
   } catch (err) {
     Alert.alert("There is something wrong!", err.message);
   }

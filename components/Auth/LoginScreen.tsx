@@ -10,7 +10,7 @@ import Button from "../Common/Button";
 import Input from "../Common/Input";
 import Text from "../Common/Text";
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = ({ navigation }: any) => {
   // set theme
   const theme = useTheme<Theme>();
   // set bgimage
@@ -31,9 +31,7 @@ const LoginScreen = ({ navigation }) => {
       console.log(message);
     } else {
       login(email, password)
-        .then(() => {
-          console.log("logged in");
-        })
+        .then(() => {})
         .catch(() => {
           console.log("the insert data is wrong");
         });

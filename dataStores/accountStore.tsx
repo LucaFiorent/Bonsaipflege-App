@@ -1,5 +1,4 @@
-import create from "zustand";
-import firebase from "firebase";
+import { create } from "zustand";
 type Task = {
   taskID: string;
   doneTask: string[];
