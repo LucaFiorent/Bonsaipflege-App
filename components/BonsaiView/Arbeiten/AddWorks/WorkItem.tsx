@@ -7,7 +7,6 @@ import moment from "moment";
 import { WorkItemProps } from "../../../../types/WorkViewTypes";
 import { Bubble, Drop, Scissor, Trash } from "iconsax-react-native";
 import ModalMessage from "../../../Common/ModalMessage";
-import firebase from "firebase";
 import { db, storage } from "../../../../firebase/firebaseConfig";
 import { userStore } from "../../../../dataStores/accountStore";
 import {
@@ -30,19 +29,6 @@ const WorkItem: FC<WorkItemProps> = ({ task, bonsai, user }) => {
       if (taskItem.taskID !== taskID) return taskItem;
     });
 
-    // if (selTask.taskImage) {
-    //   var fileRef = firebase.storage().refFromURL(task.taskImage);
-    //   fileRef.delete();
-    // }
-
-    // db.collection("bonsais")
-    //   .doc(bonsai.id)
-    //   .set({
-    //     ...bonsai,
-    //     tasks: selTask,
-    //     updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
-    //   });
-    // setDeleteModalVisible(!deleteModalVisible);
     if (task.taskImage) {
       const fileRef = ref(storage, task.taskImage);
       await deleteObject(fileRef).catch((error) => {

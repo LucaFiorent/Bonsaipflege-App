@@ -119,29 +119,6 @@ const EditProfilePage: React.FC<EditProfilePageProps> = ({ navigation }) => {
       avatar: imageUrl,
       nickname: nickname,
     });
-    // if (oldImage !== "") {
-    //   var fileRef = firebase.storage().refFromURL(oldImage);
-    //   fileRef.delete();
-    // }
-
-    // const response = await fetch(imagePath);
-    // const blob = await response.blob();
-    // var ref = firebase
-    //   .storage()
-    //   .ref()
-    //   .child("profilePictures/" + uuidv4());
-    // const snapshot = await ref.put(blob);
-    // const imageUrl = await snapshot.ref.getDownloadURL();
-
-    // userStore.setState((state) => ({
-    //   ...state,
-    //   avatar: imageUrl,
-    //   nickname: nickname,
-    // }));
-
-    // db.collection("userData")
-    //   .doc(userData.id)
-    //   .set({ ...userData, avatar: imageUrl, nickname: nickname });
   };
 
   return (

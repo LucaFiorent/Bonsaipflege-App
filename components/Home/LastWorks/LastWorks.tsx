@@ -8,7 +8,6 @@ import theme from "../../../theme/theme";
 import { Image, Pressable } from "react-native";
 import { Bubble, Drop } from "iconsax-react-native";
 import moment from "moment";
-import { NavigationEvents } from "react-navigation";
 import { userStore } from "../../../dataStores/accountStore";
 
 type LastWorksProps = {

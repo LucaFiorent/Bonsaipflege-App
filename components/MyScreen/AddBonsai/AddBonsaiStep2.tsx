@@ -90,40 +90,9 @@ const AddBonsaiStep2: FC<AddBonsaiStep2Props> = ({ route, navigation }) => {
 
   //get all Forms from Firestore Database
   useEffect(() => {
-    // const entityRefForms = db.collection("forms");
-    // const entityRefSizes = db.collection("sizes");
-
     const formsRef = collection(db, "forms");
     const sizesRef = collection(db, "sizes");
 
-    // entityRefForms.onSnapshot(
-    //   (querySnapshot: any) => {
-    //     const newEntities: any = [];
-    //     querySnapshot.forEach((doc: any) => {
-    //       const entity = doc.data();
-    //       entity.id = doc.id;
-    //       newEntities.push(entity);
-    //     });
-    //     setFormsFirestore(newEntities);
-    //   },
-    //   (error: any) => {
-    //     console.log(error, "no forms found");
-    //   }
-    // );
-    // entityRefSizes.onSnapshot(
-    //   (querySnapshot: any) => {
-    //     const newEntities: any = [];
-    //     querySnapshot.forEach((doc: any) => {
-    //       const entity = doc.data();
-    //       entity.id = doc.id;
-    //       newEntities.push(entity);
-    //     });
-    //     setSizesFirestore(newEntities);
-    //   },
-    //   (error: any) => {
-    //     console.log(error, "no sizes found");
-    //   }
-    // );
     const unsubscribeForms = onSnapshot(
       formsRef,
       (querySnapshot) => {

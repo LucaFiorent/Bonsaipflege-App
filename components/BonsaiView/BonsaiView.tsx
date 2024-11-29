@@ -95,15 +95,6 @@ const BonsaiView: FC<BonsaiViewParams> = ({ navigation, route }) => {
       newBonsaiList;
     });
 
-    // if (selRouteBonsai.image) {
-    //   var fileRef = firebase.storage().refFromURL(selRouteBonsai.image);
-    //   fileRef.delete();
-    // }
-
-    // const allBonsais = db.collection("bonsais").doc(selRouteBonsai.id);
-    // allBonsais.delete();
-    // setModalVisible(!visible);
-    // navigation.navigate("MyScreen");
     if (selRouteBonsai.image) {
       const fileRef = ref(storage, selRouteBonsai.image);
       await deleteObject(fileRef);
@@ -166,14 +157,6 @@ const BonsaiView: FC<BonsaiViewParams> = ({ navigation, route }) => {
           updatedOn: serverTimestamp(),
         });
       }
-      // if (task) {
-      //   db.collection("bonsais")
-      //     .doc(selectedBonsai.id)
-      //     .set({
-      //       ...formatElement,
-      //       updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
-      //     });
-      // }
     }
   };
 

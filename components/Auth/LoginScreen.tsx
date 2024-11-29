@@ -58,7 +58,7 @@ const LoginScreen = ({ navigation }: any) => {
 
         <Input
           label="E-Mail"
-          placeholder="Add your E-Mail"
+          placeholder="add your E-Mail"
           value={email}
           onChange={(email) => setEmail(email)}
         />
@@ -66,6 +66,7 @@ const LoginScreen = ({ navigation }: any) => {
           label="Password"
           placeholder="add your password"
           value={password}
+          type="password"
           onChange={(password) => setPassword(password)}
         />
         <Text color="error">{message}</Text>

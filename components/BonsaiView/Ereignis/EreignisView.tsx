@@ -11,7 +11,7 @@ const EreignisView: FC = () => {
 
   return (
     <Box>
-      <Text>LOL</Text>
+      <Text>Todos</Text>
     </Box>
   );
 };

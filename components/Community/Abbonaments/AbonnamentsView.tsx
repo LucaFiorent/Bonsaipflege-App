@@ -35,11 +35,6 @@ const AbonnamentsView: FC<AbonnamentsViewProps> = ({ navigation, route }) => {
               paddingTop: theme.spacing.m,
               paddingBottom: theme.spacing.xxl,
             }}
-            // removeClippedSubviews={true}
-            // initialNumToRender={5}
-            // maxToRenderPerBatch={5}
-            // updateCellsBatchingPeriod={100}
-            // windowSize={20}
             data={bonsaiElement}
             renderItem={(bonsai) => {
               {

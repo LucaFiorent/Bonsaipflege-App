@@ -49,11 +49,6 @@ const MyScreen: FC<MyScreenProps> = ({ navigation }) => {
               paddingTop: theme.spacing.m,
               paddingBottom: theme.spacing.xxl,
             }}
-            // removeClippedSubviews={true}
-            // initialNumToRender={5}
-            // maxToRenderPerBatch={5}
-            // updateCellsBatchingPeriod={100}
-            // windowSize={20}
             data={myBonsais}
             renderItem={(bonsai) => {
               return (

@@ -135,41 +135,6 @@ const AddWorksModal: FC<AddWorksModalProps> = ({
   };
 
   const addData = async (imagePath: any) => {
-    // if (image) {
-    //   const response = await fetch(imagePath);
-    //   const blob = await response.blob();
-    //   var ref = firebase
-    //     .storage()
-    //     .ref()
-    //     .child("bonsaiTaskImages/" + uuidv4());
-    //   const snapshot = await ref.put(blob);
-    //   const imageUrl = await snapshot.ref.getDownloadURL();
-    //   task.taskImage = imageUrl;
-    // }
-
-    // if (task) {
-    //   userBonsaisStore.setState((state) => {
-    //     let newBonsaiTask = state.myBonsais.map((item) => {
-    //       if (item.id === data.id) {
-    //         let bonsaiTasks = item.tasks;
-    //         bonsaiTasks.push(task);
-    //         return bonsaiTasks;
-    //       }
-    //     });
-    //   });
-
-    //   let mySelBonsai = myBonsais.filter((item) => item.id === data.id);
-    //   let formatElement = mySelBonsai[0];
-
-    //   if (task) {
-    //     db.collection("bonsais")
-    //       .doc(data.id)
-    //       .set({
-    //         ...formatElement,
-    //         updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
-    //       });
-    //   }
-    // }
     let imageUrl = "";
 
     if (image) {
