@@ -1,0 +1,6 @@
+Copyright © 2024 Luca Daniele Fiorentino  
+All rights reserved.
+
+This software and its associated files (Bonsaipflege-App) are the property of Luca Daniele Fiorentino and are protected by copyright law. Unauthorized copying, distribution, modification, or use of this Software, in whole or in part, is strictly prohibited without prior written permission from the copyright holder.
+
+Permission to use this
