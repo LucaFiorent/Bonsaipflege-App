@@ -1,24 +1,20 @@
 ## STEP 1
-To get started, you first need the Expo CLI command-line app installed on your computer, if it's not already present. You can install it using:
+To get started, navigate to your project folder and install all dependencies with the following command:
 
-> $ npm install --global expo-cli
-
-See the documentation here:
-> https://docs.expo.dev/get-started/installation/
+> $ npm install
 
 ## STEP 2
-Download the "Expo Go" app on your phone from the Play Store.
-
-Once the app is installed, you need to install the dependencies using:
-
-> $ expo install
+Download the Expo Go app on your phone from the Play Store (for Android).
 
 ## STEP 3
-After the dependencies are installed, you can start the app with the following command:
+Once the app is installed, start your project with the following command:
 
-> $ expo start
+> $ npm run start
 
 ## STEP 4
+After starting the project, scan the QR code in the terminal using the Expo Go app’s QR code scanner, or manually enter the URL in the Expo Go app. The project should automatically start on your phone.
+
+## STEP 5
 Using the App
 Register, log in, and explore. 😊
 
