@@ -38,3 +38,17 @@ Register, log in, and explore. 😊
 
 ## Last works, Today's works
 ![Frame 61](https://github.com/user-attachments/assets/b865bedc-6c7b-4b87-b312-65207289271b)
+.
+.
+.
+.
+.
+.
+## License
+
+This project is licensed under a proprietary license. All rights are reserved by the copyright holder, Luca Daniele Fiorentino.  
+Unauthorized copying, modification, distribution, or use of this project or its associated files is strictly prohibited.
+
+For inquiries about licensing or permissions, please contact:  
+*Luca Daniele Fiorentino*  
+Email: lucafiorentino4@gmail.com
